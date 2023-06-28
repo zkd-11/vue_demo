@@ -1,37 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title></title>
-</head>
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{message}}</h2>
+      </div>
+    </template>
 
-<body>
-  <div id="app"></div>
-  <template id="my-app">
-    <div>
-      <h2>{{message}}</h2>
-    </div>
-  </template>
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+          };
+        },
 
-  <script src="../js/vue.js"></script>
-  <script>
-    Vue.createApp({
-         template: "#my-app",
-      data: function () {
-        return {
-          message: "hello Hanjue",
-          counter: 100,
-        };
-      },
-       
-      // 定义各种方法
-      methods: {
-
-      },
-    }).mount("#app");
-  </script>
-</body>
-
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
 </html>
