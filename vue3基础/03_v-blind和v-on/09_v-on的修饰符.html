@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-on的修饰符</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{message}}</h2>
+      </div>
+      <div @click="clickDiv">
+        <button @click.stop="clickBn">按钮停止冒泡</button>
+      </div>
+      <!-- 指定某个按键松开时 -->
+      <input type="text" @keyup.enter="enterKey" />
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          clickDiv() {
+            console.log("div被点击");
+          },
+          clickBn() {
+            console.log("已设置了停止冒泡");
+          },
+          enterKey(event) {
+            console.log("keyup", event.target.value);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

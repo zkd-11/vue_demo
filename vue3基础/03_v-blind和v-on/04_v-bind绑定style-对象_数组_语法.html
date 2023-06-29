@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>绑定样式</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <!-- 不加引号 会去data内部找该变量, 加引号表示静态值, -连接的样式名需要加引号 -->
+        <h2 :style="{color: finalColor, 'font-size': '20px'}">{{message}}</h2>
+        <!-- 可用拼接形式 -->
+        <h2 :style="{color: finalColor, 'font-size':finalFontsize + 'px'}">
+          {{message}}
+        </h2>
+        <!-- 可以是对象 -->
+        <h2 :style="finalStyleObj">对象的形式填充style</h2>
+        <div :style="[finalStyleObj, styleUe]">对象的形式填充style</div>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            finalColor: "red",
+            finalFontsize: "40",
+            finalStyleObj: {
+              "font-size": "50px",
+              fontWeight: "bold",
+              backgroundColor: "aqua",
+            },
+            styleUe: {
+              textDecoration: "underline",
+            },
+          };
+        },
+
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>

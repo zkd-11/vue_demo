@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-bind绑定属性方法</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <div :[AAA]="FinalName">{{message}}</div>
+        <div :[originName]="FinalName">{{message}}</div>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            originname: "oName",
+            aaa: "oName",
+            FinalName: "final",
+          };
+        },
+
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>

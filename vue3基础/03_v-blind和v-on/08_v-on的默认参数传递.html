@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>默认参数传递</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{message}}</h2>
+        <!-- 默认会传递一个event属性对象, 可在函数进行获取 -->
+        <button @click="btnClick">按钮单属性</button>
+        <!--如须接受接收多个参数时, 事件需要加$符号, 表示vue截取到的数据-->
+        <button @click="btnClicks($event, 'wulv', 18)">按钮复合属性</button>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+          };
+        },
+        // 定义各种方法
+        methods: {
+          btnClick(event) {
+            console.log(event);
+          },
+          btnClicks(event, name, age) {
+            console.log(event, name, age);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

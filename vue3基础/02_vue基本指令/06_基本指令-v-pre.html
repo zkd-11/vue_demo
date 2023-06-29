@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>v-pre</title>
+</head>
+
+<body>
+  <div id="app"></div>
+  <template id="my-app">
+    <div>
+      <!-- 此用法用于解决渲染前 跳过编译, 不进行渲染, 显示原始mustache标签 双括号内容, 不被渲染 -->
+    
+      <h2 v-pre>{{message}}</h2>
+    </div>
+  </template>
+
+  <script src="../js/vue.js"></script>
+  <script>
+    Vue.createApp({
+      template: "#my-app",
+      data: function () {
+        return {
+          message: "hello Hanjue",
+          counter: 100,
+        };
+      },
+       
+      // 定义各种方法
+      methods: {
+
+      },
+    }).mount("#app");
+  </script>
+</body>
+
+</html>

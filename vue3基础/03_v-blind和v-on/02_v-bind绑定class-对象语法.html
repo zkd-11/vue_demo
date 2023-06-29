@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-bind绑定类名</title>
+
+    <style>
+      .active {
+        color: aqua;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2 :class="className">{{message}}</h2>
+        类名的定义可以是对象的形式
+        <!-- 键值对  前者类名 后者 可以是静动态: 布尔值, 类名引号可选 -->
+        <h2 :class="{'active': isactive, title: true}">{{message}}</h2>
+        <!-- 默认类名 -->
+        <h3 class="abc" :class="{'active': isactive}">{{message}}</h3>
+
+        <!-- 类名引用对象属性 -->
+        <h3 class="abc" :class="classObject">{{message}}</h3>
+        <!-- 使用方法返回属性 -->
+        <h2 :class="getClassName()">{{message}}</h2>
+      </div>
+      <button @click="toggle">切换</button>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            className: "normal",
+            isactive: true,
+            // 如果要将类名作为一个对象返回时, 属性不能是引用vue中属性
+            classObject: { active: false, title: true },
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          toggle() {
+            this.isactive = !this.isactive;
+          },
+          getClassName() {
+            return this.className;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-html的使用</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>message + 标签需要内部设置标签属性 v-html</h2>
+        <h2 v-html="message"></h2>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message:
+              "<span style='color: red; background: blue;'> 这是一个vue内部返回标签 </span>",
+            counter: 100,
+          };
+        },
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>

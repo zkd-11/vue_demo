@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-once基本指令使用</title>
+  </head>
+
+  <body>
+    <!-- v-once 渲染一次， 后续更新数据不会更新， 类似静态绑定 -->
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{message}}</h2>
+        <h2 v-once>{{counter}}</h2>
+        <h2>{{counter}}</h2>
+        <div v-once>
+          <h1>父节点设置为v-once, 子节点也会一致</h1>
+          <h1>{{counter}}</h1>
+        </div>
+        <button @click="clickAdd">测试v-once ,数字＋1</button>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          clickAdd() {
+            this.counter++;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

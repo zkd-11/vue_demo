@@ -539,6 +539,44 @@
 
 
 
+## vue中动态绑定属性时， 会将动态名识别为小写
+
+>
+>
+>在 Vue 中，动态绑定属性名时，Vue 默认会将属性名转换为小写形式。这是由 HTML 的规范所决定的，HTML 属性名是不区分大小写的。
+>
+>在你的代码中，如果你使用 `:originName` 进行动态绑定，Vue 会将属性名识别为小写形式，并在 data 中查找 `originname` 属性。所以确保在 data 中使用 `originname`，而不是 `originName`，以便正确地进行绑定。
+>
+>如果你希望保留原始的属性名大小写，可以使用 `v-bind` 指令和计算属性来实现动态绑定，示例如下：
+>
+>```html
+><div v-bind:[originName]="FinalName">{{message}}</div>
+>```
+>
+>然后在 Vue 实例中定义一个计算属性，将 `originName` 返回为字符串形式，示例如下：
+>
+>```javascript
+>computed: {
+>  originName() {
+>    return 'originName'; // 替换为你期望的属性名
+>  }
+>}
+>```
+>
+>这样就能正确地使用动态属性名进行绑定，并保留原始的属性名大小写。\\
+
+v
+
+
+
+## v-on绑定的用法
+
+![image-20230630010559945](vue3.assets/image-20230630010559945.png)
+
+
+
+
+
  
 
 

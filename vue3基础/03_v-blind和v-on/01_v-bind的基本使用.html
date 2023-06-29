@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-bind的基本使用</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <!-- vue-3 允许模板组件中 能有多个根组件   -->
+      <img v-bind:src="src" alt="" />
+      <a :href="link">打开ai</a>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            src: "https://chat.openai.com/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTtdFmz0gKbv8jQHqoJIDoKVJOSATDBnQ_i3blpGk%3Ds96-c&w=48&q=75",
+            link: "https://www.openai.com",
+          };
+        },
+
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>

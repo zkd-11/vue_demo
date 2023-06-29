@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-on的基本使用</title>
+    <style>
+      .area {
+        background-color: aqua;
+        height: 200px;
+        width: 200px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <button @click="btnClick">按钮1</button>
+        <div class="area" v-on:mousemove="mouseMove"></div>
+        <h1>{{message}}</h1>
+        <div class="area" v-on="{click: btnClick, mousemove: mouseMove}"></div>
+
+        <h2>{{message}}</h2>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            isThrottled: false,
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          btnClick() {
+            console.log("按钮被点击");
+          },
+          mouseMove() {
+            if (this.isThrottled) {
+              return;
+            }
+            this.isThrottled = true;
+            this.timer = setTimeout(() => {
+              console.log("鼠标移动");
+              this.isThrottled = false;
+            }, 1000);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

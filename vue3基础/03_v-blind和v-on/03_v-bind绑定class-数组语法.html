@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2 :class="['aa', className, isActive ? 'active': '']">{{message}}</h2>
+        <!-- 数组可嵌套定义的静态类名, 和vue中定义的类名, 并且可以嵌套数组的类名 -->
+        <h2 :class="['aa', className,{ active: isActive }]">{{message}}</h2>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            className: "normal",
+            isActive: true,
+          };
+        },
+
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>
