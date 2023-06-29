@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mustache语法</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <!-- mustache 的基本使用   -->
+    <!-- 只能是表达式， 不能是语句 -->
+    <template id="my-app">
+      <div>
+        <h2>{{message}}</h2>
+        <h3>{{ message.split(" ").reverse().join(" ")}}</h3>
+
+        <!-- 可以对其做一个简单的计算 -->
+        <h2>{{ counter*10 }}</h2>
+        <!-- 调用函数 -->
+        <h2>{{ getReverseMessage()}}</h2>
+        <!-- 三元运算符 -->
+        <h2>{{ isShow ? "哈哈哈" : "错误" }}</h2>
+      </div>
+      <button @click="toggle">切换</button>
+
+      <!-- 错误用法 -->
+      <h2>{{ var name = "这是赋值语句" }}</h2>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            isShow: true,
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          getReverseMessage() {
+            return this.message.split(" ").reverse().join(" ");
+          },
+          toggle() {
+            this.isShow = !this.isShow;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
