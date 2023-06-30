@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>条件渲染和template结合使用</title>
+    <style>
+      .dV {
+        width: 300px;
+        height: 300px;
+        background-color: aqua;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <!-- template 包裹的标签不会被渲染到页面上  v-if判断条件可以应用于不同标签上 -->
+      <div v-if="isShow" class="dV">
+        <h2>{{message}}</h2>
+      </div>
+
+      <template v-else>
+        <h2>切换后被包裹</h2>
+      </template>
+      <button @click="clickIo">切换条件</button>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            isShow: true,
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          clickIo() {
+            this.isShow = !this.isShow;
+            console.log(this.isShow);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

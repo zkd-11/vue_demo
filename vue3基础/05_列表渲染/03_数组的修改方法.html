@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>数组的修改方法</title>
+    <style>
+      .btn {
+        font-size: 5px;
+        width: 80px;
+        margin-left: 5px;
+        position: flex;
+        justify-content: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{message}}</h2>
+      </div>
+
+      <ul v-for="(movie, index) in movies" :key="index">
+        <li>{{movie}}</li>
+      </ul>
+
+      <input type="text" v-model="newMovie" />
+      <button @click="addMovie" class="btn">提交电影</button>
+      <button @click="rwMovies" class="btn">电影筛选</button>
+
+      <div v-if="newMovies">
+        <br />
+        <span>这是重新筛选后的列表</span>
+        <ul v-for="(movie, index) in newMovies" :key="index">
+          <li>{{movie}}</li>
+        </ul>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            newMovie: "",
+            movies: ["蜘蛛侠", "钢铁侠", "我欲封天"],
+            newMovies: "",
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          addMovie() {
+            this.movies.push(this.newMovie);
+            this.newMovie = "";
+          },
+          rwMovies() {
+            this.newMovies = this.movies.filter((movie) => movie.length > 2);
+          },
+        },  
+      }).mount("#app");
+    </script>
+  </body>
+</html>

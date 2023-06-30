@@ -11,7 +11,7 @@
     <template id="my-app">
       <div>
         <h2 :class="['aa', className, isActive ? 'active': '']">{{message}}</h2>
-        <!-- 数组可嵌套定义的静态类名, 和vue中定义的类名, 并且可以嵌套数组的类名 -->
+        <!-- 数组可嵌套定义的静态类名, 和vue中定义的属性类名, 并且可以嵌套数组的类名 -->
         <h2 :class="['aa', className,{ active: isActive }]">{{message}}</h2>
       </div>
     </template>
