@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>method实现三个案例</title>
+  </head>
+
+  <body>
+    <!-- 直接用method, 不便于维护, 没有method直观, 多次使用需要多次计算 没有缓存 , 性能较差 代码可读性不高 -->
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{ getFullName() }}</h2>
+        <h2>{{ getResult()}}</h2>
+        <h2>{{ getReverseMessage() }}</h2>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            score: 88,
+            firstName: "John",
+            lastName: "Halen",
+          };
+        },
+
+        // 定义各种方法
+        methods: {
+          getFullName() {
+            return this.firstName + " " + this.lastName;
+          },
+          getResult() {
+            return this.score >= 60 ? "及格" : "不及格";
+          },
+          getReverseMessage() {
+            return this.message.split(" ").reverse().join("");
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>计算属性和computed区别</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <!-- 计算属性只计算一次, 有缓存, 能检测数据并实时进行更新 -->
+        <h2>{{fullName}}</h2>
+        <h2>{{fullName}}</h2>
+        <h2>{{fullName}}</h2>
+
+        <!-- 每次都需要重新执行方法 -->
+        <h2>{{getFullName()}}</h2>
+        <h2>{{getFullName()}}</h2>
+        <h2>{{getFullName()}}</h2>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+            firstName: "绝",
+            lastName: "韩",
+          };
+        },
+        computed: {
+          fullName() {
+            console.log("这是计算属性计算的方法");
+            return this.lastName + " " + this.firstName;
+          },
+        },
+
+        // 定义各种方法
+        methods: {
+          getFullName() {
+            console.log("方法每次需要重新执行");
+            return this.lastName + " " + this.firstName;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

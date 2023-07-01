@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>侦听器的基本使用</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <input type="text" v-model="question" />
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            question: "",
+            counter: 100,
+            timer: null,
+          };
+        },
+        watch: {
+          // 侦听question的变化时， 去进行一些逻辑的处理（javaScript, 网络请求）
+          question(newValue, oldValue) {
+            if (this.timer) {
+              clearTimeout(this.timer);
+            }
+            this.timer = setTimeout(() => {
+              console.log("新值", newValue);
+              console.log("旧值", oldValue);
+              this.questionAnswer(newValue);
+            }, 2000);
+          },
+        },
+
+        // 定义各种方法
+        methods: {
+          questionAnswer(question) {
+            // console.log("您的问题: ", question, "答案为： 暂时未找到！");
+            console.log(`您的问题: ${this.question}答案为： 暂时未找到！`);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

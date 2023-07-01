@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>插值语法</title>
+  </head>
+
+  <body>
+    <!-- 直接用插值, 不便于维护, 存在重复代码, 多次使用需要多次计算 没有缓存 , 性能较差 代码可读性不高 -->
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{firstName + ' ' +lastName}}</h2>
+        <h2>{{score >= 60 ? '及格': '不及格'}}</h2>
+        <h2>{{message.split(" ").reverse().join(" ")}}</h2>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            score: 88,
+            firstName: "John",
+            lastName: "Halen",
+          };
+        },
+
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>
