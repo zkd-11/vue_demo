@@ -28,24 +28,20 @@
             },
           };
         },
-        watch: {
-          // 监听对象， 默认监听无法监听到对象内部属性变化， 需变更为深度监听
-          // 默认监听 监听该对象的引用有无变化（获取不了不到引用类型 具体数据的oldValue）
-          // info(newInfo, oldInfo) {
-          //   console.log("新值", newInfo);
-          //   console.log("旧值", oldInfo);
-          // },
-
-          // 深度监听 / 立即执行(一定会执行一次)
-          info: {
-            handler: function (newInfo, oldInfo) {
-              // console.log(`新值为: ${newInfo.name}, 旧值为： $(oldInfo.name)`);
-              console.log("newValue", newInfo, "oldValue", oldInfo);
+        // 组件创造时期自动执行 内部执行
+        created() {
+          this.$watch(
+            "info",
+            (newValue, oldValue) => {
+              // console.log(`新值${newValue},  旧值${oldValue}`);
+              console.log("新值", newValue);
+              console.log("旧值", oldValue);
             },
-            deep: true,
-            // 立即执行， 初始时马上触发事件
-            immediate: true,
-          },
+            {
+              deep: true,
+              immediate: true,
+            }
+          );
         },
 
         // 定义各种方法
