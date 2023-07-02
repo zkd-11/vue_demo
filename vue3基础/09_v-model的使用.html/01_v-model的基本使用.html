@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>v-model的基本使用</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <!-- v-model 为 动态绑定 和监听的语法糖 -->
+
+        <!-- 可以在监听函数中 进行一个简单的逻辑判断 -->
+        <input
+          type="text"
+          :value="message"
+          @input="message= $event.target.value"
+        />
+        <!-- <input type="text" v-model="message" /> -->
+        <h2>{{message}}</h2>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+          };
+        },
+
+        // 定义各种方法
+        methods: {},
+      }).mount("#app");
+    </script>
+  </body>
+</html>

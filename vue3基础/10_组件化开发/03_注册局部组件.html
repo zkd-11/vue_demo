@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <h2>{{message}}</h2>
+      </div>
+
+      <component-a></component-a>
+    </template>
+
+    <template id="component-a">
+      <h2>局部注册的子组件</h2>
+    </template>
+
+    <script src="../js/vue.js"></script>
+
+    <script>
+      const ComponentA = {
+        template: "#component-a",
+      };
+
+      const APP = {
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello Hanjue",
+            counter: 100,
+          };
+        },
+        components: {
+          // key value, 子组件一致时可以省略， 前为子组件的命名， 后为引入的组件名，可重写
+          // ComponentA: ComponentA,
+          ComponentA,
+        },
+        // 定义各种方法
+        methods: {},
+      };
+      const app = Vue.createApp(APP);
+
+      app.mount("#app");
+    </script>
+  </body>
+</html>

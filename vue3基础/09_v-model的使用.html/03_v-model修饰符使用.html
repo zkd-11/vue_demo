@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="my-app">
+      <div>
+        <!-- 初始渲染时， 该元素双向绑定接收的为 data传递过来的data数据（number）
+           后续对此数据进行修改时， 传递为String数据
+           设置number时， 会将值变化为 只传递 number， 
+           111aa, 只会将aa前数字进行传递
+        -->
+        <!-- lazy和 number 修饰符的使用  -->
+        <input type="text" v-model.number="message" @input="filterInput" />
+        <h2>{{message}}</h2>
+        <button @click="showType">打印类型</button>
+
+        <!-- trim修饰符 -->
+        <br />
+        <br />
+        <br />
+        <input type="text" v-model.trim="cc" />
+        <button @click="showResult">查看结果</button>
+      </div>
+    </template>
+
+    <script src="../js/vue.js"></script>
+    <script>
+      Vue.createApp({
+        template: "#my-app",
+        data: function () {
+          return {
+            message: "hello",
+            counter: 100,
+            cc: "22",
+          };
+        },
+        // 定义各种方法
+        methods: {
+          showType() {
+            console.log(this.message, typeof this.message);
+          },
+          // 使用此方法后， 虽然能过滤，但是结果被转化为字符类型
+          filterInput(event) {
+            const inputValue = event.target.value;
+            const filteredValue = inputValue.replace(/\D/g, ""); // 只允许数字输入，禁止字符输入
+            this.message = filteredValue;
+
+            console.log(this.message, typeof this.message);
+          },
+          showResult() {
+            console.log(this.cc);
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>

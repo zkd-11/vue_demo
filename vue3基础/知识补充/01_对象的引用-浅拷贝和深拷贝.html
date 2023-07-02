@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>浅拷贝和深拷贝</title>
+  </head>
+  <body>
+    <!-- 引入第三方库 lodash -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/g/lodash@4(lodash.min.js+lodash.fp.min.js)"
+    ></script>
+
+    <script>
+      const info = { name: "韩绝", nba: { name: "kobe" } };
+      const obj = { ...info };
+      // 浅拷贝 会修改引用数据 值， 对于基本数据无影响
+      obj.name = "悟律";
+      obj.nba.name = "james";
+      console.log(info);
+
+      // 使用深拷贝， 后值内嵌套数据已被修改为 james， 深拷贝修改对此数据无影响
+      const deepObj = JSON.parse(JSON.stringify(obj));
+      deepObj.nba.name = "此名对原数据无影响";
+      console.log(obj.nba.name);
+
+      //  使用lodash进行 浅拷贝 和深拷贝
+      const lodashObj = _.clone(info);
+      lodashObj.nba.name = "悟律- 修改成功";
+      console.log(info.nba.name);
+
+      const lodashDeepObj = _.cloneDeep(info);
+      lodashDeepObj.nba.name = "kobe - 对原数据无影响";
+      console.log(info.nba.name);
+    </script>
+  </body>
+</html>

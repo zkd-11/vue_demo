@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // const originalObj = {
+      //   nestedObj: {
+      //     prop: "value",
+      //   },
+      // };
+
+      // // 浅拷贝
+      // const newObj = { ...originalObj };
+
+      // newObj.nestedObj.prop = "new value";
+
+      // console.log(originalObj.nestedObj.prop); // 输出: 'new value'
+
+      const originalObj = {
+        prop: "value",
+      };
+
+      // 使用 Object.assign 进行浅拷贝
+      const newObj = Object.assign({}, originalObj);
+
+      newObj.prop = "new value";
+
+      console.log(originalObj.prop); // 输出: 'value'
+    </script>
+  </body>
+</html>
