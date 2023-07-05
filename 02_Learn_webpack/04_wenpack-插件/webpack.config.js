@@ -1,6 +1,19 @@
 const path = require('path');
+//  插件 自动清除 dist目录
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { DefinePlugin } = require('webpack')
+// webpack 插件 文件拷贝
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const PrettierPlugin = require('prettier-webpack-plugin');
 
 module.exports = {
+  // 设置模式
+  //  development 开发阶段，会设置development
+  //  production 准备打包上线的时候， 设置production
+  mode: 'development',
+  // 设置 source-map ， 建立js映射文件， 方便找到错误
+  devtool: 'source-map',
   entry: './src/main.js',
   output: {
     path: path.resolve(__dirname, "./build"),
@@ -34,31 +47,7 @@ module.exports = {
            'less-loader',
         ]
       },
-      // {
-      //   test: /\.(jpe?g|png|svg|gif)$/,
-      //   use: {
-      //     loader: 'file-loader',
-      //     options: {
-      //       // outputPath: 'img'
-      //       name: 'img/[name]_[hash:7].[ext]'
-      //     }
-      //   }
-      // },
-
-      // 使用 url-loader, 是file-loader进阶， 可以对小文件进行base64编码， 好处是减少网络请求
-      // {
-      //   test: /\.(jpe?g|png|svg|gif)$/,
-      //   use: {
-      //     loader: 'url-loader',
-      //     options: {
-      //       // outputPath: 'img'
-      //       name: 'img/[name]_[hash:7].[ext]',
-      //       // 对要编码的图片进行限制
-      //       limit: 100 * 1024
-      //     }
-      //   }
-      // }，
-      //  使用asset-module 模块 进行解释
+ 
       {
         test: /\.(jpe?g|png|svg|gif)$/,
         type: 'asset',
@@ -68,7 +57,7 @@ module.exports = {
         },
         parser: {
           dataUrlCondition: {
-            maxSize: 100 * 1024
+            maxSize: 10 * 1024
           }
         }
       },
@@ -92,5 +81,33 @@ module.exports = {
       }
 
     ]
-  }
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template:'./public/index.html',
+      minify: false,
+      title: '哈哈哈',
+      
+    }),
+    new DefinePlugin({
+      BASE_URL: "'./'"
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'public',
+          // 会自动在配置文件找出口， 文件出口为 build 则会在当前目录下生成
+          to: './',
+          globOptions: {
+            ignore: [
+              // 忽略此文件， 因为这个文件一般是用读取，并且需要对自定义模板数字进行解析
+              '**/index.html',
+            ]
+          }
+        }
+      ]
+    }),
+  
+  ]
 }

@@ -27,6 +27,8 @@ imgEl.src = zzhnImage;
 const iEl = document.createElement('i');
 iEl.className = 'iconfont icon-ashbin';
 
+console.log(this.error.length);
+
 document.body.appendChild(bgDivEl)
 document.body.appendChild(divEl);
 document.body.appendChild(imgEl);

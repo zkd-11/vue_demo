@@ -1264,6 +1264,22 @@ Autoprefixer通过分析CSS规则和目标浏览器的兼容性要求，自动�
 
 
 
+### webPack 插件使用
+
+CleanWebpackPlugin， 插件： 打包，自动清除原dist文件夹
+
+
+
+
+
+### 自定义模板数字填充
+
+![image-20230705005437163](vue3.assets/image-20230705005437163.png)
+
+
+
+
+
 
 
 
