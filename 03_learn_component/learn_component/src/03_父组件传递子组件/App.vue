@@ -1,12 +1,14 @@
 <template>
-  <show-message title="11" content="静态传递"></show-message>
+  <show-message class="wulv" title="11" content="静态传递"></show-message>
   <show-message :title=title :content=content></show-message>
   <show-message :title="message.title" :content=message.content></show-message>
   <show-message v-bind="message"></show-message>
+  <multi-root-el class="wulv"></multi-root-el>
 </template>
 
 <script>
 import ShowMessage from './ShowMessage';
+import MultiRootEl from './MultiRootEl'
 export default {
   data() {
     return {
@@ -19,7 +21,9 @@ export default {
     }
   },
   components: { 
-    ShowMessage
+    ShowMessage,
+    MultiRootEl
+    
   },
   methods() {},
 }
