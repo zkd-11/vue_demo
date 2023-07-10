@@ -1986,3 +1986,290 @@ vue-loader是开发依赖是吗， 让webpack能正确识别并打包vue文件�
 
 
 
+## 动态组件使用
+
+v-if 显示
+
+componnet is= 'name' 使用， 动态显示
+
+子组件内部， 要触发事件需要提前声明
+
+
+
+## keep-alive
+
+组件缓存
+
+![image-20230709005034938](vue3.assets/image-20230709005034938.png)
+
+
+
+## dist下的app.js 和 chunk.js
+
+> 在 Vue 3 项目中，当你打包构建项目时，生成的 `dist` 目录中的 `app.js` 和 `chunk.js` 分别表示不同的内容。
+>
+> 1. `app.js`：
+>    - `app.js` 是主要的应用程序代码文件。
+>    - 它包含了你的 Vue 3 应用程序的入口点代码，包括根组件的定义、路由配置、状态管理等。
+>    - `app.js` 是整个应用程序的核心代码，它负责启动和运行 Vue 3 应用。
+>
+> 2. `chunk.js`：
+>    - `chunk.js` 是由构建工具（如 webpack）生成的其他代码块。
+>    - 当你的应用程序被拆分成多个模块或按需加载时，这些模块会以 `chunk.js` 的形式被生成。
+>    - 通常，每个模块或代码块都会被打包成一个独立的 `chunk.js` 文件，这样可以实现代码的按需加载和缓存。
+>
+> 总结：
+> - `app.js` 是主要的应用程序代码文件，包含了 Vue 3 应用程序的入口点代码。
+> - `chunk.js` 是构建工具生成的其他代码块，用于按需加载或拆分应用程序的模块。
+>
+> 请注意，具体的文件名和生成的文件结构可能因构建工具和配置而有所不同。以上概述基于一般的 Vue 3 项目构建过程和默认配置。
+
+
+
+**chunk.js包含了是我们所配置的模块， 所下载的依赖是吗 ， webpack**
+
+> 是的，`chunk.js` 文件包含了根据你的配置和依赖关系由 webpack 打包生成的模块。
+>
+> 在 Vue 3 项目中，使用 webpack 进行打包时，webpack 会将应用程序的代码和依赖的模块进行分析、优化和打包。根据你的配置，webpack 会生成多个 `chunk.js` 文件，每个文件对应一个模块或代码块。
+>
+> 这些 `chunk.js` 文件包含了你的应用程序的各个模块的代码，以及依赖的第三方库和其他模块的代码。这样，当你的应用程序运行时，它可以按需加载和执行这些模块。
+>
+> `chunk.js` 文件的命名通常是根据 webpack 的代码分割策略和文件名配置生成的。它们可能包含了你的应用程序的业务逻辑代码、组件代码、第三方库的代码等。
+>
+> 总结：
+> - `chunk.js` 文件包含了根据你的配置和依赖关系由 webpack 打包生成的模块的代码。
+> - 这些 `chunk.js` 文件可以包含你的应用程序的业务逻辑代码、组件代码以及依赖的第三方库的代码。
+>
+> 需要注意的是，具体的文件名和文件结构可能因为你的 webpack 配置和使用的代码分割策略而有所不同。以上概述基于一般的 webpack 打包过程和默认配置。
+
+
+
+## import函数分包
+
+> 使用`import()`函数可以实现动态导入模块，从而实现分包的效果。这在使用 Vue CLI 进行项目开发时特别有用。
+>
+> 下面是使用`import()`函数进行分包的示例：
+>
+> ```javascript
+> // 异步加载模块并执行回调
+> import('./path/to/module').then((module) => {
+>   // 在这里可以使用模块
+> }).catch((error) => {
+>   // 处理加载模块失败的情况
+> });
+> 
+> // 在需要的地方使用分包
+> const MyComponent = () => import('./components/MyComponent.vue');
+> ```
+>
+> 在上面的示例中，`import()`函数会动态地异步加载指定的模块，返回一个 Promise 对象。在 Promise 的回调中可以使用加载的模块。
+>
+> 在 Vue CLI 中，通常会使用动态导入来实现按需加载的路由和组件。例如，在路由配置中可以这样使用：
+>
+> ```javascript
+> const routes = [
+>   {
+>     path: '/home',
+>     name: 'Home',
+>     component: () => import('./views/Home.vue')
+>   },
+>   {
+>     path: '/about',
+>     name: 'About',
+>     component: () => import('./views/About.vue')
+>   },
+>   // 其他路由配置...
+> ];
+> ```
+>
+> 这样配置后，在访问相应路由时，对应的组件才会被动态加载，实现按需加载和分包的效果。这样可以提高初始页面加载速度，只在需要时才加载对应的模块或组件。
+
+
+
+<img src="vue3.assets/image-20230709013710169.png" alt="image-20230709013710169" style="zoom:80%;" />
+
+
+
+**chunk.js包含了是我们所配置的模块， 所下载的依赖是吗 ， webpack**
+
+> 是的，`chunk.js` 文件包含了根据你的配置和依赖关系由 webpack 打包生成的模块。
+>
+> 在 Vue 3 项目中，使用 webpack 进行打包时，webpack 会将应用程序的代码和依赖的模块进行分析、优化和打包。根据你的配置，webpack 会生成多个 `chunk.js` 文件，每个文件对应一个模块或代码块。
+>
+> 这些 `chunk.js` 文件包含了你的应用程序的各个模块的代码，以及依赖的第三方库和其他模块的代码。这样，当你的应用程序运行时，它可以按需加载和执行这些模块。
+>
+> `chunk.js` 文件的命名通常是根据 webpack 的代码分割策略和文件名配置生成的。它们可能包含了你的应用程序的业务逻辑代码、组件代码、第三方库的代码等。
+>
+> 总结：
+> - `chunk.js` 文件包含了根据你的配置和依赖关系由 webpack 打包生成的模块的代码。
+> - 这些 `chunk.js` 文件可以包含你的应用程序的业务逻辑代码、组件代码以及依赖的第三方库的代码。
+>
+> 需要注意的是，具体的文件名和文件结构可能因为你的 webpack 配置和使用的代码分割策略而有所不同。以上概述基于一般的 webpack 打包过程和默认配置。
+
+
+
+
+
+### 使用import函数分包 的优点
+
+**import函数分包，动态导入来实现按需加载的路由和组件，可以提高用户的首次访问页面加载速度**
+
+> 是的，使用 `import()` 函数进行分包（也称为动态导入）可以实现按需加载路由和组件，从而提高用户首次访问页面的加载速度。
+>
+> 通过将路由和组件进行分包，可以将页面的主要代码和依赖拆分为多个小块。当用户访问特定路由或需要加载某个组件时，才会动态加载相应的代码块，而不是一次性加载整个应用程序的所有代码。
+>
+> 这样做的好处是：
+> - 减少首次加载的文件大小，加快页面加载速度。
+> - 提高应用程序的响应速度，因为只有在需要时才会加载额外的代码块。
+> - 更好地管理和控制应用程序的代码，提高可维护性和可扩展性。
+>
+> 在 Vue 3 中，你可以使用 `import()` 函数来实现按需加载路由和组件。例如，在 Vue Router 中可以使用 `import()` 函数定义路由的 `component` 属性，将组件进行动态导入。
+>
+> 以下是一个示例：
+> ```javascript
+> const router = createRouter({
+>   routes: [
+>     {
+>       path: '/about',
+>       name: 'About',
+>       component: () => import('./views/About.vue')
+>     }
+>   ]
+> })
+> ```
+>
+> 通过使用 `import()` 函数动态导入组件，当用户访问 `/about` 路由时，才会加载 `About.vue` 组件的代码，从而实现按需加载。
+>
+> 需要注意的是，`import()` 函数返回一个 Promise，你可以使用 `then` 方法来处理加载成功后的操作，或使用 `catch` 方法来处理加载失败的情况。
+>
+> 总结：
+> - 使用 `import()` 函数进行分包（动态导入）可以按需加载路由和组件，提高用户首次访问页面的加载速度。
+> - 通过将代码拆分为多个小块，只在需要时加载额外的代码块，减少首次加载的文件大小，提高应用程序的响应速度。
+> - 在 Vue 3 中，你可以使用 `import()` 函数来实现按需加载路由和组件，例如在 Vue Router 中动态定义路由的 `component` 属性。
+> - 需要注意处理 `import()` 函数返回的 Promise，以处理加载成功和失败的情况。
+
+
+
+## vue-router 和 import分包之间的关系 
+
+> Vue Router 和 import 分包是可以结合使用的，以实现按需加载路由和组件的功能。
+>
+> Vue Router 是 Vue.js 官方的路由管理库，用于实现前端路由功能。它可以与 import 分包一起使用，通过动态导入组件来实现按需加载路由和组件。
+>
+> 在 Vue Router 的路由配置中，可以使用 `import()` 函数来定义路由的 `component` 属性，将组件进行动态导入。这样，在用户访问对应的路由时，才会按需加载相应的组件代码。
+>
+> 以下是一个示例：
+>
+> ```javascript
+> import { createRouter, createWebHistory } from 'vue-router';
+> 
+> const router = createRouter({
+>   history: createWebHistory(),
+>   routes: [
+>     {
+>       path: '/about',
+>       name: 'About',
+>       component: () => import('./views/About.vue')
+>     },
+>     // 其他路由配置...
+>   ]
+> });
+> ```
+>
+> 在上述示例中，通过使用 `import()` 函数将 `About.vue` 组件进行动态导入。只有当用户访问 `/about` 路由时，才会加载 `About.vue` 组件的代码。
+>
+> 通过结合 Vue Router 和 import 分包，可以实现以下优势：
+> - 减少初始加载的文件大小，提高应用程序的首次加载速度。
+> - 按需加载路由和组件，提高页面切换的响应速度和用户体验。
+> - 更好地管理和控制应用程序的代码，实现模块化和代码拆分。
+>
+> 需要注意的是，在使用 import 分包时，需要确保你的打包工具（如 webpack）已经配置了正确的代码拆分和按需加载的设置。这样才能确保按需加载的路由和组件能够正确地被分包和加载。
+>
+> 总结：
+> - Vue Router 是 Vue.js 官方的路由管理库，用于实现前端路由功能。
+> - Vue Router 可以与 import 分包一起使用，通过动态导入组件实现按需加载路由和组件。
+> - 在 Vue Router 的路由配置中，可以使用 `import()` 函数来定义路由的 `component` 属性，将组件进行动态导入。
+> - 结合 Vue Router 和 import 分包可以减少初始加载的文件大小，提高应用程序的首次加载速度，实现按需加载和模块化的代码管理。
+> - 需要确保打包工具（如 webpack）已经配置了正确的代码拆分和按需加载的设置，以使 import 分包能够正常工作。
+
+
+
+## 异步组件配置
+
+<img src="vue3.assets/image-20230709021829574.png" alt="image-20230709021829574" style="zoom:67%;" />
+
+```javascript
+
+import Home from "./Home.vue"
+// import AsyncCategory from './AsyncCategory.vue'
+// 异步导入
+import { defineAsyncComponent } from 'vue';
+import Loading from './Loading.vue';
+
+// 将导入的模块进行异步处理, 按需加载，返回一个promise对象， 不需要执行then, 
+// defineAsyncComponent 会自动解析
+// const AsyncCategory = defineAsyncComponent(() => import( "./AsyncCategory.vue"))
+const AsyncCategory = defineAsyncComponent({
+  loader: ()=> import( "./AsyncCategory"),
+  loadingComponent: Loading,
+})
+
+```
+
+
+
+## suspense组件
+
+> `<suspense>` 是 Vue 3 中引入的一个组件，用于处理异步组件的加载过程。它可以让你在组件加载完成之前显示一个指定的占位内容，例如加载动画或加载状态的提示信息。
+>
+> 使用 `<suspense>` 组件的步骤如下：
+>
+> 1. 在父组件中使用 `<suspense>` 包裹需要延迟加载的子组件。
+> 2. 在 `<suspense>` 组件中使用 `<template #default>` 标签定义占位内容，即在异步组件加载过程中显示的内容。
+> 3. 在 `<suspense>` 组件中使用 `<template #fallback>` 标签定义加载完成后显示的内容，即异步组件加载完成后渲染的内容。
+>
+> 示例代码如下：
+>
+> ```vue
+>   <suspense>
+>       <template #default>
+>         <div>
+>           <async-category></async-category>
+>        </div>
+>       </template>
+>       <template #fallback>
+>         <div>
+>           <loading></loading>
+>        </div>
+>       </template>
+>   </suspense>
+> ```
+>
+> 这段代码使用了 `<suspense>` 组件来包裹异步加载的组件，并提供了两个插槽（slots）：`#default` 和 `#fallback`。
+>
+> 在 `#default` 插槽中，使用了 `<async-category>` 组件，这个组件会被异步加载。当异步加载完成后，它将作为默认插槽内容被渲染。
+>
+> 在 `#fallback` 插槽中，使用了 `<loading>` 组件，这个组件在异步加载过程中作为占位符显示。当异步加载尚未完成时，`#fallback` 插槽的内容将被渲染。
+>
+> 通过这种方式，`<suspense>` 组件可以在异步加载组件时展示占位符内容，并在加载完成后渲染异步组件的内容，提供更好的用户体验。
+
+
+
+import Home from "./Home.vue"
+
+// import AsyncCategory from './AsyncCategory.vue'
+
+// 异步导入
+
+import { defineAsyncComponent } from 'vue';
+
+import Loading from './Loading.vue';
+
+
+
+与配置1 搭配使用 效果类同  对象配置 loading
+
+
+
+
+
