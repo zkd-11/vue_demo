@@ -14,14 +14,12 @@
 
     </transition> -->
 
-    <!-- 直接使用类名应用动画 -->
+    <!-- 使用 gsap运行 动画 -->
+    <!-- :css 表示不再对css样式检测， 忽略,提高动画流畅性 ， 提高性能 -->
    <transition 
-    @before-enter = 'beforeEnter'
     @enter = 'enter'
-    @after-enter = 'afterEnter'
-    @befotr-leave = 'beforeLeave'
     @leave = 'leave'
-    @after-leave = 'afterLeave'
+    :css="false"
     >
      <h2 class="title" v-if="isShow"> 悟律冲冲 </h2>
 
@@ -30,8 +28,8 @@
 </template>
 
 <script>
-import Home from '../pages/Home.vue'
-import About from '../pages/About.vue'
+import gsap from 'gsap'
+
 export default {
   data() {
     return {
@@ -39,36 +37,31 @@ export default {
     }
   },
   components: { 
-    Home,
-    About
   },
   methods: {
-    beforeEnter() {
-      console.log('beforeEnter');
-    },
-    enter() {
+    // done表示 动画执行完毕
+    enter(el, done) {
       console.log('Enter');
+      gsap.from(el, {
+        scale: 0,
+        x: 200,
+        onComplete: done
+      })
     },
-    afterEnter() {
-      console.log('afterEnter');
-    },
-    beforeLeave() {
-      console.log('beforeLeave');
-    },
-    leave() {
+    leave(el,done) {
       console.log('leave');
+      gsap.to(el, {
+        scale: 0,
+        x: 200,
+        onComplete: done
+      })
     },
-    afterLeave() {
-      console.log('afterLeave');
-    },
+
   },
 }
 </script>
 
 <style scoped>
-  .app {
-    text-align: center;
-  }
   #btn {
     display: block;
     margin: 20px auto;
@@ -76,7 +69,8 @@ export default {
   }
   .title {
     /* display: inline-block; */
-    margin-top: 100px
+    margin-top: 100px;
+    margin-left: 30px
   }
 
 

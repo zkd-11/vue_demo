@@ -2729,5 +2729,23 @@ import Loading from './Loading.vue';
 
 
 
+## filter 过滤器 返回布尔值
+
+ return this.names.filter( item => item.indexOf(this.keyword) !== -1),  代码解析， 当keyword为空字符， 全部满足是吗
+
+> 在这段代码中，`this.names.filter(item => item.indexOf(this.keyword) !== -1)` 是一个数组过滤操作，它使用了 `Array.prototype.filter()` 方法来筛选出符合条件的元素。
+>
+> 当 `this.keyword` 为空字符串时，即 `''`，它会将数组中所有元素都作为满足条件的元素返回。这是因为空字符串 `''` 在任何非空字符串中都会找到匹配，所以 `item.indexOf(this.keyword) !== -1` 的条件对于任何非空元素都会成立。
+>
+> 换句话说，如果 `this.keyword` 是空字符串，那么 `this.names.filter(item => item.indexOf(this.keyword) !== -1)` 会返回整个 `this.names` 数组，即返回所有的元素。
+>
+> 需要注意的是，这种行为是基于 `indexOf()` 方法的规则。当传入空字符串时，它会匹配到字符串中的每个字符位置，因此返回所有元素。如果你希望在 `this.keyword` 为空字符串时返回一个不包含任何元素的数组，你可以添加一个额外的条件来处理空字符串的情况，例如：
+>
+> ```javascript
+> this.names.filter(item => this.keyword === '' ? false : item.indexOf(this.keyword) !== -1)
+> ```
+>
+> 通过这样的修改，当 `this.keyword` 为空字符串时，过滤操作将返回一个空数组。
+
 
 
