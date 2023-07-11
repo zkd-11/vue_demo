@@ -2505,7 +2505,7 @@ import Loading from './Loading.vue';
 >
 > 5. 清除浮动：行内元素不能清除浮动（`clear`）。清除浮动只适用于块级元素。
 >
-> 6. 显示模式：行内元素的显示模式（`display`）默认为 `inline`，无法直接更改为其他显示模式，例如 `block` 或 `inline-block`。
+> 6. 显示模式：行内元素的显示模式（`display`）默认为 `inline`，？ 无法直接更改为其他显示模式，例如 `block` 或 `inline-block`。
 >
 > 虽然行内元素在一些样式属性上有一些限制，但您可以通过一些技巧和 CSS 属性的组合来改变行内元素的行为，例如使用 `display: inline-block` 将其变为行内块级元素，或者使用其他布局技术来实现所需的效果。
 >
@@ -2610,7 +2610,6 @@ import Loading from './Loading.vue';
 >
 > 综上所述，将行内元素设置为块级元素或行内块级元素并非必需，但在需要更精细控制布局、盒模型属性和动画效果时，这样的设置可以提供更好的灵活性和控制性。
 >
-> 希望这个解答对您有所帮助。如果您还有其他问题，请随时提问。
 
 
 
@@ -2746,6 +2745,172 @@ import Loading from './Loading.vue';
 > ```
 >
 > 通过这样的修改，当 `this.keyword` 为空字符串时，过滤操作将返回一个空数组。
+
+
+
+
+
+
+
+# 7.11 day13   18点 20分
+
+## composition APi
+
+> Composition API 是 Vue 3 中引入的新特性，它提供了一种新的组织和复用组件逻辑的方式。通过 Composition API，你可以将相关的逻辑聚合到一起，而不是按照选项 API 的方式将逻辑分散在不同的选项中。
+>
+> 使用 Composition API，你可以通过以下步骤来编写组件逻辑：
+>
+> 1. 导入 `vue` 模块，并从中获取 `createApp` 和 `ref` 函数（以及其他需要的函数）：
+>
+> ```javascript
+> import { createApp, ref } from 'vue';
+> ```
+>
+> 2. 创建一个新的 Vue 应用程序实例：
+>
+> ```javascript
+> const app = createApp({});
+> ```
+>
+> 3. 使用 `setup` 函数来定义组件的逻辑。`setup` 函数接收两个参数：`props` 和 `context`。你可以使用 `ref` 函数创建响应式数据，并将其返回供模板使用。还可以定义其他的函数、计算属性和事件处理程序等。
+>
+> ```javascript
+> app.component('my-component', {
+>   setup() {
+>     const count = ref(0);
+> 
+>     function increment() {
+>       count.value++;
+>     }
+> 
+>     return {
+>       count,
+>       increment
+>     };
+>   },
+>   template: `
+>     <div>
+>       <p>Count: {{ count }}</p>
+>       <button @click="increment">Increment</button>
+>     </div>
+>   `
+> });
+> ```
+>
+> 在上面的例子中，我们使用 `ref` 创建了一个名为 `count` 的响应式数据，并定义了一个名为 `increment` 的函数来增加计数。在模板中，我们可以使用 `{{ count }}` 来显示计数，并通过 `@click` 绑定 `increment` 函数来触发计数增加。
+>
+> 4. 最后，通过 `mount` 方法将应用程序挂载到 DOM 中的特定元素上：
+>
+> ```javascript
+> app.mount('#app');
+> ```
+>
+> 以上是使用 Composition API 编写组件逻辑的基本步骤。通过使用 Composition API，你可以更灵活地组织和复用组件逻辑，提高代码的可读性和可维护性。
+>
+> 除了 `ref`，Composition API 还提供了其他一些常用的函数，如 `reactive`、`computed`、`watch` 等，可以帮助你更好地处理状态、计算属性和副作用等方面的逻辑。你可以根据具体的需求选择适合的函数和模式来编写组件逻辑。
+
+
+
+## set up 函数
+
+> `setup` 函数是 Composition API 中用于定义组件逻辑的入口点。它是一个特殊的函数，通过它可以访问组件的 props、context，并返回响应式数据、计算属性、方法等供组件使用。
+>
+> 以下是关于 `setup` 函数的一些重要特点和用法：
+>
+> 1. `setup` 函数的参数：
+>    - `props`: 作为参数传递给组件的属性对象。你可以在 `setup` 函数中直接使用 `props` 对象中的属性，无需像选项 API 中那样在 `this` 上访问。
+>    - `context`: 包含一些与组件上下文相关的属性，例如 `attrs`、`slots`、`emit` 等。你可以使用解构语法从 `context` 中提取需要的属性。
+>
+> 2. 返回值：
+>    - 在 `setup` 函数中，你可以返回一个对象，该对象中的属性将成为组件的响应式数据、计算属性、方法等。这些属性将在模板中可以直接使用。
+>    - 你也可以返回一个渲染函数（render function），用于自定义组件的渲染逻辑。返回渲染函数后，`template` 选项将被忽略。
+>
+> 3. 访问响应式数据：
+>    - 使用 `ref` 函数来创建响应式数据。`ref` 接收一个初始值作为参数，并返回一个包含 `.value` 属性的对象。在模板中，访问响应式数据时需要使用 `.value`。
+>    - 使用 `reactive` 函数可以将一个普通对象转换为响应式对象。响应式对象的属性可以直接在模板中使用，无需使用 `.value`。
+>
+> 4. 访问计算属性：
+>    - 使用 `computed` 函数来创建计算属性。`computed` 接收一个计算函数，并返回一个具有响应式特性的计算属性对象。在模板中，可以像访问普通属性一样使用计算属性。
+>
+> 5. 事件处理：
+>    - 使用 `setup` 函数内部定义事件处理函数，并返回供模板中的元素绑定使用。
+>    - 可以使用 `emit` 函数在 `setup` 函数内部触发父组件定义的事件。
+>
+> 下面是一个使用 `setup` 函数的示例：
+>
+> ```javascript
+> import { ref, reactive, computed } from 'vue';
+> 
+> export default {
+>   props: {
+>     initialCount: {
+>       type: Number,
+>       default: 0
+>     }
+>   },
+>   setup(props, context) {
+>     const count = ref(props.initialCount);
+> 
+>     const state = reactive({
+>       message: 'Hello, Vue!',
+>       doubledCount: computed(() => count.value * 2)
+>     });
+> 
+>     function increment() {
+>       count.value++;
+>     }
+> 
+>     function greet() {
+>       console.log(state.message);
+>     }
+> 
+>     return {
+>       count,
+>       state,
+>       increment,
+>       greet
+>     };
+>   }
+> };
+> ```
+>
+> 在上述示例中，我们使用 `setup` 函数定义了 `count`、`state`、`increment` 和 `greet` 等属性，并将它们返回供组件使用。`count` 是一个响应式数据，`state` 是一个响应式对象，`increment` 和 `greet` 是组件的方法。
+>
+> 通过 `setup` 函数，你可以更灵活地组织和复用组件逻辑，并利用 Vue 3 的 Composition API 提供的各种函数来处理状态、计算属性、方法等方面的逻辑。
+
+
+
+
+
+## mixin的合并规则
+
+> 在 Vue 3 中，mixin 的合并规则有以下几个特点：
+>
+> 1. 数据属性合并：
+>    - 数据属性会按照从组件自身到 mixin 的顺序进行合并。
+>    - 如果出现重复的数据属性，组件自身的属性会覆盖 mixin 中的属性。
+>
+> 2. 钩子函数合并：
+>    - 钩子函数会按照从 mixin 到组件自身的顺序依次调用。
+>    - 如果多个 mixin 和组件自身具有相同的钩子函数，它们会按照 mixin 的顺序依次调用，然后调用组件自身的钩子函数。
+>
+> 3. 方法合并：
+>    - 方法会按照从组件自身到 mixin 的顺序进行合并。
+>    - 如果出现重复的方法，组件自身的方法会覆盖 mixin 中的方法。
+>
+> 4. 生命周期钩子的合并：
+>    - 生命周期钩子会按照从 mixin 到组件自身的顺序依次调用。
+>    - 如果多个 mixin 和组件自身具有相同的生命周期钩子，它们会按照 mixin 的顺序依次调用，然后调用组件自身的生命周期钩子。
+>
+> 需要注意的是，Vue 3 中的 mixin 不再支持影响选项的合并规则（例如 `methods`、`data` 等）。如果多个 mixin 和组件自身有相同的选项，它们会简单地覆盖对应的选项。
+>
+> 另外，Vue 3 推荐使用 Composition API 来实现组件的复用逻辑，而不是过多依赖 mixin。Composition API 提供了更灵活、更直观的方式来组织和复用组件逻辑，同时也避免了 mixin 带来的一些问题和复杂性。
+
+
+
+## option api 和 compostion api 的优缺点， 及二者对比
+
+> option api 和 compostion api 的优缺点， 及二者对比 
 
 
 
