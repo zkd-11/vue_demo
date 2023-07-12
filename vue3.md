@@ -2315,7 +2315,7 @@ import Loading from './Loading.vue';
 >        <button @click="focusInput">Focus Input</button>
 >      </div>
 >    </template>
->       
+>          
 >    <script>
 >    export default {
 >      methods: {
@@ -2910,7 +2910,533 @@ import Loading from './Loading.vue';
 
 ## option api 和 compostion api 的优缺点， 及二者对比
 
-> option api 和 compostion api 的优缺点， 及二者对比 
+> Option API 和 Composition API 是 Vue 中组织组件逻辑的两种不同方式。它们具有不同的特点、优缺点和适用场景。
+>
+> Option API:
+> - 优点：
+>   - 直观：Option API 使用常见的对象选项方式，更贴近传统的 Vue 2 开发方式，易于理解和上手。
+>   - 扁平：逻辑被分散在不同的选项中，每个选项负责一个特定的功能，适用于简单的组件和小型项目。
+>   - 状态和方法：可以直接在 `data` 中定义响应式状态，而方法可以定义在 `methods` 中。
+> - 缺点：
+>   - 难以维护：随着组件逻辑的增长，选项的数量可能会增多，导致组件选项变得冗长和难以维护。
+>   - 命名冲突：在选项中定义的数据和方法可能会产生命名冲突，尤其在复杂组件中更容易出现。
+>   - 代码复用：难以复用组件逻辑，尤其是当多个组件需要共享相同的逻辑时。
+>
+> Composition API:
+> - 优点：
+>   - 组织逻辑：Composition API 提供了一种更灵活和直观的方式来组织组件逻辑，将相关的逻辑聚合到一起。
+>   - 逻辑复用：可以更好地复用组件逻辑，通过将逻辑封装为自定义的函数或组合函数，可以在多个组件中共享和重用。
+>   - 逻辑复合：可以使用 `setup` 函数中的逻辑复合函数，将逻辑组合在一起，提高代码的可读性和可维护性。
+>   - 更好的 TypeScript 支持：Composition API 在 TypeScript 中有更好的类型推断和支持。
+> - 缺点：
+>   - 学习曲线：Composition API 是一个相对较新的概念，可能需要一些时间来适应和理解其概念和用法。
+>   - 项目迁移：对于已经使用 Option API 开发的项目，迁移到 Composition API 可能需要进行重构和调整。
+>
+> 对比：
+> - Composition API 提供了更好的逻辑组织、代码复用和类型推断能力，适用于大型和复杂的项目，以及需要更高级组件逻辑的场景。
+> - Option API 更直观和易于上手，适用于简单的组件和小型项目，或者已经使用 Option API 开发的项目。
+> - Composition API 具有更好的可测试性，因为逻辑可以更容易地进行拆分和测试。
+>
+> 总的来说，Composition API 提供了更灵活、更直观和更强大的组件逻辑组织方式，适用于大型项目和复杂场景。Option API 则更适合简单的组件和小型项目，或者已经使用 Option API 开发的项目。选择使用哪种 API 取决于项目的需求、开发团队的经验和个人喜好。
+
+
+
+## 如何理解composition API
+
+
+
+> Composition API 是 Vue 3 中引入的一种新的组件代码组织方式，它使得编写和组织可重用的逻辑更加灵活和直观。通过 Composition API，你可以将一个组件的逻辑拆分成更小的、可组合的函数，从而提高代码的可读性、可维护性和可测试性。
+>
+> 理解 Composition API 可以从以下几个方面入手：
+>
+> 1. 组合函数：Composition API 鼓励将逻辑组织为一组独立的函数，每个函数都可以处理特定的关注点。通过将逻辑拆分为不同的函数，可以更好地组合和复用代码。
+>
+> 2. setup 函数：在组件中使用 Composition API 时，需要在组件选项中添加一个名为 `setup` 的函数。`setup` 函数是一个特殊的函数，用于组合和提供组件的逻辑。它接收 `props` 和 `context` 参数，并返回一个包含响应式数据、计算属性、方法等的对象。
+>
+> 3. 响应式数据：Composition API 使用了 Vue 3 的响应式系统，可以使用 `ref`、`reactive` 等函数创建响应式数据。这些函数能够确保数据的变化能够被自动追踪，并触发相关的依赖更新和重新渲染。
+>
+> 4. 自定义逻辑复用：通过将逻辑封装为函数，可以更轻松地复用逻辑代码。你可以将一些功能性的逻辑抽象为可重用的函数，并在不同的组件中使用它们。这样可以提高代码的复用性和可维护性。
+>
+> 5. 生命周期钩子：Composition API 通过 `onMounted`、`onUpdated`、`onUnmounted` 等函数来替代 Vue 2 中的生命周期钩子。这样可以更直观地定义和处理组件的生命周期行为。
+>
+> 6. 代码组织和可读性：使用 Composition API 可以更自然地组织和组合逻辑代码，使代码更易读、易理解。逻辑相关的代码可以聚集在一起，提高代码的可维护性和可测试性。
+>
+> 总的来说，Composition API 提供了一种更灵活、直观的方式来组织和复用组件的逻辑。它能够提供更清晰的代码结构和更好的开发体验，尤其适用于复杂的组件或需要高度重用性的逻辑。
+
+
+
+
+
+# 7.12  day14  10:30
+
+## reactive判断的API
+
+> <img src="vue3.assets/image-20230712105619972.png" alt="image-20230712105619972" style="zoom: 67%;" />
+
+
+
+
+
+## 常见ref APi
+
+> 在 Vue 3 的 Composition API 中，`ref` 类型提供了一些用于操作和访问响应式数据的辅助函数，其中包括 `unref`。以下是 `ref` 类的一些常用 API 及其作用介绍：
+>
+> 1. `unref(value)`
+>    - 作用：将一个 `ref` 类型的值解封装（unwraps），返回其原始的非响应式值。
+>    - 参数：
+>      - `value`：`ref` 类型的值。
+>    - 返回值：解封装后的原始值。
+>    - 示例：
+>      ```javascript
+>      import { ref, unref } from 'vue';
+>           
+>      const count = ref(0);
+>      const unwrappedCount = unref(count);
+>      console.log(unwrappedCount); // 输出 0
+>      ```
+>
+> 2. `isRef(value)`
+>    - 作用：检查一个值是否为 `ref` 类型。
+>    - 参数：
+>      - `value`：要检查的值。
+>    - 返回值：布尔值，表示值是否为 `ref` 类型。
+>    - 示例：
+>      ```javascript
+>      import { ref, isRef } from 'vue';
+>           
+>      const count = ref(0);
+>      const isCountRef = isRef(count);
+>      console.log(isCountRef); // 输出 true
+>      ```
+>
+> 3. `toRefs(object)`
+>    - 作用：将一个响应式对象的属性转换为 `ref` 类型的属性，返回一个包含所有转换后属性的新对象。
+>    - 参数：
+>      - `object`：要转换的响应式对象。
+>    - 返回值：包含转换后属性的新对象。
+>    - 示例：
+>      ```javascript
+>      import { reactive, toRefs } from 'vue';
+>           
+>      const state = reactive({
+>        name: 'John',
+>        age: 25,
+>      });
+>           
+>      const { name, age } = toRefs(state);
+>      console.log(name.value); // 输出 'John'
+>      console.log(age.value); // 输出 25
+>      ```
+>
+> 4. `shallowRef(value)`
+>    - 作用：创建一个浅层响应式的 `ref` 类型，用于包装一个对象，并只追踪对象本身的改变。
+>    - 参数：
+>      - `value`：要包装的对象。
+>    - 返回值：一个浅层响应式的 `ref` 类型。
+>    - 示例：
+>      ```javascript
+>      import { shallowRef } from 'vue';
+>           
+>      const obj = { name: 'John' };
+>      const shallowObjRef = shallowRef(obj);
+>      console.log(shallowObjRef.value.name); // 输出 'John'
+>           
+>      // 注意：只有对象本身的改变会触发响应
+>      obj.name = 'Jane';
+>      console.log(shallowObjRef.value.name); // 输出 'Jane'
+>      ```
+>
+> 
+
+> 当涉及到 Vue 3 Composition API 中常用的 `ref` 类的 API 时，还有其他一些有用的函数。以下是其中几个常用的 API：
+>
+> 5. `toRef(object, key)`
+>    - 作用：创建一个基于原始对象的特定属性的 `ref` 类型。
+>    - 参数：
+>      - `object`：原始对象。
+>      - `key`：要创建 `ref` 的属性键。
+>    - 返回值：一个基于原始对象特定属性的 `ref` 类型。
+>    - 示例：
+>      ```javascript
+>      import { reactive, toRef } from 'vue';
+>           
+>      const state = reactive({
+>        name: 'John',
+>        age: 25,
+>      });
+>           
+>      const nameRef = toRef(state, 'name');
+>      console.log(nameRef.value); // 输出 'John'
+>      ```
+>
+> 6. `computed(getter)`
+>    - 作用：创建一个计算属性。
+>    - 参数：
+>      - `getter`：一个计算属性的 getter 函数。
+>    - 返回值：一个响应式的计算属性。
+>    - 示例：
+>      ```javascript
+>      import { ref, computed } from 'vue';
+>           
+>      const count = ref(0);
+>      const doubledCount = computed(() => count.value * 2);
+>      console.log(doubledCount.value); // 输出 0
+>           
+>      // 注意：doubledCount 是一个响应式的计算属性
+>      count.value = 5;
+>      console.log(doubledCount.value); // 输出 10
+>      ```
+>
+> 7. `watchEffect(effect)`
+>    - 作用：在响应式数据变化时执行副作用函数。
+>    - 参数：
+>      - `effect`：副作用函数，会在响应式数据变化时被调用。
+>    - 示例：
+>      ```javascript
+>      import { ref, watchEffect } from 'vue';
+>           
+>      const count = ref(0);
+>           
+>      watchEffect(() => {
+>        console.log(`count 变化了：${count.value}`);
+>      });
+>           
+>      count.value = 1; // 输出 'count 变化了：1'
+>      ```
+>
+> 这些 API 提供了进一步操作和处理 `ref` 类型的数据的能力。`toRef` 允许创建一个基于原始对象的特定属性的 `ref` 类型。`computed` 允许创建一个计算属性，根据其他响应式数据的变化来计算值。`watchEffect` 允许在响应式数据变化时执行副作用函数。这些函数提供了更多的功能和灵活性，用于处理和监视响应式数据的变化。
+
+
+
+
+
+## customRef 扩展ref类型功能
+
+> `customRef` 是 Vue 3 Composition API 中的一个函数，用于创建自定义的 `ref` 类型。它允许开发者定义自己的响应式逻辑，以满足特定需求。
+>
+> 使用 `customRef`，你可以创建一个自定义的 `ref` 类型，该类型具有自定义的读取和写入行为。以下是 `customRef` 的使用方式和相关的 API：
+>
+> ```javascript
+> import { customRef } from 'vue';
+> 
+> const customRefValue = customRef((track, trigger) => {
+>   let value = 0;
+> 
+>   return {
+>     get() {
+>       track(); // 通知追踪依赖
+>       return value;
+>     },
+>     set(newValue) {
+>       value = newValue;
+>       trigger(); // 通知触发更新
+>     },
+>   };
+> });
+> 
+> // 使用自定义的 ref 类型
+> const count = customRefValue;
+> 
+> console.log(count.value); // 输出 0
+> 
+> count.value = 1; // 触发更新
+> 
+> console.log(count.value); // 输出 1
+> ```
+>
+> 在上述示例中，`customRef` 接受一个工厂函数作为参数，该函数返回一个对象。该对象必须包含 `get` 和 `set` 方法，用于定义自定义的读取和写入行为。`track` 函数用于追踪依赖，而 `trigger` 函数用于触发更新。
+>
+> 通过使用 `customRef`，你可以根据特定的需求创建具有自定义行为的 `ref` 类型。这使得你可以在响应式数据的读取和写入过程中添加自己的逻辑，以实现更高度的控制和自定义行为。注意，使用 `customRef` 需要谨慎，因为你需要自己管理依赖追踪和触发更新，确保正确地触发响应式更新。
+>
+> `customRef` 提供了一种扩展 `ref` 类型的能力，使开发者能够实现更复杂和特定需求的响应式逻辑。但由于其灵活性和复杂性，应该谨慎使用，确保在使用时正确处理依赖追踪和触发更新的逻辑。
+
+
+
+
+
+## 对象属性和方法
+
+> 是的，对象的属性可以是函数。在 JavaScript 中，对象的属性可以包含不同类型的值，包括函数。
+>
+> 以下是一个示例：
+>
+> ```javascript
+> const obj = {
+>   name: 'John',
+>   age: 30,
+>   sayHello: function() {
+>     console.log('Hello!');
+>   }
+> };
+> 
+> console.log(obj.name); // 输出 "John"
+> console.log(obj.age); // 输出 30
+> obj.sayHello(); // 输出 "Hello!"
+> ```
+>
+> 在上述示例中，`obj` 是一个包含 `name`、`age` 和 `sayHello` 属性的对象。`name` 和 `age` 的属性值是字符串和数字，而 `sayHello` 的属性值是一个函数。通过调用 `obj.sayHello()`，可以执行该函数并打印出 "Hello!"。
+>
+> 因此，JavaScript 允许在对象中使用函数作为属性，这使得我们可以在对象中定义方法和行为。
+
+
+
+### **对象属性语法糖**
+
+```javascript
+{
+      get:() => firstName.value + ' ' + lastName.value,
+      set(newValue){
+        const names = newValue.split(' ');
+        firstName.value = names[0];
+        lastName.value = names[names.length - 1];
+      }
+    }
+```
+
+> 以下是将你提供的对象方法还原为不使用语法糖的形式：
+>
+> ```javascript
+> {
+>   get: function() {
+>     return firstName.value + ' ' + lastName.value;
+>   },
+>   set: function(newValue) {
+>     const names = newValue.split(' ');
+>     firstName.value = names[0];
+>     lastName.value = names[names.length - 1];
+>   }
+> }
+> ```
+>
+> 在不使用语法糖的形式中，我们使用了完整的函数表达式语法来定义 `get` 和 `set` 方法。在 `get` 方法中，我们使用 `function` 关键字来声明函数，并返回 `firstName.value + ' ' + lastName.value`。在 `set` 方法中，我们也使用 `function` 关键字来声明函数，并接收 `newValue` 参数，并在函数体内执行相应的逻辑。
+>
+> 通过以上还原，我们可以看到 `get` 和 `set` 方法的定义与原始对象中的定义是相同的，但使用了完整的函数表达式语法，而不是简写形式。
+
+
+
+## watchEffect 清除副作用
+
+<img src="vue3.assets/image-20230712133615151.png" alt="image-20230712133615151" style="zoom: 67%;" />
+
+
+
+### bug- ref需要加.value修改值
+
+不加 会出现Uncaught TypeError: "name" is read-only
+    at _readOnlyError (readOnlyError.js:2:1)
+
+readOnly错误
+
+
+
+## watch使用方式
+
+文件  546 
+
+两种种使用方式
+
+第一种传入：getter函数
+
+第二种： 传入一个可响应对象： reactive对象和 ref对象
+
+如需将打印的proxy对象， 可以{... info} 赋值解构为普通对象， 再对其进行打印
+
+> 在 Vue 3 Composition API 中，可以使用 `watch` 函数来监听响应式数据的变化并执行相应的回调函数。`watch` 函数有两种使用方式：基于数据源的 `watch` 和基于依赖的 `watch`。
+>
+> 1. 基于数据源的 `watch`：
+>
+> ```javascript
+> import { watch } from 'vue';
+> 
+> watch(source, callback, options);
+> ```
+>
+> - `source`：要监听的数据源，可以是一个响应式对象、一个返回响应式对象的函数，或者一个包含多个数据源的数组。
+> - `callback`：变化发生时执行的回调函数，接收新值和旧值作为参数。
+> - `options`：可选的选项对象，用于配置监听行为，例如 `deep`（深度监听）和 `immediate`（立即执行回调）。
+>
+> 2. 基于依赖的 `watch`：
+>
+> ```javascript
+> import { watch } from 'vue';
+> 
+> watch(effect, callback, options);
+> ```
+>
+> - `effect`：要监听的依赖项，可以是一个包含响应式数据访问的函数。
+> - `callback`：变化发生时执行的回调函数，接收新值和旧值作为参数。
+> - `options`：可选的选项对象，用于配置监听行为，例如 `deep`（深度监听）和 `immediate`（立即执行回调）。
+>
+> 下面是一个使用基于数据源的 `watch` 的示例：
+>
+> ```vue
+> <script>
+> import { ref, watch } from 'vue';
+> 
+> export default {
+>   setup() {
+>     const count = ref(0);
+> 
+>     watch(
+>       count,
+>       (newValue, oldValue) => {
+>         console.log('count 变化:', newValue, oldValue);
+>       },
+>       { immediate: true }
+>     );
+> 
+>     return {
+>       count,
+>     };
+>   },
+> };
+> </script>
+> ```
+>
+> 在上述示例中，我们使用 `ref` 函数创建了一个响应式的 `count` 变量，并使用 `watch` 函数来监听它的变化。每当 `count` 的值发生变化时，回调函数将被触发，并打印出新值和旧值。
+>
+> 请注意，在选项对象中设置 `immediate: true`，可以让回调函数在初始渲染时立即执行一次。
+>
+> 除了基于数据源的 `watch`，你还可以使用基于依赖的 `watch` 来监听数据的变化。基于依赖的 `watch` 更适合在回调函数中访问其他响应式数据或执行副作用。
+
+
+
+### watch侦听多个数据源
+
+> ```javascript
+> //  侦听多个数据源  对对象进行解构， 并转化为数组形式
+>     watch([()=>({...info}), name], ([newInfo, newName],[oldInfo, oldName])=>{
+>       console.log(newInfo, newName, oldInfo, oldName);
+>     })
+>       const changeName = ()=>{
+>         info.name = '悟律';
+>       }
+> 
+>       const changeRefName = ()=>{
+>         name.value = 'james';
+>       }
+> 
+> ```
+>
+> 
+
+
+
+
+
+
+
+## vue3生命周期函数重复调用的好处
+
+> 在 Vue 3 中，生命周期函数的重复调用（即每个生命周期函数可以在组件实例的整个生命周期中多次调用）带来了一些好处：
+>
+> 1. 灵活性：生命周期函数的重复调用使得开发者可以更灵活地管理组件的状态和行为。可以在不同的生命周期钩子中执行不同的操作，以满足具体的需求。
+>
+> 2. 细粒度控制：重复调用的生命周期函数使得组件的状态变化更加细粒度，可以更精确地控制组件的行为。可以在需要的时候对特定的生命周期进行操作，而不是被限制在单一的生命周期函数中。
+>
+> 3. 提升性能：由于生命周期函数的重复调用，可以更有效地利用组件的缓存和复用。在组件的更新过程中，只会调用需要更新的生命周期函数，而不是全部重新执行。
+>
+> 4. 更好的代码组织：重复调用的生命周期函数使得代码的组织更加清晰和一致。不同的操作可以在对应的生命周期函数中处理，使代码更易于阅读和维护。
+>
+> 需要注意的是，Vue 3 中引入了 Composition API，提供了更加灵活和强大的组合式函数编程方式。相比于生命周期函数，Composition API 更适合处理复杂的逻辑和状态管理，可以更好地组织和复用代码。因此，在 Vue 3 中，建议尽可能使用 Composition API 来管理组件的状态和行为，而不是过度依赖于生命周期函数的重复调用。
+
+
+
+## docuMent 和 window
+
+> 在 JavaScript 中，`document` 和 `window` 是两个不同的对象，分别表示文档对象和全局窗口对象。
+>
+> - `document` 对象代表当前文档，它是 DOM 的一部分，提供了访问和操作文档内容的方法和属性。通过 `document` 对象，你可以访问和操作文档的结构、元素、样式等。
+>
+> - `window` 对象代表浏览器的窗口或标签页，它是 JavaScript 访问浏览器窗口功能的入口点。`window` 对象提供了许多全局属性和方法，用于操作浏览器窗口的大小、位置、滚动等，以及与用户交互的功能，如定时器、弹窗等。
+>
+> 在你的代码中，监听滚动事件使用的是 `document.addEventListener("scroll", ...)`，这是因为滚动事件是与文档内容的滚动相关的，所以需要通过 `document` 对象来监听。
+>
+> 而监听鼠标移动事件使用的是 `window.addEventListener("mousemove", ...)`，这是因为鼠标移动事件是与浏览器窗口的交互相关的，所以需要通过 `window` 对象来监听。
+>
+> 需要注意的是，虽然 `document` 对象和 `window` 对象有不同的作用和属性，但它们都是全局对象，在浏览器环境中可以直接访问。在 Vue 中，你可以在组件内部的 `setup` 函数中通过 `import { ref } from 'vue'` 来导入 `ref` 函数，并在组件中使用这些响应式对象来追踪滚动位置和鼠标位置的变化。
+
+
+
+## window是pageX .   document 是scrollx
+
+> 在事件处理函数中，`pageX` 和 `pageY` 属性是鼠标事件对象的属性，用于获取鼠标在整个页面（包括滚动区域）上的坐标位置。
+>
+> `scrollX` 和 `scrollY` 是窗口对象的属性，用于获取滚动条的位置。`scrollX` 属性返回文档在水平方向上滚动的像素值，而 `scrollY` 属性返回文档在垂直方向上滚动的像素值。
+>
+> 因此，当你监听鼠标移动事件时，使用的是 
+> window.addEventListener("mousemove", ...)`，并通过事件对象的 `pageX` 和 `pageY` 属性获取鼠标在页面上的坐标。
+>
+> 而监听滚动事件时，使用的是 `document.addEventListener("scroll", ...)`，并通过窗口对象的 `scrollX` 和 `scrollY` 属性获取滚动条的位置。
+>
+> 需要注意的是，由于鼠标事件和滚动事件的属性和作用不同，因此在事件处理函数中使用的对象也不同。鼠标事件是与鼠标交互相关的，所以使用的是 `window` 对象；而滚动事件是与文档内容滚动相关的，所以使用的是 `document` 对象。
+
+
+
+## useLocalStorage
+
+```js
+import { ref, watch } from 'vue';
+
+export default function(key, value){
+  const data =ref(value);
+
+  // 一个参数时， 取值， 两个参数存值
+  if (value){
+    window.localStorage.setItem(key, JSON.stringify(value));
+  } else {
+    data.value = JSON.parse(window.localStorage.getItem(key));
+  }
+
+  // 为什么重置后的localStorage无效， 因为源代码刷新后重新赋值一次
+  // 不理解 为什么能对应到key值
+  watch(data, (newValue, oldValue)=> {
+    console.log(data);
+    console.log(`${oldValue}- 原键值已被修改为-  ${newValue}`);
+    window.localStorage.setItem(key, JSON.stringify(newValue));
+  },{
+    immediate: true,
+  })
+
+  return data;
+}
+```
+
+
+
+初始时：   
+
+   // useLocalStorage("info", "wulv");
+
+ const data = useLocalStorage("info");
+
+   console.log('info取值', data.value);
+
+   const changeData = ()=>{ data.value = '悟律'}
+
+
+
+初始使用localStorage缓存， 后修改其value值， 刷新后修改后的缓存消失， 是因为没有将 初始的缓存注释， 每次刷新都需重新运行代码， 重新初始化
+
+
+
+不理解watch， 为什么能将 value对应key值， 因为在第一次储存时， 就已经触发了watch， watch在初始储存时， 已有key值的存在， 因为value是ref对象， 所以函数修改此值时，能锁定为 初始储存值的watch， 所以缓存能修改成功
+
+
+
+###  window.localStorage.setItem(key, JSON.stringify(value));
+
+ **为什么设置值时， value需要转化为json字符串， key不用**
+
+> `window.localStorage.setItem(key, JSON.stringify(value))` 中的 `JSON.stringify(value)` 是将 `value` 转换为 JSON 字符串的操作。这是因为 `localStorage` 只能存储字符串类型的数据。
+>
+> 当你使用 `localStorage.setItem(key, value)` 存储数据时，如果 `value` 不是字符串类型，它会被自动转换为字符串。但是，对于复杂的数据类型（如对象、数组等），自动转换为字符串可能会导致数据丢失或格式不正确。
+>
+> 为了确保数据在存储到 `localStorage` 中时能够保持其原始的类型和结构，需要使用 `JSON.stringify()` 方法将其转换为 JSON 字符串。这样，在读取数据时，可以使用 `JSON.parse()` 方法将 JSON 字符串解析为相应的数据类型。
+>
+> 至于 `key` 参数，它作为 `localStorage` 的键值对的键，它的类型通常是字符串，所以不需要进行额外的转换。
+>
+> 综上所述，为了在 `localStorage` 中存储非字符串类型的数据，需要先将其转换为 JSON 字符串，以确保数据的完整性和正确性。在读取数据时，则需要将 JSON 字符串解析为相应的数据类型。
 
 
 

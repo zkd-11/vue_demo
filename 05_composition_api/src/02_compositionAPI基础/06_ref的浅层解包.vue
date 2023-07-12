@@ -33,7 +33,7 @@ export default {
     let counter = ref(100);
 // 普通对象包含 ref对象属性
     const info = {
-      counter
+      counter 
     }
 
     // 如何该对象为reactive对象， 可以对其进行解包
