@@ -2989,7 +2989,7 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, unref } from 'vue';
->           
+>      
 >      const count = ref(0);
 >      const unwrappedCount = unref(count);
 >      console.log(unwrappedCount); // 输出 0
@@ -3003,13 +3003,14 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, isRef } from 'vue';
->           
+>      
 >      const count = ref(0);
 >      const isCountRef = isRef(count);
 >      console.log(isCountRef); // 输出 true
 >      ```
 >
 > 3. `toRefs(object)`
+>    
 >    - 作用：将一个响应式对象的属性转换为 `ref` 类型的属性，返回一个包含所有转换后属性的新对象。
 >    - 参数：
 >      - `object`：要转换的响应式对象。
@@ -3017,18 +3018,19 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRefs } from 'vue';
->           
+>      
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->           
+>      
 >      const { name, age } = toRefs(state);
 >      console.log(name.value); // 输出 'John'
 >      console.log(age.value); // 输出 25
 >      ```
->
+>    
 > 4. `shallowRef(value)`
+>    
 >    - 作用：创建一个浅层响应式的 `ref` 类型，用于包装一个对象，并只追踪对象本身的改变。
 >    - 参数：
 >      - `value`：要包装的对象。
@@ -3036,11 +3038,11 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { shallowRef } from 'vue';
->           
+>      
 >      const obj = { name: 'John' };
 >      const shallowObjRef = shallowRef(obj);
 >      console.log(shallowObjRef.value.name); // 输出 'John'
->           
+>      
 >      // 注意：只有对象本身的改变会触发响应
 >      obj.name = 'Jane';
 >      console.log(shallowObjRef.value.name); // 输出 'Jane'
@@ -3051,6 +3053,7 @@ import Loading from './Loading.vue';
 > 当涉及到 Vue 3 Composition API 中常用的 `ref` 类的 API 时，还有其他一些有用的函数。以下是其中几个常用的 API：
 >
 > 5. `toRef(object, key)`
+>    
 >    - 作用：创建一个基于原始对象的特定属性的 `ref` 类型。
 >    - 参数：
 >      - `object`：原始对象。
@@ -3059,17 +3062,18 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRef } from 'vue';
->           
+>      
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->           
+>      
 >      const nameRef = toRef(state, 'name');
 >      console.log(nameRef.value); // 输出 'John'
 >      ```
->
+>    
 > 6. `computed(getter)`
+>    
 >    - 作用：创建一个计算属性。
 >    - 参数：
 >      - `getter`：一个计算属性的 getter 函数。
@@ -3077,16 +3081,16 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, computed } from 'vue';
->           
+>      
 >      const count = ref(0);
 >      const doubledCount = computed(() => count.value * 2);
 >      console.log(doubledCount.value); // 输出 0
->           
+>      
 >      // 注意：doubledCount 是一个响应式的计算属性
 >      count.value = 5;
 >      console.log(doubledCount.value); // 输出 10
 >      ```
->
+>    
 > 7. `watchEffect(effect)`
 >    - 作用：在响应式数据变化时执行副作用函数。
 >    - 参数：
@@ -3094,13 +3098,13 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, watchEffect } from 'vue';
->           
+>      
 >      const count = ref(0);
->           
+>      
 >      watchEffect(() => {
 >        console.log(`count 变化了：${count.value}`);
 >      });
->           
+>      
 >      count.value = 1; // 输出 'count 变化了：1'
 >      ```
 >
@@ -3350,7 +3354,9 @@ readOnly错误
 >
 > - `window` 对象代表浏览器的窗口或标签页，它是 JavaScript 访问浏览器窗口功能的入口点。`window` 对象提供了许多全局属性和方法，用于操作浏览器窗口的大小、位置、滚动等，以及与用户交互的功能，如定时器、弹窗等。
 >
-> 在你的代码中，监听滚动事件使用的是 `document.addEventListener("scroll", ...)`，这是因为滚动事件是与文档内容的滚动相关的，所以需要通过 `document` 对象来监听。
+> 在你的代码中，监听滚动事件使用的是
+>
+>  `document.addEventListener("scroll", ...)`，这是因为滚动事件是与文档内容的滚动相关的，所以需要通过 `document` 对象来监听。
 >
 > 而监听鼠标移动事件使用的是 `window.addEventListener("mousemove", ...)`，这是因为鼠标移动事件是与浏览器窗口的交互相关的，所以需要通过 `window` 对象来监听。
 >
@@ -3416,7 +3422,7 @@ export default function(key, value){
 
 
 
-初始使用localStorage缓存， 后修改其value值， 刷新后修改后的缓存消失， 是因为没有将 初始的缓存注释， 每次刷新都需重新运行代码， 重新初始化
+初始使用localStorage缓存， 后修改其value值， 刷新后修改后的缓存消失， 是因为没有将 初始的缓存代码 注释， 每次刷新都需重新运行代码， 重新初始化
 
 
 
@@ -3428,7 +3434,9 @@ export default function(key, value){
 
  **为什么设置值时， value需要转化为json字符串， key不用**
 
-> `window.localStorage.setItem(key, JSON.stringify(value))` 中的 `JSON.stringify(value)` 是将 `value` 转换为 JSON 字符串的操作。这是因为 `localStorage` 只能存储字符串类型的数据。
+> `window.localStorage.setItem(key, JSON.stringify(value))` 
+>
+> 中的 `JSON.stringify(value)` 是将 `value` 转换为 JSON 字符串的操作。这是因为 `localStorage` 只能存储字符串类型的数据。
 >
 > 当你使用 `localStorage.setItem(key, value)` 存储数据时，如果 `value` 不是字符串类型，它会被自动转换为字符串。但是，对于复杂的数据类型（如对象、数组等），自动转换为字符串可能会导致数据丢失或格式不正确。
 >
@@ -3440,3 +3448,398 @@ export default function(key, value){
 
 
 
+## render函数
+
+> `render` 函数是 Vue 中用于生成虚拟 DOM（Virtual DOM）的函数。它是 Vue 中模板编译的结果，用于描述组件的结构和内容。
+>
+> 在 Vue 2 中，模板编译会将模板转换为 `render` 函数，它接收一个 `h` 参数（也可以是 `createElement`）作为第一个参数，用于创建虚拟 DOM 元素，并返回该元素。
+>
+> 在 Vue 3 中，可以使用 Composition API 中的 `createRenderer` 函数来创建自定义的渲染器，并使用 `render` 函数生成虚拟 DOM。
+>
+> `render` 函数的作用是根据组件的状态（响应式数据）和上下文信息，生成对应的虚拟 DOM 树。通过创建和更新虚拟 DOM 树，Vue 可以高效地进行组件的渲染和更新。
+>
+> 在 `render` 函数中，可以使用各种 Vue 的模板语法、JavaScript 表达式、条件语句、循环语句等来动态生成组件的结构和内容。通过使用 `render` 函数，可以更灵活地控制组件的渲染逻辑，并实现更高级的自定义功能。
+>
+> 以下是一个简单的示例，展示了一个使用 `render` 函数生成虚拟 DOM 的组件：
+>
+> ```javascript
+> import { h } from 'vue';
+> 
+> export default {
+>   render() {
+>     return h(
+>       'div',
+>       {
+>         class: 'my-component',
+>         onClick: this.handleClick,
+>       },
+>       [
+>         h('h1', 'Hello, Vue!'),
+>         h('p', 'Welcome to my component.'),
+>       ]
+>     );
+>   },
+>   methods: {
+>     handleClick() {
+>       console.log('Clicked!');
+>     },
+>   },
+> };
+> ```
+>
+> 在这个示例中，`render` 函数使用 `h` 函数创建了一个 `div` 元素，并指定了类名和点击事件。它还创建了一个 `h1` 元素和一个 `p` 元素作为 `div` 的子元素。当点击 `div` 时，会触发 `handleClick` 方法。
+>
+> 通过编写 `render` 函数，可以以编程方式定义组件的结构和行为，实现更灵活和高效的组件渲染。
+
+
+
+## template模板的编译结果是render函数
+
+> 是的，Vue 的模板经过编译后会生成对应的 `render` 函数。在 Vue 的运行时，模板会被编译成一个可执行的 `render` 函数，用于生成组件的虚拟 DOM。
+>
+> 模板编译的过程是将模板解析为抽象语法树（AST），然后根据 AST 生成相应的 `render` 函数。这个过程由 Vue 的编译器负责完成。
+>
+> 当你使用 Vue 的模板语法编写组件的模板时，比如使用 `<template>` 标签来定义组件的结构和内容，Vue 在内部会将模板编译成对应的 `render` 函数。这个 `render` 函数会接收一个 `createElement` 方法作为参数，用于创建虚拟 DOM 元素。
+>
+> 编译后的 `render` 函数可以直接执行，生成组件的虚拟 DOM。当组件的状态发生变化时，Vue 会重新执行 `render` 函数，生成新的虚拟 DOM，并与旧的虚拟 DOM 进行比对，最终更新到实际的 DOM 中。
+>
+> 使用 `render` 函数可以获得更高的性能和灵活性，因为它直接操作虚拟 DOM，避免了模板解析和编译的过程，同时也可以更精确地控制组件的渲染逻辑。
+>
+> 总而言之，Vue 的模板经过编译后会生成对应的 `render` 函数，用于生成组件的虚拟 DOM，实现组件的渲染和更新。
+
+
+
+## render函数和h函数
+
+> 在 Vue 中，`render` 函数是用于生成虚拟 DOM（Virtual DOM）的函数，而 `h` 函数是用于创建虚拟 DOM 元素的辅助函数。
+>
+> `h` 函数的全称是 `createElement`，它接收三个参数：
+>
+> ```javascript
+> h(tag, props, children)
+> ```
+>
+> - `tag` 是一个字符串，表示要创建的元素的标签名或组件名。
+> - `props` 是一个对象，包含了要传递给元素的属性和事件监听器等。
+> - `children` 是一个数组，表示元素的子节点，可以包含嵌套的 `h` 函数调用。
+>
+> 通过 `h` 函数调用，我们可以创建虚拟 DOM 元素，例如：
+>
+> ```javascript
+> h('div', { class: 'my-class' }, [
+>   h('h1', 'Hello, Vue!'),
+>   h('p', 'Welcome to my component.'),
+> ])
+> ```
+>
+> 这个例子使用 `h` 函数创建了一个 `div` 元素，它有一个 `class` 属性，并包含了一个 `h1` 元素和一个 `p` 元素作为子节点。
+>
+> `render` 函数在创建组件的虚拟 DOM 时，通常会使用 `h` 函数来构建组件的结构和内容。例如，一个使用 `render` 函数的组件可能如下所示：
+>
+> ```javascript
+> export default {
+>   render() {
+>     return h('div', { class: 'my-component' }, [
+>       h('h1', 'Hello, Vue!'),
+>       h('p', 'Welcome to my component.'),
+>     ]);
+>   },
+> };
+> ```
+>
+> 在这个例子中，`render` 函数使用 `h` 函数来创建组件的结构，返回一个 `div` 元素作为根节点，并包含了一个 `h1` 元素和一个 `p` 元素作为子节点。
+>
+> 通过 `render` 函数和 `h` 函数的配合使用，我们可以以编程的方式创建组件的虚拟 DOM，并最终渲染到实际的 DOM 中。
+
+
+
+## render函数的使用 - 插槽
+
+> 这段代码包含了两个组件：App 和 Home。
+>
+> 首先，让我们看一下 App 组件的代码解析：
+>
+> ```javascript
+> <script>
+> import { ref, h } from 'vue';
+> import Home from './Home.vue'
+> 
+> export default {
+>   render() {
+>     return h(Home, null, {
+>       default: props => h("span", null, `app传入到home组件的内容: ${props.name}`)
+>     });
+>   }
+> }
+> </script>
+> 
+> <style scoped>
+> </style>
+> ```
+>
+> 在 App 组件中，我们使用 `render` 函数来创建组件的虚拟 DOM。在 `render` 函数中，我们调用了 `h` 函数来创建 Home 组件的虚拟 DOM。`h` 函数的第一个参数是组件或元素的标签名或组件名，在这里我们传入了 `Home` 组件。
+>
+> 作为 `h` 函数的第三个参数，我们传入了一个对象，包含了名为 `default` 的插槽。这个插槽对应的是一个函数，接收 `props` 参数，并返回一个 `span` 元素。在这里，我们使用模板字符串拼接了一段文本，并将 `props.name` 插入到文本中。
+>
+> 接下来，我们来看一下 Home 组件的代码解析：
+>
+> ```javascript
+> <script>
+> import { h } from 'vue';
+> 
+> export default {
+>   render() {
+>     return h("div", null, [
+>       h("h2", null, "home"),
+>       this.$slots.default ? this.$slots.default({name: 'wulv'}) : h("span", null, "我是home中默认插槽")
+>     ]);
+>   }
+> }
+> </script>
+> 
+> <style scoped>
+> </style>
+> ```
+>
+> 在 Home 组件中，同样使用 `render` 函数来创建组件的虚拟 DOM。在 `render` 函数中，我们调用了 `h` 函数来创建 `div` 元素作为根节点。
+>
+> 在 `div` 元素的子节点中，我们创建了一个 `h2` 元素，文本内容为 "home"。然后我们判断 `this.$slots.default` 是否存在，如果存在则调用该插槽函数并传入一个对象 `{name: 'wulv'}` 作为参数；如果不存在，则创建一个默认的 `span` 元素，文本内容为 "我是home中默认插槽"。
+>
+> 综合起来，这段代码演示了如何使用 `render` 函数和 `h` 函数来创建组件的虚拟 DOM，并使用插槽传递数据和内容。在 App 组件中，我们使用 `h` 函数创建了 Home 组件的虚拟 DOM，并通过插槽传递了一段文本内容。在 Home 组件中，我们创建了一个带有默认插槽的 `div` 元素，并根据是否传入插槽函数来决定插槽的内容。
+
+
+
+
+
+
+
+# 7.13  day15   13：40
+
+ 
+
+## 插件与依赖
+
+ vue插件不就是依赖吗， 作为vue的功能模块， 就是vue特定的插件， 实质上可以理解为独属vue的依赖
+
+
+
+vue插件： vue专属依赖， 用于扩展功能， 定制依赖
+
+插件视为Vue的特定功能模块，它们是Vue应用程序所依赖的一部分，但插件和依赖并不完全等同。插件是为了增强Vue的功能和特性，而依赖是指应用程序所依赖的外部库、模块或工具
+
+依赖： 可以是与vue无关的外部库， css框架、 Http库等
+
+
+
+> 您可以将Vue插件视为Vue框架的功能扩展模块，它们提供了特定的功能或增强了Vue的能力。从一定程度上说，插件可以被视为Vue应用程序的依赖项，因为它们是开发Vue应用所需的外部库或模块。
+>
+> 然而，需要注意的是，插件和依赖并不完全等同。插件通常是为了在Vue应用中提供特定功能或行为，而依赖是指应用程序所依赖的外部库、模块或工具。依赖项可以是与Vue无关的库，如CSS框架、HTTP库等。而插件则更加专注于扩展Vue的功能和特性。
+>
+> 在使用Vue插件时，通常需要将插件作为依赖进行安装，并在Vue应用中进行相应的配置和注册。插件可以通过全局注册、局部注册或混入等方式被应用到Vue组件中。而依赖项则可以通过包管理工具（如npm或yarn）进行安装和管理。
+>
+> 因此，可以将插件视为Vue的特定功能模块，它们是Vue应用程序所依赖的一部分，但插件和依赖并不完全等同。插件是为了增强Vue的功能和特性，而依赖是指应用程序所依赖的外部库、模块或工具。
+
+
+
+## vue的全局自定义插件， 原型链的 prototype储存属性 
+
+
+
+> 在 Vue 中，全局自定义插件确实可以类比于原型链的 `prototype`，因为它们都可以在全局范围内扩展 Vue 实例的功能。
+>
+> 通过全局自定义插件，您可以向 Vue 实例添加全局方法、指令、过滤器或混入等功能。这些功能可以在整个应用程序中使用，类似于 `prototype` 中定义的属性和方法可以在所有实例中访问。
+>
+> 当您使用 `app.use()` 方法全局安装插件时，插件的功能将被添加到 Vue 实例的原型链上。这意味着所有的 Vue 组件实例都可以访问这些功能，无需在每个组件中重复定义。
+>
+> 这种方式使得全局自定义插件非常方便，因为您只需在应用程序的入口点安装插件一次，然后在所有组件中都可以使用插件提供的功能。
+>
+> 然而，请注意全局自定义插件与原型链上的 `prototype` 属性并不完全相同。插件可以提供更丰富和复杂的功能，例如注册全局组件、处理钩子函数等，而不仅仅是简单的属性和方法。插件的设计和实现更加灵活，可以根据需求进行定制和扩展。
+
+
+
+## vue插件部分功能是基于原型链实现的
+
+> 是的，Vue 插件的部分功能可以基于原型链来实现。
+>
+> Vue 的原型链是指 Vue 实例的原型及其原型链上的属性和方法。通过修改 Vue 的原型链，您可以将自定义方法和属性添加到每个 Vue 实例中，从而实现插件的功能扩展。
+>
+> 例如，您可以在插件的 `install` 方法中通过修改 Vue 的原型链来添加全局方法：
+>
+> ```javascript
+> // 自定义插件
+> const MyPlugin = {
+>   install(app) {
+>     // 添加全局方法
+>     app.config.globalProperties.$myMethod = function() {
+>       // 执行自定义逻辑
+>     };
+>   }
+> };
+> ```
+>
+> 然后，在 Vue 实例中，您可以通过原型链访问到插件添加的方法：
+>
+> ```javascript
+> // 使用插件
+> createApp(App)
+>   .use(MyPlugin)
+>   .mount('#app');
+> 
+> // 在组件中访问插件的全局方法
+> export default {
+>   created() {
+>     this.$myMethod(); // 调用插件的全局方法
+>   }
+> };
+> ```
+>
+> 通过这种方式，插件可以通过修改 Vue 的原型链，向每个 Vue 实例添加自定义方法和属性，以实现特定的功能扩展。但请注意，插件的功能不仅限于原型链的修改，还可以涉及全局指令、全局组件、混入等其他功能扩展方式。
+
+
+
+## vue源码学习  18_1:40  
+
+​		2：06 
+
+
+
+
+
+## Mini-vue
+
+> Mini-vue 是一个基于 Vue 3 的迷你版实现，旨在提供一个简化版本的 Vue 框架，以便更好地理解 Vue 的内部原理和实现细节。Mini-vue 的目标是通过简洁、精简的代码展示 Vue 核心功能的实现方式，并提供一个简易的运行环境，让开发者能够深入学习和探索 Vue 的工作原理。
+>
+> Mini-vue 的代码相对较少，包含了 Vue 3 的响应式系统、虚拟 DOM、编译器等核心功能，并提供了一个简单的组件渲染和更新的示例。通过阅读 Mini-vue 的代码，开发者可以更清晰地理解 Vue 的设计思路和实现机制。
+>
+> 需要注意的是，Mini-vue 并非 Vue 官方提供的正式版本，而是一个由开发者社区自发维护的项目。它可以作为学习 Vue 原理的工具和参考，但在实际生产环境中，建议使用官方提供的稳定版本的 Vue。
+
+
+
+## vue文件 挂载到真实dom元素的过程
+
+> Mini-vue 是一个基于 Vue 3 的迷你版实现，旨在提供一个简化版本的 Vue 框架，以便更好地理解 Vue 的内部原理和实现细节。Mini-vue 的目标是通过简洁、精简的代码展示 Vue 核心功能的实现方式，并提供一个简易的运行环境，让开发者能够深入学习和探索 Vue 的工作原理。
+>
+> Mini-vue 的代码相对较少，包含了 Vue 3 的响应式系统、虚拟 DOM、编译器等核心功能，并提供了一个简单的组件渲染和更新的示例。通过阅读 Mini-vue 的代码，开发者可以更清晰地理解 Vue 的设计思路和实现机制。
+>
+> 需要注意的是，Mini-vue 并非 Vue 官方提供的正式版本，而是一个由开发者社区自发维护的项目。它可以作为学习 Vue 原理的工具和参考，但在实际生产环境中，建议使用官方提供的稳定版本的 Vue。
+
+
+
+## 虚拟dom的渲染过程
+
+
+
+compiler编译过程： 编译器将template进行编译（代码实现转化为特定渲染虚拟节点）并转化为vnode
+
+runtime过程 :  runtime 中的render渲染函数，将其渲染并挂载到dom元素上
+
+reactive System响应系统绑定过程:    则是将其建立联系， 将虚拟节点和真实dom元素节点建立联系， 视图 - 节点动态绑定， 实时渲染 
+
+
+
+<img src="vue3.assets/image-20230713171004092.png" alt="image-20230713171004092" style="zoom: 67%;" />
+
+
+
+> 虚拟 DOM 的渲染过程可以概括为以下几个步骤：
+>
+> 1. 初始渲染：
+>    - 创建虚拟 DOM 树：根据模板或 JSX 语法，通过编译器将模板转化为虚拟 DOM 树的结构。
+>    - 创建真实 DOM：根据虚拟 DOM 树的结构，创建对应的真实 DOM 元素节点。
+>
+> 2. 将虚拟 DOM 映射到真实 DOM：
+>    - 将虚拟 DOM 树中的节点属性、文本内容等信息，逐一映射到真实 DOM 元素上。
+>    - 将虚拟 DOM 树中的事件监听器绑定到真实 DOM 元素上。
+>
+> 3. 初始渲染到页面：
+>    - 将真实 DOM 元素插入到页面中的指定位置，成为页面的一部分。
+>
+> 4. 数据变更时的更新：
+>    - 当数据发生变化时，通过比较新旧虚拟 DOM 树，找出变化的部分。
+>    - 对变化的部分进行差异更新（Diffing）：比较新旧节点的属性、文本内容等信息，并更新到真实 DOM 元素上。
+>    - 更新完成后，将更新的部分反映到页面中，使页面展示最新的数据。
+>
+> 5. 事件响应：
+>    - 监听用户交互事件，如点击、输入等。
+>    - 根据事件触发的回调函数，修改数据或执行相应的操作。
+>    - 数据的修改会触发重新渲染的过程，实现页面的响应式更新。
+>
+> 总的来说，虚拟 DOM 的渲染过程涉及到虚拟 DOM 树的创建、映射到真实 DOM、初始渲染到页面、数据变更时的更新，以及事件的响应。通过虚拟 DOM 的中间层，可以提高渲染性能，并实现页面的高效更新。
+
+
+
+
+
+## vue3中的三大核心系统
+
+> 在 Vue 3 中，有三个核心系统（Core Systems）负责实现不同的功能和机制：
+>
+> 1. **Reactivity System（响应式系统）**：Vue 3 引入了一个新的响应式系统，使用 Proxy 实现数据的响应式追踪和触发更新。该系统通过跟踪数据的访问和修改，自动触发相关依赖的更新。它可以让开发者方便地创建响应式数据，并在数据变化时更新相关的视图。
+>
+> 2. **Renderer（渲染器）**：渲染器是负责将虚拟 DOM 渲染为真实 DOM 的部分。Vue 3 的渲染器可以根据不同的平台和运行环境进行定制化，支持多种渲染目标，如浏览器环境、服务器端渲染、原生移动应用等。渲染器还提供了一系列的钩子函数，允许开发者在渲染过程中进行自定义操作。
+>
+> 3. **Compiler（编译器）**：编译器负责将模板或 JSX 语法转换为可执行的渲染函数。Vue 3 中的编译器通过将模板解析为 AST（抽象语法树），然后将 AST 转化为渲染函数，实现了模板的编译过程。编译器还支持一些高级特性，如片段（Fragments）、静态提升（Static Inlining）和事件优化等，以提高渲染性能和优化输出的代码。
+>
+> 这三个核心系统相互协作，构成了 Vue 3 的基础架构，为开发者提供了强大的功能和灵活性。Reactivity System 实现了数据的响应式，使得数据和视图之间能够自动保持同步；Renderer 负责将虚拟 DOM 渲染为真实 DOM，实现页面的渲染和更新；Compiler 则将模板转换为渲染函数，提供了编译和优化的功能。
+
+
+
+
+
+## 渲染系统实现
+
+![image-20230713172729723](vue3.assets/image-20230713172729723.png)
+
+
+
+### 渲染器实现
+
+渲染器是 Vue 的核心组件之一，负责将虚拟 DOM 渲染为真实 DOM，并进行更新。
+
+在 Vue 中，渲染器的实现可以根据不同的平台和运行环境进行定制化。以下是渲染器的一般实现过程：
+
+1. **创建虚拟 DOM**：首先，Vue 会根据组件的模板或 JSX 语法生成虚拟 DOM（Virtual DOM）对象，描述组件的结构和内容。
+
+2. **Diff 算法**：渲染器会使用 Diff 算法来比较新旧虚拟 DOM 的差异，找出需要更新的部分。
+
+3. **创建真实 DOM**：根据需要更新的部分，渲染器会创建相应的真实 DOM 元素，包括元素的标签名、属性、样式等。
+
+4. **挂载到文档**：将真实 DOM 元素挂载到文档中的指定位置，即将组件渲染到页面上。
+
+5. **事件监听**：渲染器会为真实 DOM 元素添加事件监听器，以便响应用户的交互操作。
+
+6. **更新视图**：当组件的状态发生变化时，渲染器会根据新的状态重新生成虚拟 DOM，并通过 Diff 算法找出需要更新的部分，然后更新相应的真实 DOM 元素。
+
+7. **销毁组件**：当组件被销毁时，渲染器会将相关的真实 DOM 元素从文档中移除，并取消事件监听，释放资源。
+
+需要注意的是，Vue 3 中的渲染器具有可定制化的特性，可以针对不同的平台和运行环境进行适配。例如，在浏览器环境下，渲染器会使用 DOM API 来创建和操作真实 DOM；而在服务器端渲染环境下，渲染器会生成字符串形式的 HTML，然后发送给客户端进行渲染。这种灵活的设计使得 Vue 可以在不同的场景下运行，并提供一致的开发体验。
+
+
+
+### 对绑定事件的识别判断对于
+
+onClick 事件      监听判断   
+
+  if(key.startsWith("on")) {        // 
+
+​     el.addEventListener(key.slice(2).toLowerCase(), value)
+
+
+
+slice（2）, 表示按第二个字符 开始进行索引， 并进行截取
+
+onClick 需要被识别为 click， 所以从2开始截取， 并转化为click
+
+
+
+### const el = vnode.el = document.createElement(vnode.tag);
+
+对虚拟节点保存信息是指方便后面的响应式操作是吗， 视图响 应
+
+> 是的，`vnode.el = document.createElement(vnode.tag)` 这一行代码的作用是将创建的真实 DOM 元素与虚拟节点 `vnode` 关联起来，并将真实 DOM 元素保存在 `vnode.el` 属性中。
+>
+> 保存真实 DOM 元素的引用对于后续的响应式操作非常重要。当数据发生变化时，我们可以通过比对虚拟节点的旧值和新值来确定需要更新的部分，并对相应的真实 DOM 元素进行更新。
+>
+> 通过保存真实 DOM 元素的引用，我们可以直接操作该元素，而不需要每次都通过选择器重新获取。这样可以提高性能，并避免不必要的 DOM 查询和操作。
+>
+> 因此，将真实 DOM 元素保存在虚拟节点中是为了方便后续的响应式操作和视图更新。

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>渲染器实现</title>
+  </head>
+  <script src="./render.js"></script>
+  <body>
+    <div id="app"></div>
+    <!-- 通过 h函数 创建一个 vnode -->
+    <script>
+      const vnode = h("div", { class: "wulv" }, [
+        h("h2", null, "当前计数： 100"),
+        // h("button", {onClick: "console.log('11')"}, "+1"), 错误写法
+        h("button", { onClick: () => { console.log('函数绑定 渲染成功') } }, "+1")
+        // h("button", null, "+1"),
+      ]);
+
+      console.log(vnode);
+      mount(vnode, document.querySelector("#app"));
+    </script>
+  </body>
+</html>
