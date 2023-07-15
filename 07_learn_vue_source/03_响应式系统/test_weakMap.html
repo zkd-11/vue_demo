@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const person1 = { name: "John" };
+      const person2 = { name: "Jane" };
+
+      const weakMap = new WeakMap();
+
+      weakMap.set(person1, "Person 1");
+      weakMap.set(person2, "Person 2");
+      console.log(weakMap);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="./render.js"></script>
+    <script src="./reactive.js"></script>
+    <script src="./index.js"></script>
+
+    <script>
+      // 1.创建根组件
+      const App = {
+        // 将data数据绑定为 响应式
+        //  响应式： 某数据修改时， 使用该属性的函数和变量属性，都自动进行变更
+        //  动态更新 -  核心还是用到set 和 get方法
+        data: reactive({
+          counter: 0,
+        }),
+        render() {
+          return h("div", null, [
+            h("h2", null, `当前计数: ${this.data.counter}`),
+            h(
+              "button",
+              {
+                // 这里的counter函数触发不准确， 是因为在
+                onClick: () => {
+                  this.data.counter++;
+                  console.log(this.data.counter);
+                },
+              },
+              "+1"
+            ),
+          ]);
+        },
+      };
+
+      // 2.挂载根组件
+      const app = createApp(App);
+      app.mount("#app");
+    </script>
+  </body>
+</html>

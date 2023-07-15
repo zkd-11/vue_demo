@@ -13,12 +13,39 @@
       const vnode = h("div", { class: "wulv" }, [
         h("h2", null, "当前计数： 100"),
         // h("button", {onClick: "console.log('11')"}, "+1"), 错误写法
-        h("button", { onClick: () => { console.log('函数绑定 渲染成功') } }, "+1")
+        h(
+          "button",
+          {
+            onClick: () => {
+              console.log("函数绑定 渲染成功");
+            },
+          },
+          "+1"
+        ),
         // h("button", null, "+1"),
       ]);
 
       console.log(vnode);
+
+      const vnode2 = h("div", { class: "hanjue" }, [
+        h("h2", null, "当前计数： 200"),
+        h(
+          "button",
+          {
+            onClick: () => {
+              console.log("函数绑定 渲染成功");
+            },
+          },
+          "+2"
+        ),
+        h("h2", { name: "悟律" }, [h("h2", null, "当前计数： 100")]),
+      ]);
+      // const vnode2 = h("div", { class: "hanjue" }, "h单独h");
+
       mount(vnode, document.querySelector("#app"));
+      setTimeout(() => {
+        patch(vnode, vnode2);
+      }, 500);
     </script>
   </body>
 </html>
