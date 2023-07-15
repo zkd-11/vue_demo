@@ -295,7 +295,7 @@ export const queuePostRenderEffect = __FEATURE_SUSPENSE__
  */
 export function createRenderer<
   HostNode = RendererNode,
-  HostElement = RendererElement
+  HostElement =  RendererElement
 >(options: RendererOptions<HostNode, HostElement>) {
   return baseCreateRenderer<HostNode, HostElement>(options)
 }
