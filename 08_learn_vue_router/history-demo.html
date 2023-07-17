@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>history模式</title>
+  </head>
+  <body>
+    <div id="app">
+      <a href="/home">home</a>
+      <a href="/about">about</a>
+
+      <div class="content">Default</div>
+    </div>
+
+    <script>
+      const contentEl = document.querySelector(".content");
+      const aEls = document.getElementsByTagName("a");
+
+      const changeContent = () =>{
+        console.log('被提取出的内容更替匹配Switch');
+        switch (location.pathname) {
+            case "/home":
+              console.log("11");
+              contentEl.innerHTML = "home";
+              break;
+            case "/about":
+              contentEl.innerHTML = "about";
+              break;
+            default:
+              contentEl.innerHTML = "default";
+          }
+      }
+
+      for (let aEl of aEls) {
+        aEl.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          const href = aEl.getAttribute("href");
+          history.pushState({}, "", href);
+          // history.replaceState({}, "", href);
+          console.log(this.location.pathname);
+
+          changeContent();
+        });
+      }
+
+      window.addEventListener("popstate", changeContent)
+    </script>
+  </body>
+</html>

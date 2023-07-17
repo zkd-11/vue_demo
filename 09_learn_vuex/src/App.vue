@@ -1,0 +1,33 @@
+<template>
+
+    <h2> App:  {{ $store.state.counter }}</h2>
+    <button @click="increment">+</button>
+    <button @click="decrement">-</button>
+
+    <home></home>
+</template>
+
+<script>
+import Home from './pages/Home.vue'
+
+export default {
+  name: "App",
+  components: {
+    Home,
+  },
+
+  //  vueX 管理状态， 公共储存资源储存库
+  methods: {
+    increment() {
+      this.$store.commit("increment");
+    },
+    decrement() {
+      this.$store.commit("decrement");
+    }
+  }
+  
+}
+</script>
+
+<style scoped>
+</style>
