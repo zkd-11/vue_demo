@@ -9,6 +9,8 @@
 
 <script>
 import Home from './pages/Home.vue'
+// import Home from './pages/05_useGetters封装后使用.vue'
+
 
 export default {
   name: "App",

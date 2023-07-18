@@ -4,5 +4,5 @@ import { useState } from './useState'
 
 export {
   useGetters,
-  useState
+
 }

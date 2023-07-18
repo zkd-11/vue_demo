@@ -1,6 +1,7 @@
 import { createStore } from "vuex"
 // 导入 函数变量名 文件
 import { INCREMENT_N } from './multation-type'
+import axios  from "axios";
 
 const store = createStore({
   state() {
@@ -25,7 +26,8 @@ const store = createStore({
           count: 5
         },
       ],
-      discount: 0.8
+      discount: 0.8,
+      banners: []
     }
   },
   // getters 相当于 computed对象， 内部属性返回可为 函数
@@ -83,8 +85,37 @@ const store = createStore({
       console.log(payload);
       // state.counter += payload
       state.counter += payload.n
-    }
+    },
+
+        // 调用APi接口信息
+      addBannerData(state, payload) {
+        state.banners = payload
+      } ,
   },
+  actions: {
+    // 1. 参数问题
+    //  context 为很重要的对象， 储存的为当前vuex这个对象
+    //  acctions对象  负责储存异步操作 并提交至mutations
+    incrementAction(context,) {
+      setTimeout(()=> {
+        console.log(context);
+        // 触发 mutations的increment方法
+        context.commit("increment")
+      }, 1000)
+    },
+
+    getHomeMultidata(context) {
+      return new Promise((resolve, reject) => {
+        axios.get("http://123.207.32.32:8000/home/multidata").then(res => {
+          console.log(res);
+          context.commit("addBannerData", res.data.data.banner.list);
+          resolve({ name: "wulv", age: 22 })
+        }).catch( err => {
+          reject(err);
+        })
+      })
+    }
+  }
 });
 
 export default store;

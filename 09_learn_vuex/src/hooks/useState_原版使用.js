@@ -1,6 +1,7 @@
 import { mapState, useStore } from 'vuex'
 import { computed } from 'vue'; 
 
+
 export function useState(mapper) {
   // 拿到 store对象
   const store = useStore();
