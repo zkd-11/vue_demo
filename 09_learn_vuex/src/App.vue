@@ -1,8 +1,8 @@
 <template>
 
-    <h2> App:  {{ $store.state.counter }}</h2>
+    <!-- <h2> App:  {{ $store.state.counter }}</h2> -->
+    <h2> App:  {{ $store.state.rootCounter }}</h2>
     <button @click="increment">+</button>
-    <button @click="decrement">-</button>
 
     <home></home>
 </template>

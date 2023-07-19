@@ -2315,7 +2315,7 @@ import Loading from './Loading.vue';
 >        <button @click="focusInput">Focus Input</button>
 >      </div>
 >    </template>
->                
+>                   
 >    <script>
 >    export default {
 >      methods: {
@@ -2989,7 +2989,7 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, unref } from 'vue';
->                
+>                     
 >      const count = ref(0);
 >      const unwrappedCount = unref(count);
 >      console.log(unwrappedCount); // 输出 0
@@ -3003,7 +3003,7 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, isRef } from 'vue';
->                
+>                     
 >      const count = ref(0);
 >      const isCountRef = isRef(count);
 >      console.log(isCountRef); // 输出 true
@@ -3018,12 +3018,12 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRefs } from 'vue';
->          
+>            
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->          
+>            
 >      const { name, age } = toRefs(state);
 >      console.log(name.value); // 输出 'John'
 >      console.log(age.value); // 输出 25
@@ -3038,11 +3038,11 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { shallowRef } from 'vue';
->                
+>                     
 >      const obj = { name: 'John' };
 >      const shallowObjRef = shallowRef(obj);
 >      console.log(shallowObjRef.value.name); // 输出 'John'
->                
+>                     
 >      // 注意：只有对象本身的改变会触发响应
 >      obj.name = 'Jane';
 >      console.log(shallowObjRef.value.name); // 输出 'Jane'
@@ -3062,12 +3062,12 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRef } from 'vue';
->          
+>            
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->          
+>            
 >      const nameRef = toRef(state, 'name');
 >      console.log(nameRef.value); // 输出 'John'
 >      ```
@@ -3081,11 +3081,11 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, computed } from 'vue';
->          
+>            
 >      const count = ref(0);
 >      const doubledCount = computed(() => count.value * 2);
 >      console.log(doubledCount.value); // 输出 0
->          
+>            
 >      // 注意：doubledCount 是一个响应式的计算属性
 >      count.value = 5;
 >      console.log(doubledCount.value); // 输出 10
@@ -3098,13 +3098,13 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, watchEffect } from 'vue';
->                
+>                     
 >      const count = ref(0);
->                
+>                     
 >      watchEffect(() => {
 >        console.log(`count 变化了：${count.value}`);
 >      });
->                
+>                     
 >      count.value = 1; // 输出 'count 变化了：1'
 >      ```
 >
@@ -4837,7 +4837,7 @@ export default {
 
 
 
-## mutaion 
+## mutaion 处理同步操作  使用state
 
 > 在 Vuex 中，mutation 应该专注于同步修改状态，而不应该用于发送网络请求或进行异步操作。这是因为 mutation 是用于修改状态的纯函数，它的目的是确保状态的可追踪性和可预测性。
 >
@@ -4849,6 +4849,664 @@ export default {
 > 3. 异步处理：action 可以处理异步操作，例如发送网络请求，并在异步操作完成后触发 mutation 来更新状态。
 >
 > 总而言之，将异步操作放在 action 中是更合适和推荐的做法，而 mutation 应该保持同步修改状态的功能。这样可以更好地组织代码，并提高代码的可读性和可维护性。
+
+### commit接收参数
+
+> 在VueX中，mutation方法接收两个参数：
+>
+> 1. `state`：表示当前的状态对象。它是由VueX自动传递给mutation方法的，你可以通过对`state`对象进行修改来更新状态。
+>
+> 2. `payload`：表示负载数据，用于传递额外的参数给mutation方法。它是可选的，你可以根据需要选择是否在commit时传递额外的数据给mutation。
+>
+> 下面是一个示例，展示了一个接收payload参数的mutation方法：
+>
+> ```javascript
+> // 在Vuex的store模块中定义mutation
+> const myModule = {
+>   state: {
+>     count: 0
+>   },
+>   mutations: {
+>     increment(state, payload) {
+>       state.count += payload.amount;
+>     }
+>   }
+> };
+> ```
+>
+> 在这个例子中，mutation方法`increment`接收了一个`payload`参数，并将`payload.amount`的值加到`state.count`上。
+>
+> 当调用`commit`方法触发该mutation时，可以传递一个包含`amount`属性的`payload`对象，例如：
+>
+> ```javascript
+> store.commit("increment", { amount: 5 });
+> ```
+>
+> 这样，`increment`方法将会使用`payload.amount`的值来更新`state.count`，使其增加5。
+>
+> 需要注意的是，mutation方法只能接收这两个参数，并且不支持异步操作。如果需要执行异步操作，应该使用actions来处理。
+
+
+
+## commit 触发根组件代码解析
+
+vueX 中 ， commit("increment", null, { root: true}) /， 子模块触发事件根模块， 对这段代码进行解析
+
+> 这段代码是在VueX中使用`commit`方法触发一个名为`increment`的事件，并且通过`{ root: true }`选项将该事件从子模块触发到根模块。
+>
+> 在VueX中，`commit`方法用于触发一个mutation（变更状态）事件。它接受三个参数：`commit("mutationName", payload, options)`。
+>
+> - `mutationName`是要触发的mutation的名称，这里是`increment`。
+> - `payload`是可选的参数，用于向mutation传递额外的数据。
+> - `options`是可选的选项对象。其中`root`属性设置为`true`表示该mutation将从根模块开始触发，而不是当前子模块。
+>
+> 这意味着当这段代码被执行时，它会触发根模块中名为`increment`的mutation。具体的操作将在根模块的mutation定义中实现。
+>
+> 例如，在根模块的mutation定义中，你可以编写以下代码：
+>
+> ```javascript
+> const state = {
+>   count: 0
+> };
+> 
+> const mutations = {
+>   increment(state) {
+>     state.count++;
+>   }
+> };
+> 
+> export default {
+>   state,
+>   mutations
+> };
+> ```
+>
+> 这样，当执行`commit("increment", null, { root: true })`时，根模块中的`increment`mutation将被调用，从而使`count`状态增加。
+>
+> 请注意，上述代码只是示例，实际的代码可能会根据你的应用程序结构和需求有所不同。
+
+
+
+### commit- 第三个参数
+
+在VueX的commit方法中，第三个参数是一个可选的对象，用于提供额外的选项配置。以下是一些常见的选项：
+
+1. `root`：布尔值，用于指定是否从根模块开始触发mutation。当设置为`true`时，该mutation将从根模块开始执行，默认为`false`。
+2. `silent`：布尔值，用于指定是否禁用触发mutation时的控制台输出警告信息。当设置为`true`时，控制台不会显示mutation的警告信息，默认为`false`。
+
+
+
+## vueX 模块概念
+
+> 在VueX中，模块是用于将状态、操作和其他相关逻辑组织在一起的一种方式。模块化可以帮助你在大型应用程序中更好地组织和管理状态，并使代码更具可维护性。
+>
+> 一个VueX模块包含以下内容：
+>
+> 1. `state`：模块的状态数据。它类似于根模块的状态，但只能在该模块内部访问。
+>
+> 2. `mutations`：用于修改模块状态的方法集合。只能修改属于该模块的状态数据。
+>
+> 3. `actions`：包含异步操作、业务逻辑以及触发mutations的方法集合。
+>
+> 4. `getters`：用于派生计算状态的方法集合。类似于根模块的getters，但只能访问属于该模块的状态数据。
+>
+> VueX模块的定义可以嵌套，形成一个模块树。每个子模块都可以拥有自己的state、mutations、actions和getters。
+>
+> `namespaced`属性是用于控制模块的命名空间的属性。当你在模块中设置`namespaced: true`时，模块会自动为其所有的mutations、actions和getters添加命名空间前缀。这样可以避免不同模块之间的命名冲突。
+>
+> 例如，假设有一个名为`user`的模块，你可以这样定义它：
+>
+> ```javascript
+> const userModule = {
+>   namespaced: true,
+>   state: { /* 状态数据 */ },
+>   mutations: { /* 修改状态的方法集合 */ },
+>   actions: { /* 异步操作和业务逻辑方法集合 */ },
+>   getters: { /* 计算状态的方法集合 */ }
+> };
+> ```
+>
+> 然后，在使用该模块的组件中，可以通过添加模块命名空间前缀来访问该模块的mutations、actions和getters：
+>
+> ```javascript
+> computed: {
+>   ...mapGetters('user', ['getUsername']),
+> },
+> methods: {
+>   ...mapActions('user', ['login']),
+>   ...mapMutations('user', ['setUsername'])
+> }
+> ```
+>
+> 在上述例子中，`user`模块的getters、actions和mutations会自动添加`user/`前缀，以区分其它模块中的同名方法。
+>
+> 使用命名空间可以帮助你在大型应用程序中更好地组织和管理模块，避免命名冲突，并提供更清晰的代码结构。
+
+
+
+### 标签使用子模块的属性
+
+```html
+  <!-- 使用getter  home模块中的 doubleHomeCounter -->
+  <h2> homeGetters: {{ $store.getters["home/doubleHomeCounter"]}}</h2>
+```
+
+
+
+## use state 映射的优化
+
+封装此js文件的作用， 将属性在组件中能以原先属性/函数名进行显示， 且mapState返回为一个函数数组， 当需要获取值时， 在内部进行computed进行解析后， 获得为数组，函数解构值
+
+优化： 当需要使用子模块时， 需去指定模块找对应属性而非在根组件
+
+```js
+//  根据使用的不同 导入不同的函数
+import { mapState, createNamespacedHelpers} from 'vuex'
+// 引入映射js文件
+import { useMapper } from './useMapper';
+
+//  此模块 主要 mapper 映射 提取 
+export function useState( mapper, moduleName ) {
+    let mapperFn = mapState;
+    if( typeof moduleName === "string" && moduleName.length >0 ) {
+        mapperFn = createNamespacedHelpers(moduleName).mapState
+    }
+    return useMapper(mapper, mapperFn);
+}
+```
+
+
+
+createNamespacedHelpers,  返回一个对象， 函数参数为模块名， 根据模块名，为mapState添加路径， 如home,  就会去执行 home下的 mapState函数
+
+
+
+
+
+## nextTIck 函数
+
+dom元素更新追踪， 更新后触发事件
+
+25-   2:41 原理
+
+
+
+`nextTick`将回调函数放置在微任务队列中， 正常的任务执行为在宏任务， 立即执行， 如果按正常顺序时， dom元素执行更新操作，后续紧接的执行语句， 是无法在dom元素更新后执行的， 因为微任务执行后， 才执行宏任务， 宏任务内部包括组件更新， watch事件等相关的事件触发， 所以需要 使用到 nextTIck
+
+
+
+> `nextTick`的原理是利用JavaScript的事件循环机制来实现异步执行。
+>
+> 当我们调用`nextTick(callback)`时，Vue会将该回调函数放入一个队列中，并在下一个事件循环周期中执行。这意味着在当前的同步任务执行完毕之后，Vue会立即将回调函数放入任务队列中，而不是立即执行。
+>
+> 具体来说，当执行JavaScript代码时，会按照同步任务和异步任务的不同进行处理：
+>
+> 1. 同步任务：按照代码顺序依次执行。
+>
+> 2. 异步任务：在事件循环的不同阶段执行。事件循环包括宏任务队列（macrotask queue）和微任务队列（microtask queue）。
+>
+>    - 宏任务（macrotask）：例如`setTimeout`、`setInterval`、`setImmediate`等，它们的回调函数会放入宏任务队列中等待执行。
+>
+>    - 微任务（microtask）：例如`Promise`、`MutationObserver`等，它们的回调函数会放入微任务队列中等待执行。微任务队列的执行时机在每个宏任务执行完毕之后，当前任务队列清空之前。
+>
+> 当调用`nextTick(callback)`时，Vue会将回调函数放入微任务队列中。这样，当当前的同步任务执行完毕时，JavaScript引擎会立即执行微任务队列中的所有回调函数。这样就保证了`nextTick`中的回调函数会在DOM更新循环结束后执行。
+>
+> 通过利用事件循环的机制，Vue能够在下一个事件循环周期中异步执行`nextTick`的回调函数，以确保在DOM更新后获取到最新的DOM状态。
+>
+> 需要注意的是，虽然`nextTick`是异步执行的，但它的执行顺序是在其他异步任务之前的微任务队列中。因此，在同一事件循环周期内，通过`nextTick`添加的多个回调函数将按照添加顺序依次执行。
+
+
+
+# 7.19 day20   16点30分
+
+
+
+## History fallback API  （08-vueRouter 知识补充）
+
+> History fallback API（历史回退 API）是一种用于处理前端路由的机制。它与单页应用程序 (SPA) 的前端路由设置相关。
+>
+> 在传统的服务器端网页开发中，当用户访问一个特定的 URL 时，服务器会返回相应的 HTML 页面。但在 SPA 中，所有的路由都由前端处理，服务器只返回一个基础的 HTML 页面。当用户在 SPA 中进行导航时，页面的 URL 发生变化，但浏览器不会向服务器发送新的请求。这样在用户刷新页面或直接输入某个 URL 地址时，服务器将无法识别该路由并返回相应的页面。
+>
+> 为了解决这个问题，History fallback API 提供了一种机制，通过配置服务器以始终返回基础 HTML 页面（通常是 `index.html`），然后由前端的路由机制根据 URL 来渲染相应的内容。
+>
+> 具体而言，当服务器收到请求时，如果找不到与请求 URL 相对应的资源，服务器会返回基础 HTML 页面，然后前端的路由机制会根据 URL 来确定要渲染的页面组件或内容。
+>
+> 这种方式保证了在前端路由设置下，无论用户直接输入 URL 或刷新页面，都能正确渲染相应的内容，并提供与传统服务器端网页开发类似的用户体验。
+>
+> 注意，使用 History fallback API 需要在服务器端进行配置，具体配置方式会根据使用的服务器软件（如 Nginx、Apache、Express 等）而有所不同。你需要根据你的服务器配置和需求，参考相应的文档来进行配置。
+>
+> 总结：History fallback API 是一种用于解决单页应用程序前端路由问题的机制，通过配置服务器始终返回基础 HTML 页面，然后由前端的路由机制根据 URL 渲染相应的内容。
+
+
+
+**能理解为在哪个页面进行刷新时， 因为设置了historyAPifallback， 所以它会将当前的页面进行返回， 或者说保持当前页面的状态， 并且前端路由会根据对应的url去进行组件加载**
+
+
+
+> 是的，你的理解是正确的。
+>
+> 当设置了 History fallback API 并在前端应用程序中进行路由配置时，如果用户在浏览器中刷新当前页面，服务器会始终返回基础 HTML 页面。
+>
+> 这意味着服务器不会返回特定页面的状态或内容，而是返回包含前端应用程序的基础结构和代码的 HTML 页面。该页面会加载前端应用程序的 JavaScript 和 CSS 文件，并通过前端路由机制来根据 URL 来决定要加载和渲染的组件。
+>
+> 当用户刷新当前页面时，前端应用程序会重新加载，并根据当前的 URL 和路由配置来决定要渲染的组件。这样，前端应用程序能够保持当前页面的状态，以及基于 URL 进行正确的组件加载和渲染。
+>
+> 通过这种方式，用户在刷新页面后仍能够看到与之前相同的页面内容，并且前端路由会根据对应的 URL 进行相应的组件加载和渲染。这种行为使得前端应用程序在刷新页面时能够保持应用程序状态的连续性和正确性。
+>
+> 总结：通过设置 History fallback API，服务器会始终返回基础 HTML 页面。当用户在刷新页面时，前端应用程序会重新加载，并根据当前的 URL 和路由配置来决定要渲染的组件，从而保持页面的状态并正确加载相应的组件。
+
+##   🔺✨ typeScript  文件配置 
+
+全局下载依赖 - 
+
+ typeScript  :  使用ts文件
+
+ts-node (直接node内部运行 ts文件)  内部进行编译并运行
+
+本身依赖其它两个包： tslib   @types/node 
+
+文件编译报错： ../../../node_modules/puppeteer/lib/types.d.ts:4057:5 - error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+
+
+
+### 添加了 标记记号 🔺✨
+
+使用微软的表情 win+ .
+
+选择🔺✨ 这两个表情， 并在搜狗拼音中自定义短语中自定义添加了 cc键将其置于候选位置第一，  cc加空格直接使用标记， 🔺✨
+
+并且-  ocr不成功是因为没有选择有道ocr
+
+
+
+### bug   4057     tsc 编译出错
+
+
+
+> 这些错误提示是 TypeScript 编译器给出的错误信息，指示在 `puppeteer` 的类型定义文件 `types.d.ts` 中找不到一些名称或特定的语言特性。
+>
+> 1. `Cannot find name 'Awaited'`：这个错误表示在 `puppeteer` 的类型定义文件中找不到名为 `Awaited` 的类型。可能是由于 `Awaited` 类型的定义缺失或缺少相关的类型定义文件。你可以尝试更新 `puppeteer` 或相关的类型定义文件，以确保版本匹配和类型定义的完整性。
+>
+> 2. `Private identifiers are only available when targeting ECMAScript 2015 and higher`：这个错误表示私有标识符（Private identifiers）只在目标 ECMAScript 2015 及更高版本时可用。这可能是由于你的 TypeScript 编译配置不支持或未启用 ECMAScript 2015 或更高的目标版本。你可以在 `tsconfig.json` 文件中将 `target` 配置为 `"ES2015"` 或更高版本来解决该问题。
+>
+> 解决这些错误的步骤如下：
+>
+> 1. 确保你使用的 `puppeteer` 版本与相关的类型定义文件（`.d.ts`）匹配，并且它们是最新的版本。
+>
+> 2. 检查你的 TypeScript 配置文件（例如 `tsconfig.json`）中的 `types` 和 `typeRoots` 配置，确保它们包含了正确的类型定义文件路径。
+>
+> 3. 确保你的 TypeScript 编译配置中的 `target` 版本设置为 `"ES2015"` 或更高版本，以启用相关的语言特性和支持。
+>
+> 请注意，这些错误可能是由于版本不匹配、缺少类型定义文件或 TypeScript 编译配置问题引起的。确保你的依赖版本和类型定义文件与你的 TypeScript 配置兼容，并按照上述步骤进行相应的修复和调整。
+
+### ts-node
+
+> `ts-node` 是一个用于在 Node.js 环境中直接运行 TypeScript 代码的工具。它允许你在开发过程中无需先将 TypeScript 代码编译为 JavaScript，而直接在 Node.js 中执行 TypeScript。
+>
+> 使用 `ts-node` 有以下几个优点：
+>
+> 1. 无需手动编译：使用 `ts-node`，你可以直接运行 TypeScript 代码，而无需先将其编译为 JavaScript。这简化了开发流程，减少了手动编译的步骤。
+>
+> 2. 即时类型检查：`ts-node` 可以在执行代码的同时进行即时的类型检查。这意味着在开发过程中，你可以立即发现类型错误并进行调试，而无需等待编译过程。
+>
+> 3. 调试支持：`ts-node` 可以与调试器（如 VS Code）无缝集成，让你能够直接在 TypeScript 代码中进行断点调试和步进调试。
+>
+> 4. 配置灵活：`ts-node` 提供了一些配置选项，如自定义编译选项、自定义类型检查规则等，以满足不同的开发需求。
+>
+> 要使用 `ts-node`，首先需要全局安装它：
+>
+> ```shell
+> npm install -g ts-node
+> ```
+>
+> 然后，在命令行中运行以下命令来执行 TypeScript 文件：
+>
+> ```shell
+> ts-node path/to/your/typescript/file.ts
+> ```
+>
+> `ts-node` 会自动将 TypeScript 代码解析为 JavaScript，并在 Node.js 环境中执行。你可以像运行普通的 JavaScript 文件一样运行 TypeScript 文件。
+>
+> 注意，虽然 `ts-node` 可以方便地在开发过程中直接运行 TypeScript 代码，但在生产环境中，建议先将 TypeScript 代码编译为 JavaScript，并执行编译后的 JavaScript 代码，以获得更好的性能和安全性。
+
+
+
+### tslib   @types/node 
+
+
+
+> `tslib` 是一个 TypeScript 运行时库，它提供了一些帮助函数和工具，用于支持编译后的 JavaScript 代码在运行时的执行。它是由 TypeScript 团队提供的官方运行时库。
+>
+> 当你使用 TypeScript 编译代码时，默认会在编译结果中引入 `tslib`。这个库包含了一些常见的帮助函数，如 `__extends`、`__awaiter`、`__generator` 等。这些函数用于支持编译后的 JavaScript 代码执行一些特定的操作，例如处理继承、异步操作和生成器函数等。
+>
+> `@types/node` 是 TypeScript 提供的类型声明文件，用于支持在 TypeScript 项目中使用 Node.js 核心模块和其他第三方模块时的类型检查。这些类型声明文件提供了对 Node.js 模块的类型定义，使 TypeScript 编译器能够检查你的代码与模块的正确性，并提供相应的代码补全和类型推断。
+>
+> 通过安装 `tslib` 和 `@types/node`，你可以获得 TypeScript 运行时库和 Node.js 类型声明的支持，以更好地进行 TypeScript 项目的开发和调试。
+>
+> 安装 `tslib` 和 `@types/node` 的方法如下：
+>
+> 使用 npm：
+> ```shell
+> npm install tslib @types/node
+> ```
+>
+> 使用 yarn：
+> ```shell
+> yarn add tslib @types/node
+> ```
+>
+> 这将会在你的项目中安装并添加这两个依赖项。在你的 TypeScript 项目中，`tslib` 库将被自动引入，并且你可以在代码中使用 Node.js 核心模块和其他第三方模块的类型定义。
+>
+> 请确保在项目中的 `package.json` 文件中存在 `tslib` 和 `@types/node` 的依赖项，并确保安装了这些依赖项。这样，你就可以充分利用 TypeScript 运行时库和 Node.js 类型声明的功能。
+
+
+
+### 查找全局依赖 所下载位置
+
+npm  root -g  查询所依赖所处位置
+
+
+
+### 全局安装依赖后查看依赖版本
+
+npm install tslib @types/node -g 全局安装这两个依赖后， 用什么指令查看这两个依赖的版本
+
+> 在全局安装的依赖项中，你可以使用以下命令来查看其版本：
+>
+> 对于 `tslib`：
+> ```shell
+> npm list tslib -g
+> ```
+> 或
+> ```shell
+> npm show tslib version -g
+> ```
+>
+> 对于 `@types/node`：
+> ```shell
+> npm list @types/node -g
+> ```
+> 或
+> ```shell
+> npm show @types/node version -g
+> ```
+>
+> 这些命令将列出全局安装的 `tslib` 和 `@types/node` 的版本号。
+>
+> 请注意，使用全局安装的方式来安装 TypeScript 相关的依赖项并不是推荐的做法。通常情况下，推荐将这些依赖项作为项目的本地开发或生产依赖项进行安装，以确保每个项目具有独立的依赖环境，并能够在项目级别进行版本管理。
+>
+> 如果你正在开发一个具体的项目，建议在项目的根目录中执行依赖项的安装，并使用项目本地的命令来查看依赖项的版本。例如，使用 `npm list` 或 `yarn list` 命令在项目中查看依赖项的版本。
+
+
+
+
+
+## typeScript- webpack配置   
+
+26 1：40 -2：20   🔺✨  10-03webpack
+
+
+
+## ts变量定义格式
+
+
+
+
+
+### 字符串包装类和字符串类型
+
+
+
+> 字符串包装类和字符串类型之间存在一些区别，这是由于 JavaScript 中的字符串包装类是用来处理字符串的对象形式。
+>
+> 1. 字符串类型：字符串类型是 JavaScript 中的基本数据类型之一，用于表示文本数据。它是不可变的，意味着一旦创建，就无法改变其值。字符串类型使用引号（单引号或双引号）来表示字符串字面量。
+>
+> ```javascript
+> const str = "Hello, World!"; // 字符串类型
+> ```
+>
+> 2. 字符串包装类：字符串包装类是 JavaScript 中提供的一种对象形式的字符串表示。它允许对字符串进行一些操作和访问其属性和方法。当我们对字符串类型调用属性或方法时，JavaScript 会自动将字符串类型转换为字符串包装类对象，并执行相关操作。
+>
+> ```javascript
+> const str = "Hello, World!"; // 字符串类型
+> const strObject = new String(str); // 字符串包装类对象
+> ```
+>
+> 虽然字符串包装类提供了一些额外的功能，例如访问字符串长度、查找子字符串等，但它也具有一些特殊行为和注意事项：
+>
+> - 字符串包装类是对象类型，而不是基本类型。因此，它们在比较时使用引用相等性而不是值相等性。
+> - 字符串包装类是可变的，可以通过属性和方法进行修改，但字符串类型是不可变的。
+> - 在大多数情况下，直接使用字符串类型更常见和更高效。只有在需要使用字符串对象的特定功能时才需要使用字符串包装类。
+>
+> 总结来说，字符串类型是 JavaScript 中的基本数据类型，表示不可变的文本数据。字符串包装类是用于处理字符串的对象形式，提供了一些额外的功能和操作，但在一般情况下，使用字符串类型更常见和更推荐。
+
+
+
+
+
+## symbol  同值 分割复用
+
+
+
+**相当于对一个对象进行包裹， 对同个对象的不同属性进行赋值，从而实现一值复用**
+
+
+
+> 如果您希望对一个对象的相同属性进行赋值，并且希望对它们进行区分，可以使用 Symbol 进行分割。Symbol 是 JavaScript 的一种基本数据类型，它是唯一且不可变的。
+>
+> 您可以创建多个具有相同名称的 Symbol，并将其用作对象属性的键。这样做可以确保每个属性都具有不同的标识符，从而避免冲突。
+>
+> 下面是一个示例：
+>
+> ```javascript
+> const symbol1 = Symbol('property');
+> const symbol2 = Symbol('property');
+> 
+> const obj = {};
+> 
+> obj[symbol1] = 'Value 1';
+> obj[symbol2] = 'Value 2';
+> 
+> console.log(obj[symbol1]); // 输出: Value 1
+> console.log(obj[symbol2]); // 输出: Value 2
+> ```
+>
+> 在上面的代码中，我们创建了两个不同的 Symbol，分别命名为 `symbol1` 和 `symbol2`。然后，我们将它们用作对象 `obj` 的属性键，并分别赋予不同的值。
+>
+> 通过使用 Symbol，即使属性名称相同，它们也具有不同的标识符，因此它们不会互相冲突。
+>
+> 请注意，Symbol 是一种特殊的数据类型，它与字符串键不同，因此无法通过常规方式遍历对象的 Symbol 属性。要遍历对象的 Symbol 属性，可以使用 `Object.getOwnPropertySymbols` 方法。
+>
+> ```javascript
+> const symbols = Object.getOwnPropertySymbols(obj);
+> symbols.forEach(symbol => {
+>   console.log(obj[symbol]);
+> });
+> ```
+>
+> 这样可以获取对象中使用 Symbol 作为属性键的值。
+>
+
+
+
+> 是的，使用 Symbol 对象进行属性包裹可以实现对同一个对象的不同属性进行赋值，从而实现值的复用。通过为每个属性分配不同的 Symbol，可以确保属性之间的唯一性，并且不会产生冲突。
+>
+> 这种方式可以用于创建具有相似功能或相关属性的对象，同时避免属性名称的冲突。每个属性都使用不同的 Symbol 作为键，这样可以确保属性的唯一性，并且可以通过 Symbol 来访问和操作这些属性的值。
+>
+> 以下是一个示例：
+>
+> ```javascript
+> const name = Symbol('name');
+> const age = Symbol('age');
+> const height = Symbol('height');
+> 
+> const person = {
+>   [name]: 'John',
+>   [age]: 25,
+>   [height]: 180
+> };
+> 
+> console.log(person[name]);    // 输出: John
+> console.log(person[age]);     // 输出: 25
+> console.log(person[height]);  // 输出: 180
+> ```
+>
+> 在上面的示例中，我们创建了三个不同的 Symbol，并将它们用作 `person` 对象的属性键。通过使用 Symbol，我们可以访问和操作这些属性的值，而不会发生属性名称冲突。
+>
+> 这种方法可以提供一种灵活且安全的方式来对对象的属性进行包裹和赋值，避免属性名称冲突，并实现属性值的复用。
+>
+> 请注意，Symbol 属性不会被常规的对象遍历方法（如 `for...in` 循环）访问到，但可以通过使用 `Object.getOwnPropertySymbols` 或 `Reflect.ownKeys` 方法来获取对象的 Symbol 属性。
+>
+
+
+
+### 对值取出 -  symbols
+
+```js
+const symbols = Object.getOwnPropertySymbols(obj); // 获取 obj 对象中的所有 Symbol 属性，并以数组形式返回
+symbols.forEach(symbol => { // 遍历 Symbol 属性数组
+  console.log(obj[symbol]); // 输出每个 Symbol 属性对应的值
+});
+```
+
+
+
+> 这段代码用于获取一个对象中的所有 Symbol 属性，并遍历输出每个 Symbol 属性对应的值。
+>
+> 首先，`Object.getOwnPropertySymbols(obj)` 方法用于获取 `obj` 对象中的所有 Symbol 属性，并将它们以数组的形式返回。这个方法返回的数组包含了对象中所有的 Symbol 属性，无论是可枚举还是不可枚举的。
+>
+> 然后，使用 `forEach` 方法对获取到的 Symbol 属性数组进行遍历。对于数组中的每个 Symbol 属性，执行给定的回调函数。在这个示例中，回调函数中的参数 `symbol` 就代表数组中的当前 Symbol 属性。
+>
+> 在回调函数中，通过 `obj[symbol]` 的方式可以访问和获取对应 Symbol 属性的值。这里使用 `console.log` 将每个属性的值输出到控制台。
+>
+> 以下是完整的示例代码解析：
+>
+> ```javascript
+> const symbols = Object.getOwnPropertySymbols(obj); // 获取 obj 对象中的所有 Symbol 属性，并以数组形式返回
+> symbols.forEach(symbol => { // 遍历 Symbol 属性数组
+>   console.log(obj[symbol]); // 输出每个 Symbol 属性对应的值
+> });
+> ```
+>
+> 这段代码的作用是遍历一个对象的所有 Symbol 属性，并输出它们的值。通过使用 Symbol 属性，可以实现对对象的属性进行包裹和赋值，避免属性名称冲突，并且能够灵活地操作这些属性。
+>
+
+
+
+
+
+## Symbol和对象的区别
+
+> Symbol 和对象是两个不同的概念，它们在 JavaScript 中有以下区别：
+>
+> 1. 数据类型：Symbol 是一种基本数据类型，而对象是一种复合数据类型。
+>
+> 2. 唯一性：每个 Symbol 值都是唯一的，不会与其他任何值相等。即使两个 Symbol 使用相同的描述符创建，它们也是不相等的。对象可以有相同的属性和值，但它们是不同的对象实例。
+>
+> 3. 作为属性名：Symbol 值可以用作对象的属性名，通过使用 Symbol 作为属性名，可以确保属性的唯一性，避免属性名冲突。对象则使用字符串或 Symbol 作为属性名。
+>
+> 4. 遍历：对象的属性可以通过遍历方法（如 for...in 循环或 Object.keys）进行迭代访问，可以获取对象的所有属性。而 Symbol 属性默认是不可枚举的，不会出现在常规的遍历方法中，需要使用 Object.getOwnPropertySymbols 方法或 Reflect.ownKeys 方法来获取 Symbol 属性。
+>
+> 5. 字面量表示：Symbol 使用 `Symbol()` 函数来创建，对象则使用对象字面量 `{}` 或构造函数创建。
+>
+> 总的来说，Symbol 是一种特殊的数据类型，用于创建唯一的标识符，而对象是用于表示和组织数据的数据结构。Symbol 可以用作对象属性名，用于确保属性的唯一性和防止冲突，而对象则包含属性和对应的值。
+>
+> 需要注意的是，Symbol 和对象是不同的概念，具有不同的特性和用途，根据具体的需求和场景来选择使用哪种数据类型。
+
+
+
+
+
+## TS中never的应用场景
+
+
+
+> `never` 类型在 TypeScript 中有几个主要的应用场景：
+>
+> 1. 函数永远不会返回：当函数存在无限循环或抛出异常等情况时，可以将其返回类型标注为 `never`。这可以帮助开发者明确函数的行为，以及在调用该函数时捕捉潜在的问题。
+>
+> ```typescript
+> function throwError(message: string): never {
+>   throw new Error(message);
+> }
+> 
+> function infiniteLoop(): never {
+>   while (true) {
+>     // 无限循环
+>   }
+> }
+> ```
+>
+> 2. 类型守卫（type guards）：`never` 类型可以在类型判断中用作辅助类型，帮助编译器推断出正确的类型。
+>
+> ```typescript
+> function getSomeValue(x: string | number): string {
+>   if (typeof x === 'string') {
+>     return x;
+>   } else if (typeof x === 'number') {
+>     return String(x);
+>   } else {
+>     const exhaustiveCheck: never = x;
+>     throw new Error('Unexpected type: ' + typeof x);
+>   }
+> }
+> ```
+>
+> 3. 辅助类型推断：当 TypeScript 无法推断出某个值的类型时，可以使用 `never` 类型进行辅助。
+>
+> ```typescript
+> function unreachableCode(): never {
+>   while (true) {
+>     // 无限循环
+>   }
+> }
+> 
+> const value = unreachableCode(); // 推断类型为never
+> ```
+>
+> 总之，`never` 类型主要用于表示那些永远不会发生的值的类型。通过使用 `never` 类型，可以帮助编译器进行类型检查和推断，并使代码更加健壮和可靠。
+
+
+
+### never表示永远无返回值
+
+> 上述代码中包含两个函数：
+>
+> 1. `throwError(message: string): never`：该函数接受一个字符串类型的参数 `message`，并且返回类型被标注为 `never`。函数的作用是抛出一个带有指定错误信息的 `Error` 异常。由于异常的抛出会中断函数的执行，并且不会返回任何值，因此返回类型被标注为 `never`。
+>
+> 2. `infiniteLoop(): never`：该函数没有参数，返回类型也被标注为 `never`。函数内部包含一个无限循环，即 `while (true)`，这意味着函数将永远不会自然终止。因此，返回类型被标注为 `never`，表示函数永远不会返回。
+>
+> 这两个函数的共同点是它们都返回 `never` 类型。`never` 类型表示那些永远不会发生的值的类型，用于表示不可达的代码路径或函数的终止状态。这在类型检查和辅助类型推断中非常有用，可以帮助开发者编写更加健壮和可靠的代码。
+
+
+
+标识所有异常不可达的路径
+
+> 是的，`never` 类型在 TypeScript 中常用于标识所有异常不可达的路径。当函数中包含会抛出异常的代码或进入无限循环的逻辑时，可以将该函数的返回类型标注为 `never`，以表明该函数不会正常返回。
+>
+> 通过将返回类型标注为 `never`，可以帮助编译器检测到潜在的问题。例如，如果在一个分支中抛出了异常，而在另一个分支中没有返回值，编译器会发出警告或错误，提示开发者可能存在逻辑错误。
+>
+> 使用 `never` 类型可以增强代码的可靠性和可维护性，因为它能够明确指示某些代码路径的不可达性，从而帮助开发者更好地理解和推断函数的行为。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
