@@ -9,4 +9,3 @@ function sum( num: number, num2: number) {
 }
 
 sum(1,2);
-

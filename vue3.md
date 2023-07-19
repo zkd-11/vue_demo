@@ -5490,13 +5490,61 @@ symbols.forEach(symbol => { // 遍历 Symbol 属性数组
 
 
 
+## ts-数据类型 
+
+tuple: 元组：对数组的参数进行声明， 且声明后需要一 一对应， 类型和参数需要一致
+
+ 函数声明 ： 函数名： （）=> void, 表示一个无返回值的函数
+
+函数返回值：编译器会自动推导补充
+
+匿名参数：可根据上下文自动推导函数类型
+
+对象类型： 参数名： {x: number, y: number , z?: number} , ?表示可选参数
+
+联合类型： number | boolean | String|
+
+类型别名： type IDtype = string | number| boolean| 
+
+​			function printID( id: IDTypre)  相当于 type 变量提取
+
+### tuple 元组
+
+<T> 表示将接收的类型 作为参数注解
+
+```tsx
+export {}
+// 泛型  表示将接收的类型 作为注解
+function useState<T>(state: T) {
+  let currentState = state;
+
+  const changeState = (newState: T) => {
+    currentState = newState;
+  }
+
+  //  表示定义了一个元组， 第一个为any 第二个为函数
+  const tuple: [T, (newState: T)=> void ] = [currentState, changeState];
+
+  return tuple
+}
+
+const[counter, setCounter] = useState(19);
+
+const[title, setTitle] = useState("aa");
+
+
+// 声明函数 表示 为无返回值的函数 ()=>{ return undefined;}
+const foo: ()=> void = () =>{}
+
+// 可阅读性较差 一般使用 
+type MyFunction = () => void;
+const foo1: MyFunction = () => {}
+
+```
 
 
 
-
-
-
-
+此段代码： 相当于提供了一个返回值和函数， 值为传入的初始值， 后续可根据返回的函数去进行对值的操控， 并可通过元组的下标0 取出第一个值
 
 
 
