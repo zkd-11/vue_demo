@@ -5115,7 +5115,7 @@ ts-node (直接node内部运行 ts文件)  内部进行编译并运行
 
 选择🔺✨ 这两个表情， 并在搜狗拼音中自定义短语中自定义添加了 cc键将其置于候选位置第一，  cc加空格直接使用标记， 🔺✨
 
-并且-  ocr不成功是因为没有选择有道ocr
+并且-  ocr不成功 是因为没有选择有道ocr
 
 
 
@@ -5545,6 +5545,71 @@ const foo1: MyFunction = () => {}
 
 
 此段代码： 相当于提供了一个返回值和函数， 值为传入的初始值， 后续可根据返回的函数去进行对值的操控， 并可通过元组的下标0 取出第一个值
+
+
+
+
+
+
+
+# 🔺✨day21  22:40
+
+
+
+
+
+## 可选链 
+
+> 可选链是一种 JavaScript/TypeScript 中的新特性，它通过简化对可能为 null 或 undefined 的属性或方法的访问，使代码更加简洁和安全。可选链避免了在访问嵌套属性或调用嵌套方法时出现的 "Cannot read property '...' of null" 或 "Cannot read property '...' of undefined" 错误。
+>
+> 在 JavaScript 中，如果我们尝试访问一个对象中的属性或调用对象的方法，而该对象为 null 或 undefined，那么会导致运行时错误。为了避免这种情况，我们需要在访问前添加条件判断，例如：
+>
+> ```javascript
+> if (obj && obj.property && obj.property.method) {
+>   // 执行操作
+> }
+> ```
+>
+> 而使用可选链，可以简化上述代码为：
+>
+> ```javascript
+> if (obj?.property?.method) {
+>   // 执行操作
+> }
+> ```
+>
+> 在 TypeScript 中，可选链也可以用于类型安全地访问可能为 null 或 undefined 的属性。通过可选链，编译器会根据对象的类型进行推断，从而确保只有在属性存在的情况下才能进行访问。
+>
+> 示例代码：
+>
+> ```typescript
+> interface Person {
+>   name: string;
+>   age?: number;
+> }
+> 
+> const person1: Person = {
+>   name: "Alice",
+>   age: 30,
+> };
+> 
+> const person2: Person = {
+>   name: "Bob",
+> };
+> 
+> console.log(person1.age); // 输出: 30
+> console.log(person2.age); // 输出: undefined
+> 
+> // 使用可选链来访问可能为 undefined 的属性
+> console.log(person1?.age); // 输出: 30
+> console.log(person2?.age); // 输出: undefined
+> ```
+>
+> 注意，在使用可选链时，如果对象为 null 或 undefined，则整个表达式会直接返回 undefined，而不会引发运行时错误。这使得代码更加健壮，避免了许多潜在的错误。可选链在处理深层次的嵌套对象时尤其有用，可以减少代码的冗余和复杂性。
+
+
+
+
 
 
 
