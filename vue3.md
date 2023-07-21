@@ -2315,7 +2315,7 @@ import Loading from './Loading.vue';
 >        <button @click="focusInput">Focus Input</button>
 >      </div>
 >    </template>
->                   
+>                      
 >    <script>
 >    export default {
 >      methods: {
@@ -2989,7 +2989,7 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, unref } from 'vue';
->                     
+>                          
 >      const count = ref(0);
 >      const unwrappedCount = unref(count);
 >      console.log(unwrappedCount); // 输出 0
@@ -3003,7 +3003,7 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, isRef } from 'vue';
->                     
+>                          
 >      const count = ref(0);
 >      const isCountRef = isRef(count);
 >      console.log(isCountRef); // 输出 true
@@ -3018,12 +3018,12 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRefs } from 'vue';
->            
+>              
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->            
+>              
 >      const { name, age } = toRefs(state);
 >      console.log(name.value); // 输出 'John'
 >      console.log(age.value); // 输出 25
@@ -3038,11 +3038,11 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { shallowRef } from 'vue';
->                     
+>                          
 >      const obj = { name: 'John' };
 >      const shallowObjRef = shallowRef(obj);
 >      console.log(shallowObjRef.value.name); // 输出 'John'
->                     
+>                          
 >      // 注意：只有对象本身的改变会触发响应
 >      obj.name = 'Jane';
 >      console.log(shallowObjRef.value.name); // 输出 'Jane'
@@ -3062,12 +3062,12 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRef } from 'vue';
->            
+>              
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->            
+>              
 >      const nameRef = toRef(state, 'name');
 >      console.log(nameRef.value); // 输出 'John'
 >      ```
@@ -3081,11 +3081,11 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, computed } from 'vue';
->            
+>              
 >      const count = ref(0);
 >      const doubledCount = computed(() => count.value * 2);
 >      console.log(doubledCount.value); // 输出 0
->            
+>              
 >      // 注意：doubledCount 是一个响应式的计算属性
 >      count.value = 5;
 >      console.log(doubledCount.value); // 输出 10
@@ -3098,13 +3098,13 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, watchEffect } from 'vue';
->                     
+>                          
 >      const count = ref(0);
->                     
+>                          
 >      watchEffect(() => {
 >        console.log(`count 变化了：${count.value}`);
 >      });
->                     
+>                          
 >      count.value = 1; // 输出 'count 变化了：1'
 >      ```
 >
@@ -5609,17 +5609,188 @@ const foo1: MyFunction = () => {}
 
 
 
+## 字面量
+
+const name = "悟律"，  此时悟律会作为一种数据类型赋值于 name
+
+相当于name 的数据类型 就是“悟律”（字符串字面量）， 它的值 为 悟律
+
+> 
+>
+> 你是对的，当使用 `const` 定义一个常量属性时，它的类型将被推断为字符串字面量类型而不是字符串类型。这意味着它只能被赋值为其初始值的字面量，而不能被赋值为其他字符串。
+>
+> 让我们来看一个例子：
+>
+> ```typescript
+> const name = "悟律"; // 推断为 "悟律" 字符串字面量类型
+> 
+> name = "John"; // 错误！不能将 "John" 赋值给 name，因为 name 的类型是 "悟律" 字符串字面量类型
+> ```
+>
+> 在上面的例子中，`name` 被推断为字符串字面量类型，其值为 `"悟律"`。由于字符串字面量类型只能接受字面量值，因此尝试将其他字符串赋值给 `name` 会导致 TypeScript 报错。
+>
+> 如果你想要声明一个普通的字符串类型的变量，可以显式地指定它的类型为 `string`：
+>
+> ```typescript
+> const name: string = "悟律"; // 声明为普通的字符串类型
+> 
+> name = "John"; // 正确！可以将其他字符串赋值给 name，因为它的类型是普通的字符串类型
+> ```
+>
+> 总结：使用 `const` 定义的常量属性在 TypeScript 中会被推断为字符串字面量类型，只能被赋值为其初始值的字面量。如果需要普通的字符串类型变量，可以显式地指定类型为 `string`。
 
 
 
 
 
+> 字面量确实可以看作是一种独立的数据类型，是由开发者在代码中显式定义的特定值的表达方式。字面量提供了直接表示数据值的方法，而不需要创建变量或使用变量进行赋值。它们在代码中直接表示固定的值，不可修改，因此可以被看作是一种常量。
+>
+> 在编程语言中，字面量有多种类型，包括但不限于：
+>
+> 1. 整数字面量：表示整数值，如 `1`, `42`, `-10` 等。
+> 2. 浮点数字面量：表示浮点数值，如 `3.14`, `0.5`, `-2.75` 等。
+> 3. 字符串字面量：表示字符串值，用引号包裹，如 `"Hello"`, `'world'`, `"123"` 等。
+> 4. 布尔字面量：表示布尔值，即 `true` 或 `false`。
+> 5. 数组字面量：表示数组的值，使用方括号包裹元素，如 `[1, 2, 3]`, `['a', 'b', 'c']` 等。
+> 6. 对象字面量：表示对象的值，使用花括号包裹键值对，如 `{ name: 'John', age: 25 }`。
+> 7. 空值字面量：表示空值，即 `null` 或 `undefined`。
+>
+> 字面量在编程中非常有用，它们可以增加代码的可读性，使代码更加直观和简洁。例如，可以使用布尔字面量直接表示逻辑值，在条件判断中使代码更加清晰。同样，数组和对象字面量可以直接表示数据结构，而无需创建变量。
+>
+> 总之，字面量是由开发者显式定义的独立数据类型，它们在代码中直接表示固定的值，不可修改，起到了常量的作用，并且可以增强代码的可读性和简洁性。
 
 
 
+## Type -  别名
+
+感觉type有点类似class定义类， 类似而已， 具体实现不同， 还是别称的比较多， 实质上还是 模板 -  ， 可以作为类型规范， 简写 alias
 
 
 
+type  - type alias  起 别名
+
+> 确实，`type` 和 `class` 在某种程度上有一些相似之处，它们都用于定义新的数据结构或类型，但它们的作用和用法是有区别的。
+>
+> 1. `type` 关键字：
+>    - `type` 关键字用于创建类型别名（Type Alias），它给一个已有的类型（包括基本类型、联合类型、交叉类型、对象类型等）起一个新的名字。类型别名不会创建新的类型，只是为已有的类型提供一个别名，使代码更加可读和模块化。
+>    - `type` 只是给类型起了一个别名，并不会生成真正的 JavaScript 代码。它在编译时会被 TypeScript 编译器移除，不会影响运行时的行为。
+>    - 适合用于简化复杂类型或重复使用的类型定义，提高代码的可读性和维护性。
+>
+> 2. `class` 关键字：
+>    - `class` 关键字用于定义类（Class），类是一种面向对象编程的概念，用于创建对象实例和封装数据和方法。
+>    - 类定义了一种对象的蓝图或模板，通过实例化类可以创建具体的对象，对象拥有类定义的属性和方法。
+>    - 类生成真正的 JavaScript 代码，它在运行时会被实例化为对象，并且可以通过 `new` 关键字来创建对象实例。
+>    - 类中可以定义构造函数、属性、方法等，并且可以进行继承和多态等面向对象特性。
+>
+> 虽然 `type` 和 `class` 都用于定义新的数据结构或类型，但它们的用途和功能是不同的。`type` 用于给已有类型起别名，增加代码可读性和模块化，而 `class` 用于定义面向对象的类，用于创建对象实例和封装数据和方法。它们各自在 TypeScript 中有着不同的作用和应用场景。
+
+
+
+## toUTCString方法
+
+> `toUTCString()` 是 JavaScript 中 Date 对象的方法之一，用于将日期时间转换为一个表示 UTC（Coordinated Universal Time，协调世界时）的字符串。
+>
+> Date 对象表示特定的日期和时间，它的 `toUTCString()` 方法返回一个格式化后的字符串，表示该日期时间对应的 UTC 时间。这个方法的返回值遵循以下格式：
+>
+> ```
+> "Tue, 20 Jul 2023 12:34:56 GMT"
+> ```
+>
+> 其中：
+>
+> - `Tue`: 表示星期几，是一个英文缩写，例如 "Sun" 表示星期日，"Mon" 表示星期一，依此类推。
+> - `20`: 表示日期，即几号。
+> - `Jul`: 表示月份，也是一个英文缩写，例如 "Jan" 表示一月，"Feb" 表示二月，以此类推。
+> - `2023`: 表示年份。
+> - `12:34:56`: 表示时间，即小时、分钟和秒。
+> - `GMT`: 表示协调世界时的标准时间偏移，也可以用 "UTC" 来表示。
+>
+> 注意，`toUTCString()` 方法返回的字符串中的时间部分总是表示为 UTC 时间，不受本地时区的影响。如果需要显示本地时间，请使用 `toLocaleString()` 方法。
+>
+> 以下是一个使用 `toUTCString()` 方法的示例：
+>
+> ```javascript
+> const date = new Date();
+> const utcString = date.toUTCString();
+> console.log(utcString); // 输出类似 "Tue, 20 Jul 2023 12:34:56 GMT" 的字符串
+> ```
+>
+> `toUTCString()` 方法对于将日期时间转换为 UTC 时间的字符串表示非常有用，特别是在处理跨时区的日期时间时，可以确保时间的标准化和统一性。
+
+
+
+## ts中的this隐式指向
+
+🔺✨ 代码解析： 函数参数定义时， 参数名为this表示时， 将此函数作为一个对象的方法时，则表示   this为隐式调用所在的作用域， 在后续使用函数时， 仅能传递其它参数， 隐式调用-- ， 
+
+```ts
+type ThisType = { name: string };
+
+function eating(this: ThisType, message: string) {
+  console.log(this.name + " eating", message);
+}
+```
+
+对象只需要满足条件即可 =》 拥有所声明的属性， 属性满足 >=  所要求属性
+
+​		
+
+```tsx
+const info = {
+  name: "wulv",
+  // 对象满足即可
+  age:18,
+  eating: eating,
+};
+
+// 隐式绑定  自动绑定info对象
+info.eating("哈哈哈");
+```
+
+🔺✨  隐式 this 
+
+
+
+**全代码**
+
+```ts
+//  表示 期望调用此函数的对象拥有一个name的变量属性
+type ThisType = { name: string };
+
+//  这里的this 表示作用域的this指向 
+function eating(this: ThisType, message: string) {
+  console.log(this.name + " eating", message);
+}
+
+const info = {
+  name: "wulv",
+  // 对象满足即可
+  age:18,
+  eating: eating,
+};
+
+// 隐式绑定  自动绑定info对象
+info.eating("哈哈哈");
+
+// 显示绑定
+eating.call({name: "kobe", age:18}, "呵呵呵")
+eating.apply({name: "james"}, ["嘿嘿嘿"])
+
+export {};
+
+```
+
+
+
+> 在 JavaScript 中，函数的调用方式决定了函数内部的 `this` 上下文，这被称为 "函数调用的绑定规则"。在你提供的代码中，我们可以看到 `eating` 函数使用了 `this: ThisType` 的类型注解来指定 `this` 的类型。这意味着在调用 `eating` 函数时，要求将 `this` 绑定到一个与 `ThisType` 类型匹配的对象上。
+>
+> 当你将 `eating` 函数绑定到 `info` 对象上时，即 `info.eating`，JavaScript 中的函数调用绑定规则会自动将 `this` 绑定到调用该函数的对象上，也就是 `info` 对象。这被称为隐式绑定。
+>
+> 因此，当你调用 `info.eating("哈哈哈")` 时，JavaScript 会自动将 `eating` 函数的 `this` 绑定到 `info` 对象上，这样 `this.name` 就可以获取到 `info` 对象的 `name` 属性值 "wulv"，从而打印出 "wulv eating 哈哈哈"。
+>
+> 使用 `this` 类型注解 `this: ThisType`，你告诉 TypeScript 在调用 `eating` 函数时要求使用正确的对象作为 `this`，TypeScript 会检查函数的调用上下文是否与 `ThisType` 类型匹配，从而避免潜在的 `this` 绑定错误。
+>
+> 总结：隐式绑定是 JavaScript 的函数调用绑定规则，当你调用对象上的方法时，JavaScript 会自动将函数的 `this` 绑定到该对象，而 TypeScript 中的 `this` 类型注解 `this: ThisType` 可以帮助 TypeScript 检查函数的调用上下文，确保正确绑定 `this`。
 
 
 
