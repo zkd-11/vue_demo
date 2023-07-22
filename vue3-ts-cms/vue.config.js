@@ -18,7 +18,8 @@ module.exports = {
   //     components: '@/components'
   //   }
   // }
-  // 3.配置方式三:
+  // 3.配置方式三: 链式配置
+
   chainWebpack: (config) => {
     config.resolve.alias
       .set('@', path.resolve(__dirname, 'src'))

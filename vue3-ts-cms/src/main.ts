@@ -1,15 +1,15 @@
 import { createApp } from 'vue'
-import { globalRegister } from '../src_why/global'
+import { globalRegister } from './global'
 import 'normalize.css'
 import './assets/css/index.less'
 
 // import './service/axios_demo'
-import hyRequest from '../src_why/service'
+import hyRequest from '.'
 
 import App from './App.vue'
 
-import router from '../src_why/router'
-import store from '../src_why/store'
+import router from './router'
+import store from './store'
 
 const app = createApp(App)
 
