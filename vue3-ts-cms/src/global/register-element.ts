@@ -26,6 +26,7 @@ const components = [
 
 export default function (app: App): void {
   for (const component of components) {
+    // 注册组件
     app.component(component.name, component)
   }
 }

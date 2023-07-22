@@ -13,6 +13,8 @@
 // 生成环境: production
 // 测试环境: test
 
+// process.env.NODE_ENV , 为项目当前所处环境， 进行判断
+// 导出时，需要以{}包裹导出， 否则应该在初始定义时就用 export let BASE_PATH导出
 let BASE_URL = ''
 const TIME_OUT = 10000
 

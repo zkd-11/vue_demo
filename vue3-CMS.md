@@ -240,3 +240,340 @@ trim_trailing_whitespace = false
 > 接下来，在上层项目中也可以使用 `npx cz` 命令来进行提交，`commitizen` 就会按照配置进行提交信息的填写。
 >
 > 需要注意的是，`commitizen` 的配置是针对每个项目的，如果你在不同的项目中使用不同的 Git 仓库，每个项目都需要单独配置一次 `commitizen`。而且在项目的根目录中配置 `commitizen` 更为常见和推荐，因为这样可以确保不同开发者在不同环境中都可以使用统一的提交方式，不会受到文件目录的影响。
+
+
+
+### husky - 和  comitizen 暂时配置不生效 - 暂时不管 ， 这部分主要内容为项目提交规范
+
+
+
+
+
+## router - vuex 的集成
+
+vue-router
+
+<img src="vue3-CMS.assets/image-20230722163719500.png" alt="image-20230722163719500" style="zoom:67%;" />
+
+
+
+vue-x
+
+<img src="vue3-CMS.assets/image-20230722163743080.png" alt="image-20230722163743080" style="zoom:67%;" />
+
+
+
+
+
+## prettier 配置生效 shift+all+F
+
+启用配置文件的格式进行 自动格式化
+
+<img src="vue3-CMS.assets/image-20230722172007113.png" alt="image-20230722172007113" style="zoom:67%;" />
+
+之所以不生效， 未配置 加上 本地有多个-  格式化程序， 需要指定一个
+
+
+
+
+
+### powerShell  - 终端需要切换 - 
+
+cmd的升级版 - 但是对于一些指令， 会报错， 切换为默认的cmd比较适合， 已切换
+
+
+
+<img src="vue3-CMS.assets/image-20230722172945308.png" alt="image-20230722172945308" style="zoom:67%;" />
+
+
+
+
+
+### 💓🐟- **false** 识别- 不出 $store
+
+<img src="vue3-CMS.assets/image-20230722182726266.png" alt="image-20230722182726266" style="zoom:67%;" />
+
+能在网页使用， ts识别不出， 但是已经提前声明还是显示错误， 先躲避
+
+
+
+## element-plus
+
+> Element Plus 是一款基于 Vue.js 的 UI 组件库，它是对 Element UI 的一次重写和升级，提供了一系列优雅美观的 UI 组件，方便开发者在 Vue.js 项目中快速构建出现代化的网页应用程序。
+>
+> Element Plus 提供了丰富的组件，包括但不限于按钮、输入框、表格、对话框、菜单、导航、表单等。这些组件都经过精心设计和开发，具有高度的可定制性，同时也符合现代 Web 应用程序的设计风格。
+>
+> 要在你的 Vue.js 项目中使用 Element Plus，首先需要在项目中安装 Element Plus 的依赖：
+>
+> ```bash
+> npm install element-plus
+> ```
+>
+> 或者使用 yarn 安装：
+>
+> ```bash
+> yarn add element-plus
+> ```
+>
+> 然后，在项目的入口文件（通常是 `main.js` 或 `main.ts`）中引入 Element Plus 的样式和组件：
+>
+> ```javascript
+> import { createApp } from 'vue';
+> import ElementPlus from 'element-plus';
+> import 'element-plus/lib/theme-chalk/index.css';
+> 
+> import App from './App.vue';
+> 
+> const app = createApp(App);
+> 
+> app.use(ElementPlus);
+> 
+> app.mount('#app');
+> ```
+>
+> 以上代码中，我们先导入了 Element Plus 的样式文件 `element-plus/lib/theme-chalk/index.css`，然后使用 `app.use(ElementPlus)` 将 Element Plus 注册为 Vue.js 的插件，这样就可以在整个项目中使用 Element Plus 的组件了。
+>
+> 之后，你就可以在你的 Vue 组件中按需引入 Element Plus 的组件，并使用它们来构建你的网页应用程序了。例如，在一个 Vue 组件中使用 Element Plus 的按钮组件：
+>
+> ```vue
+> <template>
+>   <el-button type="primary">点击我</el-button>
+> </template>
+> 
+> <script>
+> import { ElButton } from 'element-plus';
+> 
+> export default {
+>   components: {
+>     ElButton,
+>   },
+> };
+> </script>
+> ```
+>
+> 这样，你就可以在你的 Vue 项目中使用 Element Plus 提供的丰富组件了。Element Plus 的官方文档也非常详细，可以在其中查找更多组件的用法和配置选项：https://element-plus.org/
+
+
+
+### babel-plugin-import
+
+引用插件时， 会自动引用样式， 按需使用， 需要在配置文件中使用
+
+<img src="vue3-CMS.assets/image-20230722193101855.png" alt="image-20230722193101855" style="zoom:67%;" />
+
+当导入时，才会引入应用样式
+
+
+
+> `babel-plugin-import` 是一个用于按需引入组件的 Babel 插件，主要用于优化代码体积。它通常与 UI 组件库（如 Ant Design、Element Plus 等）一起使用。
+>
+> 当我们使用 UI 组件库时，如果直接导入整个组件库的样式和代码，会导致最终打包生成的 JavaScript 文件较大，包含了未使用的组件代码，增加了页面加载时间。为了解决这个问题，我们可以使用 `babel-plugin-import` 插件按需引入组件，即只导入需要使用的组件代码，以及相应组件的样式。
+>
+> 使用 `babel-plugin-import` 插件的步骤如下：
+>
+> 1. 安装插件：
+>
+>    ```bash
+>    npm install babel-plugin-import --save-dev
+>    ```
+>
+> 2. 在 Babel 配置文件（通常是 `.babelrc` 或 `babel.config.js`）中添加插件配置：
+>
+>    ```json
+>    {
+>      "plugins": [
+>        [
+>          "import",
+>          {
+>            "libraryName": "element-plus",
+>            "styleLibraryName": "theme-chalk"
+>          }
+>        ]
+>      ]
+>    }
+>    ```
+>
+>    上面的配置表示使用 `element-plus` 组件库，并按需引入 `theme-chalk` 主题的样式。
+>
+> 3. 在代码中按需引入组件：
+>
+>    ```javascript
+>    // 在需要使用的组件中直接按需引入
+>    import { Button, Input } from 'element-plus';
+>    ```
+>
+> 通过以上配置，`babel-plugin-import` 将会自动按需引入指定的组件，以及相应的样式。这样可以显著减少最终打包后的文件大小，优化页面加载速度。
+
+
+
+### 全局组件注册
+
+> 全局组件注册是指将一个组件在整个应用程序中都可以使用，而无需在每个使用该组件的地方进行单独的引入或注册。
+>
+> 在 Vue 2.x 版本中，我们可以通过在 `main.js`（或类似的入口文件）中注册全局组件，使其在整个应用程序中可用。以下是一个示例：
+>
+> ```javascript
+> // main.js
+> 
+> import { createApp } from 'vue';
+> import App from './App.vue';
+> import MyGlobalComponent from './components/MyGlobalComponent.vue'; // 导入全局组件
+> 
+> const app = createApp(App);
+> 
+> app.component('my-global-component', MyGlobalComponent); // 注册全局组件
+> 
+> app.mount('#app');
+> ```
+>
+> 在上面的代码中，我们通过 `app.component` 方法将 `MyGlobalComponent` 注册为全局组件，并为其指定了一个名称 `'my-global-component'`，以后在应用程序的任何地方，都可以通过这个名称来使用该组件。
+>
+> 使用全局组件时，无需在每个组件中再次导入或注册，而是直接在模板中使用它：
+>
+> ```html
+> <!-- 在其他组件的模板中直接使用全局组件 -->
+> <template>
+>   <div>
+>     <my-global-component></my-global-component>
+>   </div>
+> </template>
+> ```
+>
+> 这样，`MyGlobalComponent` 就可以在整个应用程序中的任何组件模板中使用，无需重复导入或注册，从而提高代码的可维护性和复用性。
+
+
+
+函数注册- 函数内部注册组件， 所以注册组件等价 注册函数
+
+
+
+```tsx
+globalRegister(app)，这二者等价是吗
+app.use(globalRegister)
+
+所调用的函数
+import { App } from 'vue'
+import registerElement from './register-element'
+
+// ts 组件类型声明
+export function globalRegister(app: App): void {
+  app.use(registerElement)
+}
+```
+
+
+
+> 是的，`globalRegister(app)` 和 `app.use(globalRegister)` 是等价的，都会调用 `globalRegister` 函数并传递 `app` 参数。在这种情况下，`globalRegister` 函数接收一个 `App` 实例作为参数，然后在内部调用 `app.use(registerElement)`，将 `registerElement` 函数注册到应用程序中。
+>
+> 实际上，`app.use()` 方法用于在 Vue 应用程序中安装插件，而 `globalRegister` 函数可以被视为一个插件，它在内部使用了 `app.use(registerElement)` 来注册一些全局组件。所以，当你调用 `app.use(globalRegister)` 时，它会将 `registerElement` 注册为全局组件，从而使这些组件在整个应用程序中都可用。
+
+
+
+
+
+## axios 测试请求
+
+http://httpbin.org/， 提供一个测试请求的网站
+
+
+
+### interceptors作用
+
+拦截器： 实质上是执行函数， 第一个参数为成功执行，第二个参数为失败，
+
+可在请求发送前进行拦截， 也可在信息返回后进行拦截
+
+> 拦截器（Interceptors）是在发送请求或响应之前拦截并对它们进行处理的功能。在前端开发中，拦截器通常用于以下目的：
+>
+> 1. 添加公共配置：可以在发送请求前，对请求进行拦截并添加一些公共的配置信息，比如在请求头中添加认证信息、设置请求超时时间等。
+>
+> 2. 请求/响应的处理：可以在请求发送前或响应返回后对它们进行预处理或后处理，例如，在请求发送前对请求参数进行加密，或者在响应返回后对响应数据进行统一处理。
+>
+> 3. 错误处理：拦截器可以用来捕获请求或响应中的错误，然后进行相应的处理，比如在请求失败时显示错误提示信息。
+>
+> 4. 请求取消：拦截器可以用来实现请求的取消功能，当某个请求已经发出，但在响应返回之前需要取消该请求，拦截器可以拦截该请求并取消它。
+>
+> 拦截器通常是在发送请求之前执行的请求拦截器和在响应返回后执行的响应拦截器两种类型。它们可以用来实现一些通用的功能和处理逻辑，使代码更加模块化和可维护。
+>
+> 在一些前端框架和库中，比如 Axios 和 Vue.js，拦截器是一个重要的特性，提供了强大的扩展性和灵活性，使开发人员可以在请求和响应的不同阶段进行定制化的处理。
+
+
+
+### 只要是通过axios发送的请求都可被拦截器所拦截
+
+> 拦截器需要提前设置在发送的请求前，只对在拦截器后续的请求生效
+
+
+
+
+
+## 区分环境变量
+
+![image-20230722222244524](vue3-CMS.assets/image-20230722222244524.png)
+
+
+
+对于base_url,  base_name, 不同环境下，需要用到不同的名字， 有三种方式，一是手动修改， 不推荐（出错率高），二是使用逻辑判断进行赋值， 三是根据配置文件，使用语句进行读取， 自动获取
+
+
+
+### 第二种方式 process.env.NODE_ENV
+
+这种方式， 通过逻辑判断此属性赋予不同的值， 在开发中较常用于这种形式
+
+它会根据环境的不同而自动设置
+
+> 是的，`process.env.NODE_ENV` 是一个动态属性，并且是 Vue CLI 内置的一个特殊属性。它的值会根据当前运行的环境而自动设置，例如：
+>
+> - 在开发环境中，它的值是 "development"。
+> - 在生产环境中，它的值是 "production"。
+> - 在测试环境中，它的值是 "test"。
+>
+> 在 Vue CLI 项目中，这个属性的值会根据你启动应用的方式而动态设置，比如使用 `npm run serve` 启动开发服务器时，它会被设置为 "development"，而使用 `npm run build` 打包应用时，它会被设置为 "production"。这样，你可以根据 `process.env.NODE_ENV` 的值来做一些环境相关的配置或判断，例如使用不同的 API 地址、打开/关闭某些开发工具等。
+
+
+
+### 第三种方式 process.env.VUE_APP定义变量
+
+**process.env.VUE_APP_BASE_URL**
+
+> `process.env.VUE_APP_BASE_URL` 是 Vue CLI 内置的一个特殊变量，用于设置项目的基础 URL。这个变量在 Vue CLI 项目中使用，并且在编译时会被替换成对应的值。
+>
+> 在 Vue CLI 项目中，可以在 `.env` 文件或者以 `.env` 开头的文件中设置环境变量。例如，可以在根目录下创建一个名为 `.env` 的文件，并在其中定义 `VUE_APP_BASE_URL` 变量：
+>
+> ```
+> VUE_APP_BASE_URL=http://httpbin.org
+> ```
+>
+> 然后，在你的代码中可以通过 `process.env.VUE_APP_BASE_URL` 获取到这个变量的值：
+>
+> ```javascript
+> console.log(process.env.VUE_APP_BASE_URL); // 输出：http://httpbin.org
+> ```
+>
+> 这样可以在项目中使用不同的环境变量值，而不需要在代码中硬编码这些值，方便在不同环境下进行切换和配置。注意，为了使 `.env` 文件生效，需要重新启动项目，或者在启动项目时加上 `--mode` 参数指定使用的环境模式。例如，使用以下命令启动项目：
+>
+> ```
+> vue-cli-service serve --mode development
+> ```
+>
+> 这样就会加载根目录下的 `.env.development` 文件，并将其中定义的变量设置为开发环境的值。类似地，可以使用 `--mode production` 或其他自定义的模式。
+
+
+
+**自动注入**，不需要手动导入
+
+> 是的，你说得对。在 Vue CLI 项目中，定义在以 `.env` 开头的文件中的环境变量会自动注入到应用中，并且可以直接使用 `process.env.VUE_APP_XXX` 的形式来获取它们的值，而不需要手动导入。这是 Vue CLI 内置的特性，方便在项目中使用不同的环境变量值，而无需显式导入或硬编码这些值。只要变量名以 `VUE_APP_` 开头，它们就会被注入到应用中，你可以在整个项目中直接使用它们。
+
+<img src="vue3-CMS.assets/image-20230722224314810.png" alt="image-20230722224314810" style="zoom:80%;" />
+
+根据当前的所处环境自动注入
+
+开发 - 生产 - 注入
+
+
+
+
+
+
+
