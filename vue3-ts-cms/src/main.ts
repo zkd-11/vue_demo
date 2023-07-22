@@ -11,9 +11,7 @@ import App from './App.vue'
 import router from '../src_why/router'
 import store from '../src_why/store'
 
-
-
-const app = createApp(App);
+const app = createApp(App)
 
 // 注册element-plus/其他
 app.use(globalRegister)
