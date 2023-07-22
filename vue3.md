@@ -5794,3 +5794,676 @@ export {};
 
 
 
+
+
+# 🔺✨day22  17点
+
+
+
+## 抽象类
+
+抽象类的返回值： 需要进行类型注解
+
+> 该错误提示 TS7010 表示在抽象类中的 `getArea` 方法没有指定返回类型注解，因此 TypeScript 推断该方法的返回类型为 `any`，这是 TypeScript 的一个严格类型检查机制。
+>
+> 在抽象类中，抽象方法是没有具体实现的方法，它们只是方法的定义，由子类来实现具体的功能。因为抽象方法没有具体实现，TypeScript 不会自动推断它们的返回类型，所以必须在抽象方法的定义中显式地指定返回类型注解。
+>
+> 要解决这个错误，你需要在抽象类的 `getArea` 方法定义中添加返回类型注解，以明确指定该方法的返回类型。返回类型注解的语法是在方法名后面加上冒号 `:`，然后加上返回类型。例如，如果 `getArea` 方法返回一个数字类型的值，可以这样写：
+>
+> ```typescript
+> abstract getArea(): number;
+> ```
+>
+> 如果 `getArea` 方法没有返回值，可以使用 `void` 返回类型注解：
+>
+> ```typescript
+> abstract getArea(): void;
+> ```
+>
+> 根据具体的业务逻辑和需求，确定 `getArea` 方法的返回类型，并在抽象类中的方法定义中加上相应的返回类型注解，以消除 TS7010 错误。
+
+
+
+## Interface - 索引签名
+
+```tsx
+interface ILanguageYear {
+  [name: string]: number
+}
+```
+
+
+
+> 在 TypeScript 中，当我们使用 `interface` 来定义一个索引签名（Index Signature）时，可以创建一个具有数字或字符串索引的对象。索引签名允许我们以类似于数组或字典的方式访问对象的属性。
+>
+> 在你提供的代码中，定义了一个名为 `IndexLanguage` 的接口，它具有一个索引签名，允许通过数字索引访问对象的属性，且属性类型为字符串。接口的索引签名语法如下：
+>
+> ```typescript
+> interface InterfaceName {
+>   [index: number]: Type;
+> }
+> ```
+>
+> 其中：
+> - `InterfaceName` 是接口的名称，你的例子中是 `IndexLanguage`。
+> - `index` 是索引的类型，可以是 `number` 或 `string`，你的例子中是 `number`。
+> - `Type` 是索引所对应的值的类型，你的例子中是 `string`。
+>
+> 在这个 `IndexLanguage` 接口中，允许通过数字索引来访问对象的属性，并且属性值的类型必须为字符串。
+>
+> 以下是使用 `IndexLanguage` 接口的示例：
+>
+> ```typescript
+> interface IndexLanguage {
+>   [index: number]: string;
+> }
+> 
+> const languages: IndexLanguage = {
+>   0: "JavaScript",
+>   1: "TypeScript",
+>   2: "Python",
+> };
+> 
+> console.log(languages[0]); // 输出 "JavaScript"
+> console.log(languages[1]); // 输出 "TypeScript"
+> console.log(languages[2]); // 输出 "Python"
+> ```
+>
+> 注意：在使用索引签名时，对于数字索引，属性名必须是有效的数字，并且属性值必须符合索引签名指定的类型。在上面的示例中，`languages` 对象使用数字索引来访问不同的编程语言名称，并且所有属性值都是字符串类型，符合 `IndexLanguage` 接口的定义。
+
+
+
+## Interface 声明函数类型
+
+```tsx
+// type CalcFn = (n1: number, n2: number) => number
+// 可调用的接口
+interface CalcFn {
+  (n1: number, n2: number): number
+}
+
+function calc(num1: number, num2: number, calcFn: CalcFn) {
+  return calcFn(num1, num2)
+}
+
+const add: CalcFn = (num1, num2) => {
+  return num1 + num2
+}
+
+calc(20, 30, add)
+```
+
+> 在这段代码中，定义了一个类型别名 `CalcFn` 和一个可调用的接口，然后定义了一个函数 `calc` 来接受两个数字和一个可调用的函数，并将这两个数字传递给该可调用函数进行计算。最后，定义了一个 `add` 函数符合 `CalcFn` 类型，并通过 `calc` 函数来调用 `add` 函数。
+>
+> 以下是代码的解析：
+>
+> 1. `type CalcFn = (n1: number, n2: number) => number`：这是一个类型别名 `CalcFn`，它表示一个接受两个 `number` 类型参数并返回一个 `number` 类型的函数。它相当于定义了一个函数类型，可以在后面用来声明函数的类型。
+>
+> 2. `interface CalcFn { (n1: number, n2: number): number }`：这是一个可调用的接口，它定义了一个接受两个 `number` 类型参数并返回一个 `number` 类型的函数。与上面的类型别名 `CalcFn` 的定义类似，只不过这里使用了接口来声明函数类型。
+>
+> 3. `function calc(num1: number, num2: number, calcFn: CalcFn) { ... }`：这是一个函数 `calc`，它接受两个 `number` 类型参数 `num1` 和 `num2`，还接受一个 `CalcFn` 类型参数 `calcFn`，该参数是一个可调用的函数。函数 `calc` 将 `num1` 和 `num2` 作为参数传递给 `calcFn` 进行计算，并返回结果。
+>
+> 4. `const add: CalcFn = (num1, num2) => { ... }`：这是一个函数 `add`，它符合 `CalcFn` 类型的定义，接受两个 `number` 类型参数 `num1` 和 `num2`，并返回它们的和。
+>
+> 5. `calc(20, 30, add)`：这是对函数 `calc` 的调用，传入参数 `20`、`30` 和 `add`。`add` 函数作为第三个参数传递给 `calc`，因为 `add` 符合 `CalcFn` 类型的定义，所以可以作为参数传递给 `calc`。`calc` 函数执行后会调用 `add` 函数，并传递 `20` 和 `30` 作为参数，返回它们的和 `50`。
+
+
+
+## Interface- 接口继承
+
+打印一个无返回值的函数时， 打印为undefined
+
+
+
+```ts
+// 接口继承 -  接口可继承其它接口
+export {};
+
+interface ISwim {
+  swimming: ()=>void;
+}
+
+interface IFly {
+  flying: ()=>void;
+}
+
+interface IAll extends ISwim, IFly{
+
+}
+
+const actions:IAll = {
+  swimming() {
+    console.log("接口继承之游行为！");   
+  },
+  flying() {
+    console.log('接口继承之飞行为');
+  }
+}
+
+// 因为上述两函数无返回值， 直接执行即可， 不需要打印
+actions.flying();
+actions.swimming();
+
+
+```
+
+
+
+
+
+## 联合类型和交叉类型
+
+```tsx
+// 一种组合类型的方式: 联合类型
+type WhyType = number | string
+type Direction = "left" | "right" | "center"
+
+
+// 另一种组件类型的方式: 交叉类型
+type WType = number & string
+
+interface ISwim {
+  swimming: () => void
+}
+
+interface IFly {
+  flying: () => void
+}
+
+type MyType1 = ISwim | IFly
+type MyType2 = ISwim & IFly
+
+const obj1: MyType1 = {
+  flying() {
+
+  }
+}
+
+const obj2: MyType2 = {
+  swimming() {
+
+  },
+  flying() {
+    
+  }
+}
+
+export {}
+
+
+```
+
+
+
+> 在 TypeScript 中，你提到了两种组合类型的方式：联合类型和交叉类型。
+>
+> 1. 联合类型（Union Types）：使用 `|` 符号将多个类型组合在一起，表示变量可以是这些类型中的任意一个。例如，`type WhyType = number | string` 表示 `WhyType` 类型可以是 `number` 或 `string`。
+>
+> 2. 交叉类型（Intersection Types）：使用 `&` 符号将多个类型组合在一起，表示变量必须同时具有这些类型的属性和方法。例如，`type WType = number & string` 表示 `WType` 类型必须同时具有 `number` 和 `string` 类型的特性。
+>
+> 在你的代码中，定义了两个接口 `ISwim` 和 `IFly`，分别具有 `swimming` 和 `flying` 方法。然后定义了两个类型别名 `MyType1` 和 `MyType2`，分别为联合类型和交叉类型。
+>
+> 1. `MyType1 = ISwim | IFly`：这表示 `MyType1` 可以是 `ISwim` 或 `IFly` 接口类型的对象。它可以是具有 `swimming` 方法或 `flying` 方法的对象，但不必同时具有两者。
+>
+> 2. `MyType2 = ISwim & IFly`：这表示 `MyType2` 必须同时具有 `ISwim` 和 `IFly` 接口类型的特性，即必须同时具有 `swimming` 方法和 `flying` 方法。
+>
+> 在代码的后面，你分别创建了 `obj1` 和 `obj2` 变量，分别声明为 `MyType1` 和 `MyType2` 类型的对象。
+>
+> - `obj1` 是一个 `MyType1` 类型的对象，它只实现了 `IFly` 接口的 `flying` 方法。
+> - `obj2` 是一个 `MyType2` 类型的对象，它同时实现了 `ISwim` 接口的 `swimming` 方法和 `IFly` 接口的 `flying` 方法。
+>
+> 需要注意的是，交叉类型要求对象同时具有多个类型的特性，而联合类型则允许对象具有多个类型中的一个类型的特性。
+
+
+
+## freshness 擦除 
+
+如果将整个对象传入时， 如果不符合某个type要求限制， 它会报错
+
+但是当传入的为引用时， 它会执行freshness 擦除， 擦除掉多余的属性传入， 虽然本身仍具有多余的属性， 但是接口实现的有关方法时， 无法使用多余的属性， 
+
+
+
+> 在 TypeScript 中，"freshness"（新鲜度）是指编译器在进行类型检查时，对对象的属性进行检查的特性。当 TypeScript 遇到一个类型时，它会检查对象的属性是否与该类型完全匹配，包括是否存在额外的属性或缺少某些属性。
+>
+> "freshness" 擦除指的是 TypeScript 在进行类型检查时，会忽略对象的属性的额外信息，即类型中定义的属性是否完全匹配于对象中的属性，而只关注属性的类型是否匹配。
+>
+> 例如，考虑以下代码：
+>
+> ```typescript
+> interface Person {
+>   name: string;
+>   age: number;
+> }
+> 
+> function printPerson(person: Person) {
+>   console.log(person.name);
+> }
+> 
+> const john = { name: "John", age: 30, gender: "male" };
+> 
+> printPerson(john);
+> ```
+>
+> 在上面的代码中，接口 `Person` 定义了 `name` 和 `age` 两个属性。然而，对象 `john` 包含了额外的属性 `gender`。在 TypeScript 中，当将 `john` 对象传递给 `printPerson` 函数时，"freshness" 擦除会忽略 `john` 对象的额外属性 `gender`，因为它并不影响 `printPerson` 函数对 `name` 和 `age` 属性的使用。所以，这个代码是合法的，不会产生类型错误。
+>
+> "freshness" 擦除的特性可以使 TypeScript 更加灵活，允许对象在满足基本类型要求的情况下，可以包含额外的属性。但也需要小心，因为有时候这可能会导致意外的错误。如果需要严格检查对象的属性是否符合类型定义，可以使用类型断言或者额外的类型检查手段来确保属性的完整性。
+
+可使用索引签名：来引入多余的属性
+
+> 在 TypeScript 中，"freshness" 擦除（或称为额外属性检查）发生在对象字面量传递给具有明确定义的类型的参数时。如果对象字面量具有未在类型中定义的额外属性，TypeScript 编译器会发出错误。
+>
+> 对于对象字面量和接口类型之间的额外属性检查，无论你是否在方法内部使用了额外属性，都会导致编译错误。这是 TypeScript 为了保证类型的严格一致性而实施的特性。
+>
+> 以下是一个示例：
+>
+> ```typescript
+> interface Person {
+>   name: string;
+>   age: number;
+> }
+> 
+> function printPerson(person: Person) {
+>   console.log(person.name);
+> }
+> 
+> const john = { name: "John", age: 30, gender: "male" };
+> 
+> printPerson(john); // 编译错误：对象字面量可能只能指定已知属性，并且“gender”不在类型“Person”中
+> ```
+>
+> 上述代码会导致编译错误，即使你在 `printPerson` 方法内没有使用 `gender` 属性，因为 TypeScript 在传递对象字面量时进行了额外属性检查。
+>
+> 为了解决这个问题，你可以使用类型断言（Type Assertion）或者使用索引签名（Index Signature）来绕过额外属性检查：
+>
+> 使用类型断言：
+>
+> ```typescript
+> interface Person {
+>   name: string;
+>   age: number;
+> }
+> 
+> function printPerson(person: Person) {
+>   console.log(person.name);
+> }
+> 
+> const john = { name: "John", age: 30, gender: "male" };
+> 
+> printPerson(john as Person);
+> ```
+>
+> 使用索引签名：
+>
+> ```typescript
+> interface Person {
+>   name: string;
+>   age: number;
+>   [key: string]: any; // 添加索引签名，允许包含额外的属性
+> }
+> 
+> function printPerson(person: Person) {
+>   console.log(person.name);
+> }
+> 
+> const john = { name: "John", age: 30, gender: "male" };
+> 
+> printPerson(john);
+> ```
+>
+> 通过使用类型断言或索引签名，你可以绕过额外属性检查，但请注意在 `printPerson` 函数内部，你需要小心处理这些额外的属性，因为它们可能不符合原始接口类型的定义。
+
+
+
+### 使用索引签名 - 接收多余参数- 去除 fressness
+
+```tsx
+
+// 使用index 索引签名接收多余的属性, 不执行freshness 擦除
+interface IPerson1 {
+  name: string;
+  age: number;
+  height: number;
+  [name: string]: string | number;
+}
+
+function printInfo1(pfo: IPerson1) {
+  console.log(pfo.name);
+  console.log(pfo.city);
+}
+
+const info1 ={
+  name: "whyT",
+  age: 40,
+  height: 1.75,
+  city: "北京"
+}
+
+printInfo1(info1);
+console.log(info1);
+
+```
+
+
+
+
+
+## 🔺✨枚举
+
+枚举： 枚举类型， 内部定义的属性， 有对应的默认值 ， 一般从0开始叠加
+
+枚举类型的值 需要保持一致性， 不能为混合型， 数字可以任意，但需要不重复
+
+字符串命名时：只能为其赋值不能调用， 因为枚举类型（字符串字面量）和普通字符串不等价，所以只能使用  其定义时的枚举类型
+
+ 但是数字可以使用， 数字类型与枚举类型的值等价  turnDirection(0) 可以传入
+
+> 是的，您的理解是正确的。
+>
+> 在 TypeScript 中，枚举类型的成员值需要保持一致性，不能为混合类型。这意味着，如果一个枚举类型的成员值是字符串类型，那么其他成员值也应该是字符串类型；如果一个枚举类型的成员值是数字类型，那么其他成员值也应该是数字类型。
+>
+> 对于字符串枚举，它们的成员值是字符串字面量类型，确切地表示特定的字符串值。因此，在定义时可以为它们赋予字符串值，但在使用时只能使用枚举中定义的成员值，而不能直接传入普通字符串。
+>
+> 例如：
+>
+> ```typescript
+> enum Direction {
+>   LEFT = "left",
+>   RIGHT = "right",
+> }
+> 
+> let direction: Direction = Direction.LEFT; // 正确，direction 的类型是 Direction，只能取 "left" 或 "right" 中的一个
+> let normalString: string = "left"; // 正确，normalString 的类型是 string，可以是任意字符串
+> 
+> turnDirection(Direction.LEFT); // 正确，可以传入枚举成员值
+> // turnDirection("left"); // 错误，不能直接传入普通字符串
+> ```
+>
+> 对于数字枚举，它们的成员值是数字类型，它们的类型与普通的数字类型是等价的。因此，在定义时可以为它们赋予数字值，并且在使用时可以传入普通的数字。
+>
+> 例如：
+>
+> ```typescript
+> enum Direction {
+>   LEFT = 0,
+>   RIGHT = 1,
+> }
+> 
+> let direction: Direction = Direction.LEFT; // 正确，direction 的类型是 Direction，只能取 0 或 1 中的一个
+> let normalNumber: number = 0; // 正确，normalNumber 的类型是 number，可以是任意数字
+> 
+> turnDirection(Direction.LEFT); // 正确，可以传入枚举成员值
+> turnDirection(0); // 也正确，可以传入普通数字
+> ```
+>
+> 总结：
+> - 枚举类型的成员值需要保持一致性，不能为混合类型。
+> - 对于字符串枚举，成员值是字符串字面量类型，只能使用枚举中定义的成员值，而不能直接传入普通字符串。
+> - 对于数字枚举，成员值是数字类型，它们的类型与普通的数字类型是等价的，可以传入普通的数字。
+
+
+
+
+
+> 枚举（Enumeration），在编程中是一种表示一组具名常量的方法。枚举类型可以将一组相关的常量值命名为一个类型，并且可以使用这些常量值在代码中进行引用和使用。
+>
+> 在 TypeScript 中，枚举类型可以通过 `enum` 关键字来定义。枚举成员默认从 0 开始自增，也可以手动指定成员的初始值。枚举成员可以是数字或字符串类型。枚举成员在编译后会被转换成相应的 JavaScript 对象，从而实现常量的表示和使用。
+>
+> 以下是一个简单的 TypeScript 枚举的示例：
+>
+> ```typescript
+> enum Direction {
+>   North, // 默认值为0
+>   East,  // 默认值为1
+>   South, // 默认值为2
+>   West,  // 默认值为3
+> }
+> ```
+>
+> 在上述示例中，我们定义了一个名为 `Direction` 的枚举类型，它包含了四个成员：`North`、`East`、`South`、`West`。这些成员默认从0开始自增。因此，`North` 的值是0，`East` 的值是1，以此类推。
+>
+> 你还可以为枚举成员手动指定初始值：
+>
+> ```typescript
+> enum Direction {
+>   North = 1,
+>   East = 2,
+>   South = 3,
+>   West = 4,
+> }
+> ```
+>
+> 在这个例子中，我们将 `North` 的初始值设为1，`East` 的初始值设为2，以此类推。
+>
+> 在 TypeScript 中，枚举成员可以通过枚举名称进行访问，例如：
+>
+> ```typescript
+> const direction = Direction.North;
+> console.log(direction); // 输出 0
+> ```
+>
+> 你还可以通过值来获取枚举成员名称：
+>
+> ```typescript
+> const directionName = Direction[1];
+> console.log(directionName); // 输出 "North"
+> ```
+>
+> 这样，枚举类型就可以用来表示一组常量值，方便在代码中进行引用和使用
+
+
+
+## 泛型约束
+
+> 在 TypeScript 中，泛型约束（`extends` 关键字）可以用于限制泛型类型参数的类型范围。当我们定义一个泛型函数或接口时，可以使用 `extends` 关键字约束泛型类型必须满足特定的条件。
+>
+> 在您的代码中，定义了一个泛型函数 `getLength`，它接受一个泛型类型参数 `T`，并使用泛型约束 `extends ILength`，表示泛型类型 `T` 必须满足 `ILength` 接口的要求，即具有一个名为 `length` 的数值属性。
+>
+> ```typescript
+> interface ILength {
+>   length: number;
+> }
+> 
+> function getLength<T extends ILength>(arg: T) {
+>   return arg.length;
+> }
+> ```
+>
+> 因此，当调用 `getLength` 函数时，传入的参数必须满足 `ILength` 接口的要求，即必须具有 `length` 属性，且其类型为 `number`。
+>
+> 以下三次函数调用都满足这个要求：
+>
+> 1. `getLength("abc")`: 字符串 `"abc"` 具有 `length` 属性，且类型为 `number`，因此可以调用 `getLength` 函数。
+>
+> 2. `getLength(["abc", "a"])`: 数组 `["abc", "a"]` 具有 `length` 属性，且类型为 `number`，因此可以调用 `getLength` 函数。
+>
+> 3. `getLength({ length: 100 })`: 对象 `{ length: 100 }` 具有 `length` 属性，且类型为 `number`，因此可以调用 `getLength` 函数。
+>
+> 总结：
+> - 接口 `ILength` 定义了一个要求，即有一个名为 `length` 的数值属性。
+> - 泛型函数 `getLength` 使用泛型约束 `extends ILength`，表示泛型类型参数 `T` 必须满足 `ILength` 接口的要求。
+> - 通过使用泛型约束，我们可以限制泛型类型参数的类型范围，使其满足特定的条件。
+
+
+
+### extends 关键字 - 继承与 泛型约束
+
+
+
+> 您说得对，在 TypeScript 中，`extends` 关键字用于泛型类型参数的约束，并不等同于类的继承。尽管两者都使用了 `extends` 关键字，但含义和用法是不同的。
+>
+> 1. 泛型中的 `extends` 关键字：
+> 在泛型中，`extends` 关键字用于约束泛型类型参数的类型范围。通过 `extends` 关键字，我们可以指定泛型类型参数必须满足特定的条件，通常是满足某个接口或是继承自某个类。这样做可以使泛型类型参数拥有特定的属性或方法，并限制其可以使用的操作。
+>
+> 例如，在前面提到的代码中，`getLength` 函数的泛型类型参数 `T` 被约束为 `ILength` 接口，表示传入的参数必须具有 `length` 属性且其类型为 `number`。
+>
+> 2. 类的继承中的 `extends` 关键字：
+> 在类的继承中，`extends` 关键字用于定义一个类继承自另一个类。子类继承父类的属性和方法，并可以进行重写或扩展。
+>
+> 例如：
+>
+> ```typescript
+> class Animal {
+>   name: string;
+> 
+>   constructor(name: string) {
+>     this.name = name;
+>   }
+> 
+>   makeSound() {
+>     console.log("Animal makes a sound");
+>   }
+> }
+> 
+> class Dog extends Animal {
+>   // 子类扩展了父类的功能
+>   bark() {
+>     console.log("Woof! Woof!");
+>   }
+> }
+> ```
+>
+> 总结：
+> - 在 TypeScript 中，`extends` 关键字在泛型中用于约束泛型类型参数的类型范围，使其满足特定的条件。
+> - 在类的继承中，`extends` 关键字用于定义一个类继承自另一个类，子类继承父类的属性和方法。
+
+
+
+## .d.ts文件
+
+作用： 用于识别第三方库的声明， 让 TypeScript 编译器能够理解和推断库中的类型，并在编码过程中提供类型检查和智能提示功能。
+
+> `.d.ts` 文件是 TypeScript 类型定义文件的扩展名。它用于为 JavaScript 库或模块提供 TypeScript 类型信息，以便在 TypeScript 项目中能够获得更好的类型检查和代码提示。
+>
+> 在 TypeScript 中，当我们使用第三方 JavaScript 库或模块时，通常是通过类型定义文件来描述库的类型信息。这些类型定义文件使用 `.d.ts` 扩展名，并包含了对应 JavaScript 库的类型声明。
+>
+> 类型定义文件中的声明描述了库中导出的变量、函数、类、接口等的类型信息。这让 TypeScript 编译器能够理解和推断库中的类型，并在编码过程中提供类型检查和智能提示功能。
+>
+> 例如，假设我们使用了一个名为 "lodash" 的 JavaScript 库，并希望在 TypeScript 中获得它的类型支持。我们可以通过安装 `@types/lodash` 类型定义文件来实现：
+>
+> 使用 npm：
+> ```
+> npm install @types/lodash --save-dev
+> ```
+>
+> 使用 yarn：
+> ```
+> yarn add @types/lodash --dev
+> ```
+>
+> 安装完成后，TypeScript 编译器就能够识别 "lodash" 库的类型，并在我们编码时提供相关的类型检查和代码提示。
+>
+> 总结：
+> - `.d.ts` 文件是 TypeScript 类型定义文件的扩展名。
+> - 它用于为 JavaScript 库或模块提供 TypeScript 类型信息，以增强类型检查和代码提示。
+> - 通过安装对应的类型定义文件，我们可以在 TypeScript 项目中获得第三方库的类型支持。
+
+
+
+**ts不能识别lodash吗为什么， 为什么能识别 axios**
+
+
+
+> TypeScript 在某种程度上可以识别 JavaScript 库，但是要完全理解和推断库的类型信息，需要使用该库的类型定义文件（`.d.ts` 文件）。虽然 TypeScript 内置了一些常见库的类型定义，但并不是所有库都包含在 TypeScript 默认的类型库中。
+>
+> 对于一些常用的库，社区会维护相应的 `@types` 类型定义文件，以供开发者使用。这些类型定义文件通过 npm 包管理工具进行发布和安装。
+>
+> 例如，axios 是一个常用的 HTTP 客户端库，同时也有对应的类型定义文件 `@types/axios` 可供使用。如果你安装了 `@types/axios`，TypeScript 就能够理解 axios 库的类型，从而提供类型检查和智能提示功能。
+>
+> ```bash
+> npm install axios @types/axios --save
+> ```
+>
+> 相反地，对于一些不太常用的库或自己编写的库，可能没有相应的类型定义文件。在这种情况下，TypeScript 仍然可以识别 JavaScript 代码，但它将把这些库视为 "any" 类型，即不进行类型检查，也无法提供智能提示，因为缺乏类型信息。
+>
+> 总结：
+> - TypeScript 在一定程度上可以识别 JavaScript 库的类型，但要获得完整的类型检查和智能提示功能，需要安装对应的类型定义文件（`.d.ts` 文件）。
+> - 一些常用的库有相应的类型定义文件（例如 `@types/axios`），安装后 TypeScript 就能理解并提供类型检查和智能提示。
+> - 对于一些不常用的库或没有类型定义文件的库，TypeScript 将把它们视为 "any" 类型，缺乏类型信息。
+
+
+
+## 文件声明
+
+
+
+增强模块的识别能力：
+
+> 是的，文件声明（或称类型声明文件）的目的就是让 TypeScript 能够识别和理解某些模块、变量、函数或类等的类型信息。当你使用第三方 JavaScript 库或模块时，这些库可能没有包含 TypeScript 类型信息，导致 TypeScript 默认将它们的类型推断为 "any" 类型，从而丧失了类型检查和智能代码提示的好处。
+>
+> 通过添加对应的文件声明，TypeScript 就能够了解这些库的类型，从而实现以下目标：
+>
+> 1. 增强类型检查：TypeScript 能够在编译时检查代码的类型错误，帮助你发现潜在的问题并提前修复。
+> 2. 提供智能代码提示：当你在编辑器中输入代码时，TypeScript 能够根据文件声明提供智能代码提示，帮助你快速完成代码。
+>
+> 例如，当你安装了 `@types/lodash` 类型定义文件后，TypeScript 就能够理解 lodash 库的类型信息，让你能够在编码时获得更好的类型支持和代码提示。
+>
+> 声明文件不仅可以用于第三方库，还可以用于你自己编写的模块或库，以便在其他项目中使用时提供良好的类型支持。
+>
+> 总之，文件声明是 TypeScript 重要的特性之一，它使得 TypeScript 在使用第三方库或模块时能够获得更好的类型检查和智能代码提示，从而提高开发效率和代码质量。
+
+
+
+什么是文件声明？
+
+> 文件声明（File Declaration）是指 TypeScript 中用来描述一个模块或库的类型信息的文件。文件声明通常以 `.d.ts` 为后缀，它不包含具体的实现代码，而是仅用于描述类型信息。
+>
+> 在 TypeScript 中，我们使用声明文件来为 JavaScript 库或模块提供类型定义，以便在 TypeScript 项目中能够获得更好的类型检查和代码提示。
+>
+> 声明文件使用 TypeScript 的语法来描述库的类型信息，包括变量、函数、类、接口等的类型。它可以包含类型声明、类型别名、接口、命名空间等 TypeScript 的类型声明语法。
+>
+> 声明文件的作用：
+> 1. 增强类型检查：通过声明文件，TypeScript 编译器能够理解第三方库的类型，从而提供更严格的类型检查，避免类型错误。
+> 2. 提供代码提示：声明文件中的类型信息可以让开发者在编码过程中获得智能代码提示，提高开发效率。
+>
+> 通常情况下，流行的 JavaScript 库或模块会有相应的类型声明文件。TypeScript 社区维护了一个名为 DefinitelyTyped 的项目，其中包含了大量的第三方库的类型声明文件，可以通过 npm 安装并使用。
+>
+> 总结：
+> - 文件声明（File Declaration）是用于描述一个模块或库的类型信息的文件，通常以 `.d.ts` 为后缀。
+> - 声明文件用于增强类型检查和提供代码提示，让 TypeScript 能够理解第三方库的类型。
+> - 常见的第三方库通常有相应的类型声明文件，可以通过 npm 安装并使用。
+
+
+
+## .d.ts 声明命名空间
+
+```ts
+// 声明命名空间
+declare namespace $ {
+  export function ajax(settings: any): any
+}
+代码解析
+```
+
+
+
+> 在 TypeScript 中，通过 `declare namespace` 关键字可以声明一个命名空间。命名空间是一种用于组织代码和类型的方式，它将相关的函数、类、接口等定义组织在一个作用域内，避免全局命名冲突，并提供了更好的代码组织和可维护性。
+>
+> 在给定的代码中，使用 `declare namespace $` 声明了一个名为 `$` 的命名空间。在这个命名空间中，有一个名为 `ajax` 的函数，它接收一个参数 `settings`，参数类型为 `any`，返回值类型也为 `any`。
+>
+> 这样声明了 `$` 命名空间后，在其他文件中如果引入了声明文件，就可以使用 `$` 命名空间中的函数 `ajax`，并获得相应的类型检查和代码提示。
+>
+> 例如，在其他文件中可以这样使用 `$` 命名空间的 `ajax` 函数：
+>
+> ```typescript
+> // 引入声明文件
+> /// <reference path="path/to/declare-file.d.ts" />
+> 
+> // 使用 $ 命名空间中的 ajax 函数
+> $.ajax({
+>   url: "https://example.com/api",
+>   method: "GET",
+>   // ...
+> });
+> ```
+>
+> 声明命名空间是在 TypeScript 中为第三方库或其他代码提供类型定义的一种方式，它让 TypeScript 能够了解和识别这些代码的类型，从而提供更好的类型支持和代码提示。
+
+
+
+# day23  13点15分
+
+
+
+[vue3项目-CMS ](file:"D:\code-english\vue3_demo\vue3-CMS.md")  
+
