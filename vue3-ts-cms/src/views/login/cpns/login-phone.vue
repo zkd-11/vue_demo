@@ -1,5 +1,7 @@
 <template>
-  <el-form label-width="60px">
+  <!-- 待填充功能，等点击获取验证码后才进行用户输入再进行验证，
+    且获取按钮可点击切换为倒计时60秒 -->
+  <el-form label-width="70px" :model="phone" :rules="rules">
     <el-form-item label="手机号" prop="num">
       <el-input v-model="phone.num" />
     </el-form-item>
@@ -14,7 +16,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-
+import { rules } from '../config/phone-config'
 export default defineComponent({
   setup() {
     const phone = reactive({
@@ -23,7 +25,8 @@ export default defineComponent({
     })
 
     return {
-      phone
+      phone,
+      rules
     }
   }
 })

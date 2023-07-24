@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
-
 import { globalRegister } from './global'
+
+import 'normalize.css'
+import './assets/css/index.less'
 
 import 'element-plus/lib/theme-chalk/index.css'
 // 使用 elementui-Plus 组件
@@ -11,7 +13,7 @@ import './assets/css/index.less'
 
 // import './service/axios_demo' //axios_练手
 // 待开启
-// import hyRequest from './service'
+import hyRequest from './service'
 import App from './App.vue'
 
 import router from './router'
@@ -29,8 +31,33 @@ app.use(store)
 app.mount('#app')
 
 // 这种方式是第三种获得换的环境变量的方式
-console.log(process.env.VUE_APP_BASE_URL)
-console.log(process.env.VUE_APP_BASE_NAME)
+// console.log(process.env.VUE_APP_BASE_URL)
+// console.log(process.env.VUE_APP_BASE_NAME)
+
+// 这里实质上 相当于实例化对象调用方法- 传入配置
+hyRequest
+  .request<any>({
+    url: '/home/multidata',
+    method: 'GET'
+  })
+  .then((res) => {
+    console.log(res.data)
+  })
+
+// hyRequest.request({
+//   url: '/home/multidata',
+//   method: 'GET',
+//   interceptors: {
+//     requestInterceptor: (config) => {
+//       console.log('单独请求拦截器执行，并返回config')
+//       return config
+//     },
+//     responseInterceptor: (res) => {
+//       console.log('响应拦截器执行，返回response')
+//       return res
+//     }
+//   }
+// })
 
 // hyRequest.request({
 //   url: '/home/multidata',

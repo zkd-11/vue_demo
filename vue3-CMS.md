@@ -365,6 +365,24 @@ cmd的升级版 - 但是对于一些指令， 会报错， 切换为默认的cmd
 
 
 
+> 是的，这部分代码使用了 Babel 插件 `babel-plugin-import`，它的作用是实现按需加载 Element Plus 组件的 CSS 文件。
+>
+> 具体解释如下：
+>
+> 1. `plugins` 数组中使用了 `import` 插件，这个插件的作用是帮助我们按需引入 Element Plus 组件以及对应的 CSS 文件。
+>
+> 2. `libraryName: 'element-plus'` 指定了要按需引入的库名称为 `element-plus`，也就是 Element Plus 库。
+>
+> 3. `customStyleName` 是一个回调函数，它接收组件名称 `name` 作为参数，并返回对应组件的 CSS 文件路径。这样做是为了指定 Element Plus 组件的 CSS 文件路径，以便按需加载对应的样式文件。
+>
+> 4. `presets: ['@vue/cli-plugin-babel/preset']` 是 Vue CLI 的 Babel 预设，用于配置 Vue 项目的 Babel 编译选项。
+>
+> 使用这个配置后，当你在代码中按需引入 Element Plus 组件时，它会自动加载对应的 CSS 文件，而不是将整个样式文件都打包进最终的项目构建文件中，从而减少了项目的体积。这样可以优化网页加载速度和用户体验。
+
+
+
+
+
 > `babel-plugin-import` 是一个用于按需引入组件的 Babel 插件，主要用于优化代码体积。它通常与 UI 组件库（如 Ant Design、Element Plus 等）一起使用。
 >
 > 当我们使用 UI 组件库时，如果直接导入整个组件库的样式和代码，会导致最终打包生成的 JavaScript 文件较大，包含了未使用的组件代码，增加了页面加载时间。为了解决这个问题，我们可以使用 `babel-plugin-import` 插件按需引入组件，即只导入需要使用的组件代码，以及相应组件的样式。
@@ -403,6 +421,45 @@ cmd的升级版 - 但是对于一些指令， 会报错， 切换为默认的cmd
 >    ```
 >
 > 通过以上配置，`babel-plugin-import` 将会自动按需引入指定的组件，以及相应的样式。这样可以显著减少最终打包后的文件大小，优化页面加载速度。
+
+
+
+## .d.ts文件代码解读
+
+```tsx
+/* eslint-disable */
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
+}
+
+declare let $store: any,
+
+```
+
+> 这个 `.d.ts` 文件是 TypeScript 的类型声明文件，用于声明 Vue 单文件组件（`.vue` 文件）的类型信息。让 TypeScript 在开发过程中能够正确地识别和推断 `.vue` 文件的类型。
+>
+> 让我们逐个解析这个声明文件的内容：
+>
+> 1. `/* eslint-disable */`: 这是一个注释，用于禁用 ESLint 对该文件的检查，表示该文件内的代码不受 ESLint 规则限制。
+>
+> 2. `declare module '*.vue'`: 声明一个模块，表示导入一个以 `.vue` 结尾的文件时的类型信息。`*.vue` 是通配符，表示所有的 `.vue` 文件。
+>
+> 3. `import type { DefineComponent } from 'vue'`: 导入 Vue 的类型定义 `DefineComponent`，`import type` 用于只导入类型信息而不导入具体的值。
+>
+> 4. `const component: DefineComponent<{}, {}, any>`: 声明一个常量 `component`，其类型是 `DefineComponent`。`DefineComponent` 是 Vue 组件的类型定义，需要三个泛型参数：
+>    - 第一个空对象 `{}` 表示组件的 Props 类型。这里为空对象，表示没有 Props。
+>    - 第二个空对象 `{}` 表示组件的 Emits 类型。这里为空对象，表示没有 Emits。
+>    - `any` 表示组件的 `setup` 函数返回值类型。这里用 `any` 表示不对 `setup` 函数的返回值进行类型检查。
+>
+> 5. `export default component`: 将常量 `component` 导出为默认导出，即当其他文件导入这个模块时，得到的是 `component`。
+>
+> 6. `declare let $store: any`: 声明一个全局变量 `$store`，类型为 `any`，表示这个全局变量可以接受任何类型的值。
+>
+> 综上所述，这个声明文件的作用是为了让 TypeScript 在处理 Vue 单文件组件时，能够正确地识别和推断组件的类型信息，同时允许全局使用一个类型为 `any` 的变量 `$store`。
+
+
 
 
 
@@ -572,6 +629,700 @@ http://httpbin.org/， 提供一个测试请求的网站
 开发 - 生产 - 注入
 
 
+
+
+
+# 🔺✨day24- 13点20分
+
+# 进度三
+
+## 🔺✨axios封装 思路
+
+二次封装， 逻辑封装 ， 类的封装
+
+原生axios实例化对象并没有 InterCepteros拦截器具体实现方法， 为此使用一个接口，ts定义了四个函数类型， 同时再定义一个配置继承自 **AxiosRequestConfig**， 再进行内置此属性， 所以当前配置相当于具备了一个接口， 此接口可以实例化对象实现， 并且此接口时可选参数， 所以实例化对象，可以选择传入接口并给出具体的实现方法，
+
+```ts
+import axios from 'axios'
+import type { AxiosInstance } from 'axios'
+import { HYRequestInterceptors, HYRequestConfig } from './type'
+ //自定义接口扩展原config功能，添加拦截器功能  封装进type.ts
+ interface HYRequestInterceptors<T = AxiosResponse> {
+   requestInterceptor?: (config: AxiosRequestConfig) => AxiosRequestConfig
+   requestInterceptorCatch?: (error: any) => any
+   responseInterceptor?: (res: T) => T
+   responseInterceptorCatch?: (error: any) => any
+ }
+ interface HYRequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
+    //自定义接口使用 并拓展拦截功能- 可选
+   interceptors?: HYRequestInterceptors<T>
+   showLoading?: boolean
+ }
+```
+
+**this.instance.interceptors.request.use**, **this.instance.interceptors.response.use**
+
+这个为配置内置方法， 可以通过它调用接口的的方法（所定义的拦截器接收响应方法）
+
+
+
+### 为每个实例化 配置拦截器
+
+```tsx
+this.instance.interceptors.request.use() 和 this.instance.interceptors.response.use() 是 axios 实例对象的内置方法，用于注册拦截器。
+```
+
+
+
+> 对的，你理解得没问题！
+>
+> 在代码中
+>
+> **`this.instance.interceptors.request.use()`**
+>
+> **`this.instance.interceptors.response.use()`** 
+>
+> 是 `axios` 实例对象的内置方法，用于注册拦截器。
+>
+> 拦截器分为请求拦截器和响应拦截器，每个拦截器都接收两个函数作为参数：
+>
+> 1. 第一个函数用于处理成功的情况，即请求或响应成功时执行的函数。
+> 2. 第二个函数用于处理失败的情况，即请求或响应失败时执行的函数。
+>
+> 这两个函数都会接收一个参数，请求拦截器的参数是 `config`，响应拦截器的参数是 `res`（响应成功时）或 `err`（响应失败时）。
+>
+> 在这里，你对 `this.instance.interceptors.request.use()` 注册了一个请求拦截器，用于在请求成功时打印日志，并对请求配置进行处理。而 `this.instance.interceptors.response.use()` 注册了一个响应拦截器，用于在响应成功时打印日志，并对响应结果进行处理。
+>
+> 这些拦截器可以对请求和响应进行统一的处理，比如添加公共的请求头、处理错误信息等，非常方便。
+
+
+
+
+
+```ts
+    this.instance.interceptors.request.use(
+      (config) => {
+        console.log('默认实例拦截器: 请求成功拦截')
+        return config
+      },
+      (err) => {
+        console.log('默认实例拦截器: 请求失败拦截')
+        return err
+      }
+    )
+    this.instance.interceptors.response.use(
+      (res) => {
+        console.log('默认实例拦截器: 响应成功拦截')
+        return res
+      },
+      (err) => {
+        console.log('默认实例拦截器: 响应拦截失败')
+        return err
+      }
+    )	
+```
+
+
+
+### 为实例化对象 调用其单独拦截器
+
+根据实例化对象，是否传入配置， 在内部进行逻辑判断， 通过直接执行来实现对象特有的传入拦截器
+
+为每个请求配置 个性化的拦截器
+
+```tsx
+request(config: HYRequestConfig): void {
+    // 执行 请求独有的拦截器
+    // 单独请求有自带拦截器执行请求拦截器-
+    // 有拦截器的存在时进行执行拦截器内函数，再将config返回
+    if (config.interceptors?.requestInterceptor) {
+      config = config.interceptors.requestInterceptor(config)
+    }
+
+    // 单独请求有自带拦截器执行响应拦截器
+    this.instance.request(config).then((res) => {
+      if (config.interceptors?.responseInterceptor) {
+        res = config.interceptors.responseInterceptor(res)
+      }
+      console.log(res)
+    })
+  }
+}
+```
+
+
+
+> 是的，你的理解是正确的。
+>
+> 在 `HYRequest` 类中的 `request` 方法中，通过传入的 `config` 对象来执行请求，并且在执行请求之前和请求成功后分别执行了请求拦截器和响应拦截器。
+>
+> 具体逻辑如下：
+>
+> 1. 首先判断 `config.interceptors?.requestInterceptor` 是否存在，如果存在，则说明传入了请求拦截器函数。在这种情况下，先执行传入的请求拦截器函数，并将其返回的 `config` 赋值给 `config` 变量，以便在请求时使用修改后的配置。
+>
+> 2. 接着执行请求，即调用 `this.instance.request(config)` 方法，该方法会返回一个 Promise 对象。
+>
+> 3. 在 Promise 的 `then` 回调中，检查 `config.interceptors?.responseInterceptor` 是否存在，如果存在，则说明传入了响应拦截器函数。在这种情况下，先执行传入的响应拦截器函数，并将其返回的响应结果 `res` 赋值给 `res` 变量，以便在后续处理中使用修改后的响应结果。
+>
+> 4. 最后，打印响应结果 `res`。
+>
+> 这样，通过在 `request` 方法中根据传入的配置判断是否执行特定的拦截器函数，实现了在每个请求独有的情况下，能够灵活地定制请求拦截器和响应拦截器的功能。同时，还利用了全局拦截器来处理所有实例的请求和响应。这样的设计非常灵活和易于维护。
+
+
+
+### 封装的好处
+
+这样的行为有助于定制个性化的处理，对请求或响应进行个性化的操作， 从而实现不同的操作 ，这样的封装， 让每个请求变得很灵活
+
+> 正是的，你说得非常正确！
+>
+> 通过在 `HYRequest` 类中对请求和响应拦截器进行封装，以及在实例化 `HYRequest` 对象时可以传入特定的拦截器函数，使得每个请求可以根据具体需求进行个性化的处理。这样的封装让请求变得非常灵活和可定制，能够满足不同场景下的需求，同时也使得代码更加易于维护和扩展。
+>
+> 通过拦截器的使用，可以实现以下一些功能：
+>
+> 1. 添加全局的请求头或请求参数，适用于每个请求；
+> 2. 在请求前做一些数据的处理，例如在请求中添加 token；
+> 3. 在请求失败时进行错误处理，例如弹出错误提示；
+> 4. 在响应成功时对数据进行处理，例如提取响应结果中的有效数据；
+> 5. 在响应失败时进行错误处理，例如统一处理网络错误或超时错误。
+>
+> 这样的封装和灵活性可以大大提高开发效率，并且使得代码结构更加清晰和可维护。同时，对于复杂的业务场景，能够轻松应对各种需求变化。总体来说，合理使用拦截器可以提高代码的可复用性和可扩展性，使得整个项目开发更加高效和便捷。
+
+
+
+## 拦截失败有两种返回结果 
+
+**服务器设置接口的不同设置**
+
+请求失败-   直接返回失败  response Catch 拦截
+
+请求失败： 返回请求成功， 但data内为错误的状态码， 实际为失败
+
+<img src="vue3-CMS.assets/image-20230723175633249.png" alt="image-20230723175633249" style="zoom:67%;" />
+
+> 你说得很对！在拦截器中，对于请求失败和请求成功但返回的数据中包含错误信息这两种情况，可以分别进行不同的处理。
+>
+> 1. 对于请求失败，可以直接返回一个 `Error` 对象，让 `catch` 语句捕获并处理错误，从而在请求发生错误时进行统一的错误处理。例如，网络连接失败或服务器返回错误状态码等情况可以直接返回 `Error` 对象，并在 `catch` 中进行错误提示或处理逻辑。
+>
+> 2. 对于请求成功但返回的数据中包含错误信息，可以在拦截器中对响应数据进行判断，如果数据中包含错误码或错误信息，可以根据具体情况返回一个自定义的错误对象，或者在 `catch` 语句中进行错误处理。这样可以统一处理响应中的错误信息，确保请求成功时也能够及时发现并处理错误。
+>
+> 在拦截器的使用中，需要根据实际情况进行灵活处理，以满足不同业务需求。通过合理地使用拦截器，可以对请求和响应进行统一处理，提高代码的可复用性和可维护性。同时，对于异常情况的处理也更加方便和规范。
+
+
+
+### 对两种情况的响应进行处理
+
+res: 错误以成功的形式返回
+
+err: 直接返回错误
+
+```tsx
+    this.instance.interceptors.response.use(
+      (res) => {
+        console.log('默认实例拦截器: 响应成功拦截')
+        const data = res.data
+        // 此情况为请求失败，但失败的状态返回在请求成功中
+        if (data.returnCode === '-1001') {
+          console.log(`请求失败,错误码为${data.returnCode}`)
+        } else {
+          return data
+        }
+        return res
+      },
+      (err) => {
+        console.log('默认实例拦截器: 响应拦截失败')
+        // 请求失败 在相应失败设置
+        if (err.response.status === 404) {
+          console.log('404错误')
+        }
+        return err
+      }
+    )
+  }
+```
+
+
+
+### 请求前的拦截- 身份标识 token
+
+```tsx
+  requestInterceptor: (config) => {
+      const token = ''
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
+      }
+      console.log('请求成功拦截')
+      return config
+    },
+```
+
+> 对的，你说得没错！在这个代码片段中，`token` 相当于身份标识或认证令牌。它用于标识和验证发出请求的用户。
+>
+> 在 `HYrequest` 类的 `requestInterceptor` 函数中，它检查是否存在 `token`。如果有 `token`，则会将 `Authorization` 头添加到请求的 `config` 对象中，并设置为 `Bearer ${token}`。`Authorization` 头通常用于基于令牌的身份验证，服务器根据令牌验证用户的身份，并确定用户是否有权限访问请求的资源。
+>
+> `Bearer` 关键字是一种常见的约定，用于指示发送的令牌是承载令牌，这意味着服务器可以使用该令牌验证用户并授予对受保护资源的访问权限。
+>
+> 通过添加带有 `Bearer` 令牌的 `Authorization` 头，服务器可以验证用户的身份，并根据用户的权限允许或拒绝访问某些部分的应用程序或 API。
+>
+> 总体而言，在这个代码片段中，使用 `token` 是一种常见的方法来保护 API 请求，并确保只有经过身份验证的用户才能访问特定的资源。
+
+
+
+每次的请求都会加上此token是吗， 然后服务器再进行验证， 一般这个token为用户初次使用时，由服务器进行分配?
+
+> 是的，每次的请求都会加上这个 token，服务器再进行验证。通常情况下，token是由服务器在用户初次登录或进行身份验证时进行分配的。
+>
+> 用户在初次登录时，会提供身份信息（如用户名和密码），服务器会验证用户的身份，并根据验证结果生成一个 token 并分配给该用户。该 token 通常包含一些加密信息，用于标识用户的身份和权限。然后，服务器会将该 token 返回给客户端（例如浏览器或移动应用）。
+>
+> 客户端在后续的请求中，每次都会将这个 token 添加到请求的头部中的 `Authorization` 字段里。服务器在接收到请求后会验证这个 token，通过检查该 token 的有效性和权限，来确定用户是否有权访问请求的资源。
+>
+> 这种机制可以有效地保护 API 资源，只有经过身份验证并具有有效 token 的用户才能访问受保护的资源。如果用户没有提供有效的 token 或 token 验证失败，则服务器会拒绝该请求，并返回相应的错误状态码或错误信息。
+
+
+
+
+
+## 请求添加-加载动画效果（element-plus）
+
+首先需要为接口- 添加属性：showLoading:? : boolean， 设置后
+
+在实例化对象才能使用传入这个属性- 为实例化对象 设置开关
+
+
+
+在类中需要定义 
+
+常量   DEAFULT_LOADING = true， 用于赋值showLoading ，逻辑判断，当无传入值时，默认为true执行动画
+
+showLoading: boolean ， 开启动画开关， 当无传入时默认开启动画， 当对象中属性设置为false，将动画关闭
+
+ loading?: ILoadingInstance， 加载的动画组件，需要进行声明类型和导入， 在请求使用时，需要要此参数接收动画组件 
+
+```ts
+this.loading = ElLoading.service({
+​      lock: true,
+​      text: '正在请求数据....',
+​      background: 'rgba(0, 0, 0, 0.5)'
+​     })
+```
+
+在信息返回后， 需要对动画进行关闭， 调用
+
+```ts
+      // 请求成功后 将loading移除, 不一定有使用加载动画配置，不需要使用if
+      this.loading?.close()
+
+```
+
+
+
+执行逻辑判断， 最后需要对showLoading 设置为DEAFULT_LOADING （true）
+
+​	不设置会影响下次请求
+
+```ts
+ // 单独请求有自带拦截器执行响应拦截器
+    this.instance.request(config).then((res) => {
+      if (config.interceptors?.responseInterceptor) {
+        res = config.interceptors.responseInterceptor(res)
+      }
+      console.log(res.data)
+
+      this.showLoading = true
+    })
+  }
+}
+```
+
+
+
+## 💓🐟对象的请求封装为Promise对象 （这部分有点懵）
+
+```ts
+
+  request<T>(config: HYRequestConfig<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+      // 有拦截器的存在时进行执行拦截器内函数，再将config返回
+      if (config.interceptors?.requestInterceptor) {
+        config = config.interceptors.requestInterceptor(config)
+      }
+
+      // 这个请求开关，将影响加载动画开启， 默认不填入时为true,看类中constructor
+      if (config.showLoading === false) {
+        this.showLoading = false
+      }
+
+      // 单独请求有自带拦截器执行响应拦截器
+      this.instance
+        .request<any, T>(config)
+        .then((res) => {
+          // 1. 单个请求数据处理
+          if (config.interceptors?.responseInterceptor) {
+            res = config.interceptors.responseInterceptor(res)
+          }
+          // 将showLoading设置为true， 不影响下次请求
+          this.showLoading = DEAFULT_LOADING
+
+          // 3. 将结果返回
+          resolve(res)
+        })
+        .catch((err) => {
+          // 将showLoading 设置为true, 不影响下个请求
+          this.showLoading = DEAFULT_LOADING
+          reject(err)
+          return err
+        })
+    })
+  }
+
+  
+  get<T>(config: HYRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'GET' })
+  }
+
+...post ...delete ...patch 其它类似如上
+
+```
+
+
+
+```ts
+  get<T>(config: HYRequestConfig<T>): Promise<T> {
+    return this.request<T>({ ...config, method: 'GET' })
+  }
+
+```
+
+代码理解：相当于对request函数进行重写， 并且将原先instance.request方法直接修改为目标所执行的请求，在外界只需直接调用即可，传入配置文件， 底层会自动实现
+
+
+
+> 在外部调用 `hyRequest.get()` 时，你需要传入配置信息。对于 `hyRequest.get()` 方法，它接受一个参数 `config`，这个参数包含了发送 GET 请求的相关配置，例如请求的 URL、请求参数、请求头等信息。
+>
+> 所以，在使用 `hyRequest.get()` 时，你需要像这样传入配置信息：
+>
+> ```javascript
+> hyRequest.get({
+>   url: '/api/data', // 请求的URL
+>   params: { key: 'value' }, // 请求参数
+>   headers: { 'Content-Type': 'application/json' }, // 请求头
+>   // 其他配置...
+> }).then((response) => {
+>   // 处理响应数据
+> }).catch((error) => {
+>   // 处理请求错误
+> });
+> ```
+>
+> 通过这种方式，你可以在外部直接调用 `hyRequest.get()` 并传入相关配置信息来发送 GET 请求，而不需要关心底层的具体实现细节。
+
+
+
+# 进度四
+
+## tsConfig.json 配置文件
+
+
+
+```ts
+{
+  "compilerOptions": {
+    // 目标代码(ts -> js(es5/6/7))
+    "target": "esnext",
+    // 目标代码需要使用的模块化方案(commonjs require/module.exports/es module import/export)
+    "module": "esnext",
+    // 严格一些严格的检查(any) 
+    "strict": true,
+    // 对jsx进行怎么样的处理
+    "jsx": "preserve",
+    // 辅助的导入功能
+    "importHelpers": true,
+    // 按照node的方式去解析模块 import "/index.node"
+    "moduleResolution": "node",
+    // 跳过一些库的类型检测 (axios -> 类型/ lodash -> @types/lodash / 其他的第三方)
+    // import { Person } from 'axios'
+    "skipLibCheck": true,
+    // export default/module.exports = {}
+    // es module 和 commonjs
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    // 要不要生成映射文件(ts -> js)
+    "sourceMap": true,
+    // 文件路径在解析时, 基本url, 基于当前url
+    "baseUrl": ".",
+    // 指定具体要解析使用的类型
+    "types": ["webpack-env"],
+    // 路径解析(类似于webpack alias)
+    "paths": {
+      "@/*": ["src/*"],
+      "components/*": ["src/components/*"]
+    },
+    // 可以指定在项目中可以使用哪里库的类型(Proxy/Window/Document)
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
+
+```
+
+
+
+
+
+## defineComponent 包裹组件对象的作用
+
+> 在 Vue.js 3.x 中，`defineComponent` 是一个辅助函数，用于包裹组件对象，并且执行一些必要的处理，以便将组件对象转换为一个 Vue 组件选项对象。
+>
+> 具体来说，`defineComponent` 的作用有以下几点：
+>
+> 1. 类型推断：`defineComponent` 使用泛型类型参数来推断组件的 props 类型。这样可以在组件内部使用 props 的类型检查，以及提供类型推断的支持。
+>
+> 2. 组件选项：`defineComponent` 会将组件对象包裹，并转换为 Vue 组件选项对象。这样就可以在组件内部使用 Vue.js 提供的组件选项，比如 `data`、`methods`、`computed` 等。
+>
+> 3. 兼容性处理：`defineComponent` 内部会处理一些兼容性问题，以确保组件对象在 Vue.js 3.x 中能够正确地运行。
+>
+> 示例使用 `defineComponent` 的代码：
+>
+> ```js
+> import { defineComponent } from 'vue';
+> 
+> const MyComponent = defineComponent({
+>   props: {
+>     message: {
+>       type: String,
+>       required: true,
+>     },
+>   },
+>   data() {
+>     return {
+>       count: 0,
+>     };
+>   },
+>   methods: {
+>     increment() {
+>       this.count++;
+>     },
+>   },
+>   template: `
+>     <div>
+>       <p>{{ message }}</p>
+>       <p>Count: {{ count }}</p>
+>       <button @click="increment">Increment</button>
+>     </div>
+>   `,
+> });
+> 
+> export default MyComponent;
+> ```
+>
+> 在上面的例子中，`defineComponent` 函数将组件对象转换为了一个 Vue 组件选项对象。组件对象内部定义了 props、data 和 methods，并使用了模板语法来渲染组件。使用 `defineComponent` 可以让组件对象更符合 Vue 组件的规范，提供了更好的类型检查和兼容性。
+
+
+
+
+
+## normalize.css
+
+对不同的浏览器保持相同的初始化状态
+
+> 是的，您说得对。`normalize.css` 的目标之一就是确保不同浏览器在初始化状态下拥有相同的样式表现，从而消除浏览器之间的样式差异，使页面在各个浏览器上表现一致。
+>
+> 当我们在开发网页时，浏览器会自动为 HTML 元素应用一些默认样式，这些样式因浏览器而异。这就导致了不同浏览器在显示网页时可能会有细微的差异。`normalize.css` 会通过一系列的规则和样式重置来确保不同浏览器之间的一致性，从而为我们提供一个更统一、更可控的基础样式。
+>
+> 需要注意的是，`normalize.css` 并不会完全清除浏览器默认样式，而是尽量保持它们在各个浏览器上的一致性。这样做的目的是为了确保页面在不同浏览器中都有较好的表现，同时不会影响到页面的正常功能。
+
+
+
+## el-plus的表格标签
+
+```ts
+<el-tabs type="border-card" stretch>
+      <el-tab-pane>
+        <template #label>
+          <span><i class="el-icon-user-solid"></i> 账号登录</span>
+        </template>
+        <login-account ref="accountRef" />
+      </el-tab-pane>
+      <el-tab-pane>
+        <template #label>
+          <span><i class="el-icon-mobile-phone"></i> 手机登录</span>
+        </template>
+        <login-phone />
+      </el-tab-pane>
+    </el-tabs>
+
+
+```
+
+<img src="vue3-CMS.assets/image-20230724160245491.png" alt="image-20230724160245491" style="zoom:80%;" />
+
+
+
+由最外部的el-tabs标签包裹， 内部的el-tab-pane为列表选项， 账号登录和手机登录，通过点击可切换不同的内容， 内置插槽是设置文本内容和图标（设置span 再设置 i标签）
+
+标签login-account 为组件， 将内部信息进行一个抽取作为组件， 再将组件导入该部分内容
+
+
+
+### 账号组件设置
+
+```ts
+  <div class="login-account">
+   
+      <!-- ：model表示将对象的信息实时传递给外标签， 进行规则检验 -->
+    <el-form label-width="60px" :model="account" :rules="rules" ref="formRef">
+      <el-form-item label="账号" prop="name">
+        <el-input v-model="account.name" />
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <!-- 对于标签框 需要动态绑定属性 -->
+        <el-input v-model="account.password" />
+      </el-form-item>
+    </el-form>
+```
+
+el-form  表单，单行元素， item文本， input输入框， 同时对其传入account信息， 为内部导出的对象，实时动态传入，应用规则 rules 对文本进行检验， 再对文本框的信息进行双向绑定， 
+
+
+
+### 规则设置
+
+```ts
+// 编写好规则
+export const rules = {
+  // 检验规则是以数组的形式储存
+  name: [
+    {
+      // 必传， 有此符号才有*号键
+      required: true,
+      message: '用户名是必传内容~',
+      // 失去焦点时检验
+      trigger: 'blur'
+    },
+    {
+      pattern: /^[a-z0-9]{5,10}$/,
+      message: '用户名必须是5~10个字母或者数字~',
+      trigger: 'blur'
+    }
+  ],
+  password: [
+    {
+      required: true,
+      message: '密码是必传内容~',
+      trigger: 'blur'
+    },
+    {
+      pattern: /^[a-z0-9]{3,}$/,
+      message: '用户名必须是3位以上的字母或者数字~',
+      trigger: 'blur'
+    }
+  ]
+    
+}
+
+```
+
+抽取出来放置config， 内部检验数组形式， 多种应用规则
+
+
+
+### 登录逻辑验证
+
+在account-用户组件中
+
+设置登录逻辑
+
+  const formRef = ref<InstanceType<typeof ElForm>>()
+
+需先import 该组件， instanceType， 为ts内置方法用于识别类型，此方法将绑定ElForm组件， 转换为响应式数据， .value 为获取当前组件实例
+
+
+
+```ts
+const loginAction = () => {
+      formRef.value?.validate((valid) => {
+        if (valid) {
+          console.log('真正执行登录逻辑')
+        }
+      })
+    }
+```
+
+逻辑判断， 当存在时Elform实例时， 调用其validate方法- 去验证定义的rules，检验是否通过rules判断， 是则执行内部语句
+
+
+
+> 这段代码是在Vue 3中使用了Composition API的`ref`函数和TypeScript的泛型语法，同时还使用了Element UI（`ElForm`）的表单组件。
+>
+> 让我来解析这段代码：
+>
+> 1. `ref`函数：和之前解释的一样，`ref`函数是Vue 3中用于创建响应式数据的函数。
+>
+> 2. `<InstanceType<typeof ElForm>>`：这部分是TypeScript的泛型语法，它的作用和之前解释的一样，用于获取`ElForm`组件的实例类型。
+>
+> 3. `const formRef = ref<InstanceType<typeof ElForm>>()`: 这行代码声明了一个变量`formRef`，它是一个响应式引用，可以持有`ElForm`组件的实例。
+>
+> 4. `const loginAction = () => { ... }`: 这行代码定义了一个名为`loginAction`的函数。
+>
+> 5. `formRef.value?.validate((valid) => { ... })`: 这部分代码调用了`ElForm`组件的`validate`方法。`formRef.value`用于获取`formRef`的当前值（即`ElForm`组件的实例），然后通过`?.`安全导航操作符来确保`validate`方法存在，并在其存在的情况下执行它。
+>
+> 6. `if (valid) { console.log('真正执行登录逻辑') }`: 这部分代码在`validate`方法的回调中执行，它会根据表单验证的结果来决定是否执行真正的登录逻辑。如果表单验证通过（即`valid`为`true`），则输出'真正执行登录逻辑'。
+>
+> 综合起来，这段代码的作用是创建一个响应式引用`formRef`，用于持有`ElForm`组件的实例。然后，通过`loginAction`函数来处理登录逻辑，其中调用了`ElForm`组件的表单验证方法`validate`来验证表单的合法性。如果表单验证通过，则执行真正的登录逻辑。
+>
+> 请注意，以上代码中使用了Element UI的表单组件（`ElForm`），在实际应用中，你需要确保正确引入并注册Element UI组件，以及正确设置表单的验证规则和相关逻辑。
+
+
+
+# 🔺✨day25  -  20点30分
+
+# 🔺✨进度五
+
+
+
+## 20-31详解instanceOF
+
+![image-20230724203419476](vue3-CMS.assets/image-20230724203419476.png)
+
+
+
+
+
+## 依赖报错- 重启vscode- 重装依赖问题
+
+IDE问题：有时候IDE（集成开发环境）可能会出现缓存问题，导致识别不到新安装的类型声明。尝试重启IDE，或者清理IDE的缓存，然后再次打开项目。
+
+
+
+E问题：有时候IDE（集成开发环境）可能会出现缓存问题，导致识别不到新安装的类型声明。尝试重启IDE，或者清理IDE的缓存，然后再次打开项目。
+
+
+
+> 是的，如果你在`node_modules`目录中删除了`element-plus`依赖，并重新运行`npm install`或`yarn install`重新安装依赖，有时候IDE（如VSCode）可能会缓存之前的类型信息，导致在VSCode中依然显示找不到`element-plus`模块或其相应的类型声明。
+>
+> 在这种情况下，可以尝试以下方法来解决问题：
+>
+> 1. 在VSCode中尝试重启IDE，以便刷新缓存，有时候这个简单的操作就能解决问题。
+>
+> 2. 在VSCode中尝试执行"清除缓存并重启"操作。在VSCode的命令面板中（按下`Ctrl + Shift + P`或`Cmd + Shift + P`），输入"Reload Window"，选择"Developer: Reload Window"来重启VSCode，并清除缓存。
+>
+> 3. 确保你的VSCode已经安装了TypeScript插件，并且是最新版本。有时候，TypeScript插件的更新可能会修复一些问题。
+>
+> 4. 确保你的项目根目录下包含了正确的`tsconfig.json`文件，并且其中配置了正确的类型声明文件路径。
+>
+> 5. 确保你的项目中已经正确安装了`@types/element-plus`类型声明包。
+>
+> 6. 尝试关闭VSCode，删除项目根目录下的`node_modules`目录和`package-lock.json`（或`yarn.lock`）文件，然后重新运行`npm install`或`yarn install`重新安装依赖。
+>
+> 如果你尝试了上述方法仍然无法解决问题，可以尝试在VSCode中打开另一个TypeScript文件，然后再切换回你的目标文件，有时候这样能够刷新缓存并解决问题。
+>
 
 
 

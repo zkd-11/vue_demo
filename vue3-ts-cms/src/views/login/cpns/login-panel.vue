@@ -1,6 +1,7 @@
 <template>
   <div class="login-panel">
-    <h1 class="title">后台管理系统</h1>
+    <h1 class="title">悟律-后台管理系统</h1>
+    <!-- stretch 自撑开， 默认平分居中 -->
     <el-tabs type="border-card" stretch>
       <el-tab-pane>
         <template #label>
@@ -15,12 +16,12 @@
         <login-phone />
       </el-tab-pane>
     </el-tabs>
-
     <div class="account-control">
       <el-checkbox v-model="isKeepPassword">记住密码</el-checkbox>
+      <el-link type="primary">注册账号</el-link>
       <el-link type="primary">忘记密码</el-link>
     </div>
-
+    <!-- 登录按钮 -->
     <el-button type="primary" class="login-btn" @click="handleLoginClick"
       >立即登录</el-button
     >
@@ -30,25 +31,24 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import LoginAccount from './login-account.vue'
-import LoginPhone from './login-phone.vue'
+import loginPhone from './login-phone.vue'
 
 export default defineComponent({
   components: {
     LoginAccount,
-    LoginPhone
+    loginPhone
   },
   setup() {
     const isKeepPassword = ref(true)
     const accountRef = ref<InstanceType<typeof LoginAccount>>()
 
     const handleLoginClick = () => {
-      accountRef.value?.loginAction()
+      accountRef.value?.loginAction(isKeepPassword.value)
     }
-
     return {
       isKeepPassword,
-      handleLoginClick,
-      accountRef
+      accountRef,
+      handleLoginClick
     }
   }
 })

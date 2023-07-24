@@ -9,6 +9,7 @@ module.exports = {
     '@vue/typescript/recommended',
     '@vue/prettier',
     '@vue/prettier/@typescript-eslint',
+    // 将规则与prettier合并
     'plugin:prettier/recommended'
   ],
   parserOptions: {
@@ -17,6 +18,7 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+  //  将一些eslinc 误判类型 ： 标准选择关闭
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-explicit-any': 'off'
   }
