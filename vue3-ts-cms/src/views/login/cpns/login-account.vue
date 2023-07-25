@@ -47,7 +47,6 @@ export default defineComponent({
           // 表单验证通过，执行登录逻辑
           // 2.开始进行登录验证- 进行展开运算符传出对象
           store.dispatch('login/accountLoginAction', { ...account })
-          console.log('登录成功')
         } else {
           // 表单验证未通过，显示错误信息
           console.log('表单验证未通过')

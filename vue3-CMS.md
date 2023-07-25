@@ -1328,3 +1328,547 @@ E问题：有时候IDE（集成开发环境）可能会出现缓存问题，导�
 
 
 
+## 使用vueX 接收信息-  组件触发事件
+
+使用了vuex ， vuex所在文件夹 store, 建立子文件夹去对应所要开发的组件（store）， 在组件中将信息发送出去， 触发patch， 子模块的actions函数
+
+```ts
+import { Module } from 'vuex'
+// 表示为 vuex的子模块
+
+// import { IAccount } from '@/service/login/types'
+import { ILoginState } from './types'
+import { IRootState } from '../types'
+
+// 第一个参数为此模块的state数据类型， 第二个为根模块的state数据类型
+const loginModule: Module<ILoginState, IRootState>
+```
+
+**// 第一个参数为此模块的state数据类型， 第二个为根模块的state数据类型**
+**const loginModule: Module<ILoginState, IRootState>**
+
+
+
+
+
+## 组件响应绑定
+
+```ts
+    <el-tabs type="border-card" stretch v-model="currentTab">
+      <el-tab-pane name="account">
+        <template #label>
+          <span><i class="el-icon-user-solid"></i> 账号登录</span>
+        </template>
+        <login-account ref="accountRef" />
+      </el-tab-pane>
+
+      <el-tab-pane name="phone">
+        <template #label>
+          <span><i class="el-icon-mobile-phone"></i> 手机登录</span>
+        </template>
+        <login-phone ref="phoneRef" />
+      </el-tab-pane>
+    </el-tabs>
+```
+
+
+
+currentTab 默认设置为account, 需要为每个tab设置name属性， el-plus内部为我们识别当前tab，并绑定当前所在页面， 每个组件的tab下的文本框都绑定来了一个ref相应属性，获得该实例对象
+
+
+
+需对其进行类型声明， 并获得该实例组件对象
+
+```ts
+    const accountRef = ref<InstanceType<typeof LoginAccount>>()
+    const phoneRef = ref<InstanceType<typeof LoginPhone>>()
+```
+
+
+
+通过结合currentTab当前值，去触发不同的逻辑
+
+```ts
+    const handleLoginClick = () => {
+      // 判断当前 currentTab 是哪个标签
+      if (currentTab.value === 'account') {
+        accountRef.value?.loginAction(isKeepPassword.value)
+      } else {
+        console.log('phoneRef调用loginAction')
+      }
+    }
+```
+
+
+
+## 💓🐟 转换策略 -  直接看视频 跟代码- 
+
+### 原码 比对-  学会逻辑   35-	1:30
+
+
+
+
+
+### 设置全局接口的办法
+
+<img src="vue3-CMS.assets/image-20230725025331630.png" alt="image-20230725025331630" style="zoom:67%;" />
+
+
+
+## 登录逻辑的异步处理
+
+
+
+```ts
+async accountLoginAction({ commit }, payload: IAccount) {
+      // 1.实现登录逻辑
+      const loginResult = await accountLoginRequest(payload)
+      const { id, token } = loginResult.data
+      commit('changeToken', token)
+      localCache.setCache('token', token)
+```
+
+
+
+> 在这个代码片段中，使用`await`关键字是因为`accountLoginRequest(payload)`是一个异步函数。在JavaScript中，使用`async/await`是一种处理异步操作的便捷方式，它可以帮助我们更清晰地编写和处理异步代码。
+>
+> `async/await`是ES2017引入的一种异步编程模型。通过将`async`关键字添加到函数声明前，函数就变成了一个异步函数，表示这个函数可能包含异步操作，其中的某些操作需要等待结果。
+>
+> 在这个例子中，`accountLoginAction`函数是一个异步函数，它执行登录逻辑。在这个函数中，调用`accountLoginRequest(payload)`发起登录请求，这是一个异步操作，会返回一个Promise对象。
+>
+> 通过使用`await`关键字，可以等待`accountLoginRequest`异步操作的结果。当使用`await`关键字调用一个返回Promise对象的函数时，JavaScript会暂停函数的执行，直到Promise对象状态变为`resolved`（已解决）或`rejected`（已拒绝）。一旦Promise对象状态变为已解决，`await`表达式就会返回Promise对象的解决值。
+>
+> 在这里，`await accountLoginRequest(payload)`会等待登录请求的结果，并将结果赋值给`loginResult`变量。然后，通过`loginResult.data`获取登录结果的数据，包括`id`和`token`，并将`token`存储到Vuex store中，以及使用`localCache`工具将`token`缓存到本地。
+>
+> 使用`async/await`可以使异步代码看起来更像同步代码，增强代码的可读性和可维护性。它避免了回调地狱（callback hell）的问题，并使错误处理更加直观。
+
+
+
+## proxy代理绕过  同源策略
+
+```ts
+module.exports = {
+  // 1.配置方式一: CLI提供的属性
+  outputDir: './build',
+  // publicPath: './',
+  devServer: {
+    proxy: {
+      '^/api': {
+        target: 'http://152.136.185.210:5000',
+        pathRewrite: {
+          '^/api': ''
+        },
+        changeOrigin: true
+      }
+    }
+  }
+```
+
+> 在这个代码片段中，使用了代理来绕过同源策略。同源策略是一种安全机制，限制了一个网页上的脚本如何与另一个源（域、协议或端口）的资源进行交互。同源策略的目的是防止恶意网站获取用户的敏感数据或进行未经授权的操作。
+>
+> 然而，有时候我们需要在前端代码中访问不同源的服务器接口，这就会受到同源策略的限制。为了绕过同源策略，可以使用代理来将前端请求转发到目标服务器，并在代理服务器上处理跨域请求。
+>
+> 在这个代码片段中，使用了webpack的`devServer`配置中的`proxy`选项来设置代理规则。具体解析如下：
+>
+> 1. `'^/api'`: 这是一个正则表达式，用来匹配请求URL中以`/api`开头的部分。例如，对于请求`/api/login`，这个规则就会匹配上。
+>
+> 2. `target: 'http://152.136.185.210:5000'`: 这是目标服务器的地址，所有匹配到的请求将被转发到该地址。也就是说，所有以`/api`开头的请求都会被转发到`http://152.136.185.210:5000`这个服务器上。
+>
+> 3. `pathRewrite: { '^/api': '' }`: 这是对请求路径进行重写的设置。在这里，将请求路径中的`/api`部分替换为空字符串，即将`/api`从请求路径中移除。例如，对于请求`/api/login`，经过重写后变为`/login`，这样请求就不再带有`/api`前缀了。
+>
+> 4. `changeOrigin: true`: 这是一个布尔值，用于控制是否改变请求头中的`Host`字段为目标服务器的域名。设置为`true`表示将请求头中的`Host`字段修改为目标服务器的域名，这在某些情况下可能是必要的。
+>
+> 通过以上配置，当前端发起一个以`/api`开头的请求时，Webpack Dev Server会将该请求转发到`http://152.136.185.210:5000`这个服务器上，并且将请求路径中的`/api`前缀去掉。这样就绕过了同源策略，从而可以在前端代码中访问不同源的服务器接口。
+
+
+
+**Request - 内 config.ts  =>  BASE_URL = /API**
+
+
+
+### 异步逻辑处理
+
+login定义- 类型
+
+```ts
+export interface IAccount {
+  name: string
+  password: string
+}
+
+export interface ILoginResult {
+  id: number
+  name: string
+  token: string
+}
+```
+
+
+
+### 封装请求Login 请求并返回
+
+```ts
+import hyRequest from '../index'
+
+import { IAccount, IDataType, ILoginResult } from './type'
+
+enum LoginAPI {
+  AccountLogin = '/login',
+  LoginUserInfo = '/users/', // 用法: /users/1
+  UserMenus = '/role/' // 用法: role/1/menu
+}
+
+export function accountLoginRequest(account: IAccount) {
+  return hyRequest.post<IDataType<ILoginResult>>({
+    url: LoginAPI.AccountLogin,
+    data: account
+  })
+}
+
+
+```
+
+表示post<IDataType<ILoginResult>>， 接受的对象类型， 将用户表信息发送
+
+
+
+## 请求标识代码解析
+
+```ts
+export interface ILoginResult {
+  id: number
+  name: string
+  token: string
+}
+
+export interface IDataType<T = any> {
+  code: number
+  data: T
+}
+
+```
+
+
+
+```ts
+export function accountLoginRequest(account: IAccount) {
+  return hyRequest.post<IDataType<ILoginResult>>({
+    url: LoginAPI.AccountLogin,
+    data: account
+  })
+```
+
+**post<IDataType<ILoginResult>>** 表示返回参数内置 声明参数， 传入时，声明所得到的data的数据类型
+
+
+
+
+
+类型 json-ts， 将类型转化为类型， 用于ts提前声明， 如不同用户具有不同信息
+
+
+
+
+
+## 使用枚举保存常量- type.ts文件
+
+可以直接使用，作为请求的路径， 变量添加的形式
+
+```ts
+enum LoginAPI {
+  AccountLogin = '/login',
+  LoginUserInfo = '/users/', // 用法: /users/1
+  UserMenus = '/role/' // 用法: role/1/menu
+}
+
+export function accountLoginRequest(account: IAccount) {
+  return hyRequest.post<IDataType<ILoginResult>>({
+    url: LoginAPI.AccountLogin,
+    data: account
+  })
+}
+
+export function requestUserInfoById(id: number) {
+  return hyRequest.get<IDataType>({
+    url: LoginAPI.LoginUserInfo + id,
+    showLoading: false
+  })
+}
+
+export function requestUserMenusByRoleId(id: number) {
+  return hyRequest.get<IDataType>({
+    url: LoginAPI.UserMenus + id + '/menu',
+    showLoading: false
+  })
+}
+```
+
+
+
+## 登录逻辑实现完毕
+
+一个点击， 通过网络接口获取该用户的信息， 权限信息， 用户菜单， 再调到登录界面， 同时设置localStorage缓存
+
+```ts
+enum LoginAPI {
+  AccountLogin = '/login',
+  LoginUserInfo = '/users/', // 用法: /users/1
+  UserMenus = '/role/' // 用法: role/1/menu
+}
+
+export function accountLoginRequest(account: IAccount) {
+  return hyRequest.post<IDataType<ILoginResult>>({
+    url: LoginAPI.AccountLogin,
+    data: account
+  })
+}
+
+export function requestUserInfoById(id: number) {
+  return hyRequest.get<IDataType>({
+    url: LoginAPI.LoginUserInfo + id,
+    showLoading: false
+  })
+}
+
+export function requestUserMenusByRoleId(id: number) {
+  return hyRequest.get<IDataType>({
+    url: LoginAPI.UserMenus + id + '/menu',
+    showLoading: false
+  })
+}
+```
+
+
+
+## 根路径设置为main路径，再添加路由守卫
+
+```ts
+
+router.beforeEach((to) => {
+  if (to.path !== '/login') {
+    const token = localCache.getCache('token')
+    if (!token) {
+      return '/login'
+    }
+  }
+})
+
+```
+
+如果没有token时， 返回主页面，进行账户登录
+
+
+
+
+
+如果页面已经进入main路径， 用户使用了刷新， vueX已保存的信息会消失
+
+在Store根模块，将此函数导出（子模块定义的函数）
+
+
+
+```ts
+
+export function setupStore() {
+  store.dispatch('login/loadLocalLogin')
+}
+
+```
+
+在vueX封装此函数， 在main.ts,导入， 当用户刷新时自动执行，
+
+
+
+## 刷新 本地Local数据提取 - 详细函数
+
+```ts
+    loadLocalLogin({ commit }) {
+      const token = localCache.getCache('token')
+      if (token) {
+        commit('changeToken', token)
+      }
+      const userInfo = localCache.getCache('userInfo')
+      if (userInfo) {
+        commit('changeUserInfo', userInfo)
+      }
+      const userMenus = localCache.getCache('userMenus')
+      if (userMenus) {
+        commit('changeUserMenus', userMenus)
+      }
+    }
+```
+
+在网页进行刷新后， 防止vueX的数据消失， Action重新提取LocalStorage信息， 触发mutations，相当于重新设置VueX , 从本地提取，一般有token的情况下，就有其它类似数据
+
+
+
+
+
+# 🔺✨ day26 -  15点20分
+
+
+
+# 进度六
+
+
+
+## vueX  优化- 
+
+vueX 对Ts支持较差， 如果直接使用useStore，里面类型不可取，无法取到子模块的state类型，所以为了让子模块- 登录获取的state内部信息可取
+
+```ts
+import { ILoginState } from './login/types'
+
+export interface IRootState {
+  name: string
+  age: number
+}
+
+export interface IRootWithModule {
+  login: ILoginState
+}
+
+export type IStoreType = IRootState & IRootWithModule
+
+```
+
+> 在Vuex中，如果你使用TypeScript（Ts）来定义和管理状态（state），可能会遇到一些类型推断方面的挑战，特别是涉及到子模块的状态类型。使用`useStore`时，其类型定义可能无法直接获取子模块的状态类型。
+>
+> 为了解决这个问题，你可以使用`IRootWithModule`和`IStoreType`这部分代码。让我们逐步解释：
+>
+> 1. `IRootState`: 这是定义根模块（Root Module）的状态类型的接口。在这里，你定义了`name`和`age`两个属性的类型。
+>
+> 2. `IRootWithModule`: 这是定义包含子模块的根状态类型的接口。在这里，你引入了一个名为`login`的子模块，并将其状态类型定义为`ILoginState`。这样，`IRootWithModule`接口包含了`login`子模块的状态类型。
+>
+> 3. `IStoreType`: 这是整个Vuex store的状态类型的合并接口。通过使用`IRootState & IRootWithModule`，将根模块的状态类型和子模块的状态类型合并成一个完整的状态类型。这样，`IStoreType`可以同时访问根模块和子模块的状态类型，从而让你能够获取子模块的状态信息。
+>
+> 例如，假设你有一个名为`login`的子模块，它有一个名为`userInfo`的状态属性。通过使用`IStoreType`，你就可以在使用`useStore`获取store实例时，访问和获取`login`子模块的`userInfo`状态的类型，而不会出现类型错误。
+>
+> 总的来说，使用`IRootWithModule`和`IStoreType`这部分代码是为了让子模块的状态类型在使用`useStore`时可取，并解决VueX对TypeScript支持较差的问题，从而更好地利用TypeScript的类型推断和类型安全性。
+
+
+
+## main主界面-vueX模块代码解析
+
+```ts
+import { createStore, Store, useStore as useVuexStore } from 'vuex'
+
+import login from './login/login'
+
+import { IRootState, IStoreType } from './types'
+
+const store = createStore<IRootState>({
+  state() {
+    return {
+      name: 'coderwhy',
+      age: 18
+    }
+  },
+  mutations: {},
+  getters: {},
+  actions: {},
+  modules: {
+    login
+  }
+})
+
+export function setupStore() {
+  store.dispatch('login/loadLocalLogin')
+}
+
+export function useStore(): Store<IStoreType> {
+  return useVuexStore()
+}
+
+export default store
+
+```
+
+导入两个types的作用， 第一个为声明根模块 state类型声明， 第二个为导入定制的useVuxStore方法， 这个作用是访问store时， 在main组件进行访问store时， 可以访问到根组件信息， 也能访问到 login组件的state信息， 因为IstoreType相当于做了一个类型合并， 将根模块和login子模块组件的state数据合并
+
+
+
+**export type IStoreType = IRootState & IRootWithModule**
+
+相当于对store类型进行重构， state的类型为IrootState, 内部类型为 login: ILoginState类型， 所以在访问数据时， 会有类型提示
+
+
+
+> 你的说法是正确的，让我们来对代码进行解析：
+>
+> 1. `import { IRootState, IStoreType } from './types'`: 这行代码导入了你之前定义的`IRootState`和`IStoreType`，这两个类型在上面的代码片段中已经解释过了。`IRootState`用于声明父组件的状态类型，而`IStoreType`是通过合并根模块和子模块的状态类型得到的最终的Vuex store的状态类型。
+>
+> 2. `const store = createStore<IRootState>({...})`: 这行代码创建了一个VueX的store实例。在`createStore`函数中，你传入了一个泛型参数`IRootState`，用于指定根模块的状态类型。在`state()`方法中，你定义了根模块的初始状态，包含了`name`和`age`属性。
+>
+> 3. `modules: { login }`: 这里通过`modules`选项将`login`子模块添加到了根模块中。
+>
+> 4. `export function setupStore() {...}`: 这是一个辅助函数，用于在Vue应用程序启动时调用，来执行一些初始化操作。在这里，你调用了`store.dispatch('login/loadLocalLogin')`，这个操作可能是为了加载本地缓存中的登录信息。由于你使用了模块化的store结构，所以需要通过子模块的namespace来调用对应的action，即`login/loadLocalLogin`。
+>
+> 5. `export function useStore(): Store<IStoreType> {...}`: 这是一个自定义的`useStore`函数，它返回一个经过泛型指定为`Store<IStoreType>`类型的`vuex` store实例。在这里，`useVuexStore()`是VueX提供的原生函数用于获取store实例。通过在`useStore`函数中指定返回类型为`Store<IStoreType>`，你确保了在Vue组件中使用`useStore`时，可以访问到根模块和子模块的状态信息，从而能够获取到完整的状态类型。
+>
+> 总的来说，这些代码确保了在Vue组件中使用`useStore`函数获取的store实例的类型是经过合并的，包含了根模块和子模块的状态信息。这样，在使用store时，你可以访问到父组件和子组件的状态信息，从而更方便地管理和操作全局状态。
+
+
+
+## 对菜单信息进行获取
+
+```ts
+import { defineComponent, computed } from 'vue'
+import { useStore } from '@/store'
+
+
+setup() {
+    const store = useStore()
+    const userMenus = computed(() => store.state.login.userMenus)
+    return {
+      userMenus
+    }
+  }
+```
+
+
+
+
+
+## Pinia（Vue3 状态管理库）
+
+> Pinia是一个状态管理库，是为Vue 3开发的下一代状态管理解决方案。它由Vue.js核心团队推荐，并且旨在为Vue开发者提供更简单、更强大和更类型安全的状态管理工具。
+>
+> 与传统的Vue状态管理库（如Vuex）相比，Pinia在设计上有一些不同之处：
+>
+> 1. 基于Vue 3：Pinia是专门为Vue 3设计的，充分利用了Vue 3的新特性和生态系统。因此，使用Pinia需要在Vue 3项目中使用，无法在Vue 2项目中使用。
+>
+> 2. 更简单的API：Pinia的API设计非常简洁和直观，易于学习和使用。它提供了一组清晰的API，使状态的定义、修改和访问变得更加直观和自然。
+>
+> 3. 更强大的类型支持：Pinia是完全支持TypeScript的，它提供了更强大的类型定义和类型推断功能。这使得在使用TypeScript开发Vue应用时，可以更轻松地定义和管理状态的类型，从而提高代码的安全性和可维护性。
+>
+> 4. 状态分割：Pinia支持将状态划分为多个模块，使得大型应用程序的状态管理变得更加灵活和可扩展。
+>
+> 5. 插件系统：Pinia具有灵活的插件系统，允许开发者轻松地扩展其功能，并与其他库进行集成。
+>
+> 总的来说，Pinia旨在提供一个优雅而强大的状态管理解决方案，使Vue开发者能够更轻松地管理和共享状态，并提供更好的开发体验。如果你使用Vue 3，并且希望拥有更好的状态管理功能和类型支持，那么Pinia是一个值得考虑的选择
+
+
+
+##  vuex - typescript  => pinia
+
+> 在你的提问中，你提到了从Vuex到Pinia的迁移，从TypeScript到Pinia。让我解释一下：
+>
+> 1. Vuex到Pinia的迁移：Vuex是Vue.js官方推荐的状态管理库，而Pinia是由Vue.js核心团队推荐的下一代状态管理库。Pinia提供了更简单、更强大和更类型安全的状态管理解决方案，同时它也支持Vue 3的新特性和生态系统。如果你正在从Vuex迁移到Pinia，你可以按照Pinia的官方文档和迁移指南来进行迁移，以便更好地利用Vue 3和Pinia的优势。
+>
+> 2. TypeScript到Pinia：在Vue 3中，由于其使用了TypeScript来重写代码，对于使用TypeScript的开发者来说，与Vue 2相比，Vue 3提供了更好的类型支持和类型推断。而Pinia作为Vue 3的状态管理库，天然支持TypeScript，并且提供了更强大的类型定义和类型推断，使得在使用TypeScript开发Vue应用时，能够更轻松地定义和管理状态的类型，从而提高代码的安全性和可维护性。
+>
+> 总的来说，从Vuex到Pinia的迁移可以带来更好的性能和开发体验，而TypeScript对于Vue 3和Pinia的使用也提供了更强大的类型支持，让你在开发过程中更加舒心和自信。在迁移过程中，确保按照官方文档和指南进行操作，以确保平稳完成迁移，并充分利用Pinia和TypeScript的优势来优化你的Vue应用
+
+
+
+
+
+
+
+
+
+
+
+
+

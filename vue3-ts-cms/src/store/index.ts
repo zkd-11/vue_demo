@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { createStore } from 'vuex'
 // 导入子模块
 import login from './login/login'
@@ -18,4 +19,7 @@ const store = createStore<IRootState>({
   }
 })
 
+export function setupStore() {
+  store.dispatch('login/loadLocalLogin')
+}
 export default store

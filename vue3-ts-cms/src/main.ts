@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { globalRegister } from './global'
 
+import { setupStore } from './store'
 import 'normalize.css'
 import './assets/css/index.less'
 
@@ -37,7 +38,7 @@ app.mount('#app')
 // 这里实质上 相当于实例化对象调用方法- 传入配置
 hyRequest
   .request<any>({
-    url: '/home/multidata',
+    url: 'http://123.207.32.32:8000/home/multidata',
     method: 'GET'
   })
   .then((res) => {
@@ -94,3 +95,5 @@ hyRequest
 //   })
 
 // hyRequest.get()
+
+setupStore()

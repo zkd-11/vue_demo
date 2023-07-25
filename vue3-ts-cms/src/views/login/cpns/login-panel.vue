@@ -2,20 +2,23 @@
   <div class="login-panel">
     <h1 class="title">悟律-后台管理系统</h1>
     <!-- stretch 自撑开， 默认平分居中 -->
-    <el-tabs type="border-card" stretch>
-      <el-tab-pane>
+    <!-- currentTab 可以选择默认打开的tab标签 -->
+    <el-tabs type="border-card" stretch v-model="currentTab">
+      <el-tab-pane name="account">
         <template #label>
           <span><i class="el-icon-user-solid"></i> 账号登录</span>
         </template>
         <login-account ref="accountRef" />
       </el-tab-pane>
-      <el-tab-pane>
+
+      <el-tab-pane name="phone">
         <template #label>
           <span><i class="el-icon-mobile-phone"></i> 手机登录</span>
         </template>
-        <login-phone />
+        <login-phone ref="phoneRef" />
       </el-tab-pane>
     </el-tabs>
+
     <div class="account-control">
       <el-checkbox v-model="isKeepPassword">记住密码</el-checkbox>
       <el-link type="primary">注册账号</el-link>
@@ -31,24 +34,34 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import LoginAccount from './login-account.vue'
-import loginPhone from './login-phone.vue'
+import LoginPhone from './login-phone.vue'
+
+const currentTab = ref('account')
 
 export default defineComponent({
   components: {
     LoginAccount,
-    loginPhone
+    LoginPhone
   },
   setup() {
     const isKeepPassword = ref(true)
     const accountRef = ref<InstanceType<typeof LoginAccount>>()
+    const phoneRef = ref<InstanceType<typeof LoginPhone>>()
 
     const handleLoginClick = () => {
-      accountRef.value?.loginAction(isKeepPassword.value)
+      // 判断当前 currentTab 是哪个标签， 去触发对应的逻辑
+      if (currentTab.value === 'account') {
+        accountRef.value?.loginAction(isKeepPassword.value)
+      } else {
+        console.log('phoneRef调用loginAction')
+      }
     }
     return {
       isKeepPassword,
       accountRef,
-      handleLoginClick
+      phoneRef,
+      handleLoginClick,
+      currentTab
     }
   }
 })
