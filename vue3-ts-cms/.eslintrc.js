@@ -20,6 +20,8 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
   //  将一些eslinc 误判类型 ： 标准选择关闭
     '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/no-explicit-any': 'off'
+    '@typescript-eslint/no-explicit-any': 'off',
+
+    "@typescript-eslint/explicit-module-boundary-types": "off"
   }
 }

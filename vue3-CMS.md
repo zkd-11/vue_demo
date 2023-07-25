@@ -1748,7 +1748,7 @@ export type IStoreType = IRootState & IRootWithModule
 
 
 
-## main主界面-vueX模块代码解析
+## -vueX 模块 代码解析
 
 ```ts
 import { createStore, Store, useStore as useVuexStore } from 'vuex'
@@ -1864,6 +1864,23 @@ setup() {
 
 
 
+## 💓🐟测试- 用postMen 想学使用进行测试 
+
+
+
+## 能导入i标签跟elementplus- index.tss有关系
+
+```ts
+main.ts
+import 'element-plus/lib/theme-chalk/index.css'
+
+//在main组件中
+    <i
+      class="fold-menu"
+      :class="isFold ? 'el-icon-s-fold' : 'el-icon-s-unfold'"
+      @click="handleFoldClick"
+    ></i>
+```
 
 
 
@@ -1871,4 +1888,110 @@ setup() {
 
 
 
+## 🔺✨  使用el-plus的界面布局设计
 
+采取的布局是- 左侧边栏， 右头部， 下部内容
+
+aside- 侧边栏 - header-右头部- container内容
+
+并导入子组件，分别位于aside（功能权限  对应菜单渲染）， header有执行侧边栏收缩按钮
+
+
+
+主要逻辑 ： header图标可点击， emit触发父组件信息，emit再将布尔值传入侧边栏， 通过此布尔值，侧边栏组件进行接收collapse, collapse 默认为false(不折叠)， 菜单属性有collapse这个属性， 当传入为true时，收缩
+
+
+
+菜单细节问题：需要为每个菜单赋予index值（需是字符串，为number时需要为其加“ ”拼接转换为 字符串）， 标识为唯一，能正确识别当前所处菜单， 才可对其样式进行处理，如选中时高亮等其他处理
+
+
+
+userMenus此为登录时已经返回的菜单信息， 已被存储于 vueX-login下的state中， 此部分也代表着 用户的功能权限，在组件中 用 computed属性导入（响应式）
+
+ const userMenus = computed(() => store.state.login.userMenus)
+
+
+
+
+
+```ts
+   <el-container class="main-content">
+      <el-aside :width="isCollapse ? '60px' : '210px'">
+        <!-- 传入折叠布尔值 -  -->
+        <nav-menu :collapse="isCollapse" />
+      </el-aside>
+      <el-container class="page">
+        <el-header class="page-header">
+          <nav-header @foldChange="handleFoldChange" />
+        </el-header>
+        <el-main class="page-content">悟律的后台冲冲</el-main>
+      </el-container>
+    </el-container>
+```
+
+
+
+
+
+
+
+## RBAC， 角色访问控制
+
+> RBAC（Role-Based Access Control）是一种**基于角色的访问控制模型**，用于管理和控制系统中的资源访问权限。在RBAC模型中，权限控制是根据用户的角色来进行的，而不是直接给予每个用户具体的权限。这样可以简化权限管理，并提高系统的安全性和可维护性。
+>
+> RBAC模型包含以下几个核心概念：
+>
+> 1. 角色（Role）：角色是一组相同权限的用户的集合。每个角色代表了一类用户，例如管理员、普通用户、访客等。
+>
+> 2. 用户（User）：用户是系统中的具体个体，每个用户可以被分配到一个或多个角色。
+>
+> 3. 权限（Permission）：权限是对系统资源的访问权限，例如访问某个功能、查看某个页面等。
+>
+> 4. 分配（Assignment）：分配是将用户与角色关联起来，即将某个角色分配给某个用户，从而赋予用户相应的权限。
+>
+> 5. 继承（Inheritance）：继承是指角色之间可以相互关联并继承权限。例如，一个角色可以继承另一个角色的权限。
+>
+> RBAC模型的核心思想是将权限的管理从用户层面抽象到角色层面，通过给角色分配权限，再将角色分配给用户，来实现对用户访问权限的控制。这样做的好处是可以简化权限管理，降低系统复杂性，并且在需要修改权限时，只需要调整角色与权限的关系，而不必逐个修改每个用户的权限。
+>
+> RBAC模型在许多系统中广泛应用，特别是在企业级应用和系统中，用于管理复杂的用户权限和访问控制需求。它是一种成熟且高效的访问控制策略，有助于保护系统的安全性和完整性。
+
+
+
+
+
+## 🔺✨ 添加路由三种方法   36-   2:20 -2:30
+
+<img src="vue3-CMS.assets/image-20230725231533893.png" alt="image-20230725231533893" style="zoom:80%;" />
+
+
+
+第一种是为main组件添加所有子组件，写死，或许界面能隐藏部分组件显示按钮， 但是当用户在url直接进行输入，能看到未属于自身该有的权限 组件
+
+
+
+第二种添加方式： 如枚举方式， 为角色添加对应组件映射
+
+vue-router加载， 这种保证角色获得的组件唯一， 但是有缺陷当新增角色时， 需要生成枚举类型
+
+
+
+第三种： （两种）
+
+- 一种是后端给出的数据中，菜单属性中有对应的加载 组件名称，需要求前端编写时， 以这种匹配时要保持名称路径的一致
+- 另外一种- 课程所应用的为： url，每个菜单含有对应的url属性， 通过在路由中通过路由
+
+
+
+## coder_why老师 自动化生成代码
+
+组件和路由映射快速生成
+
+<img src="vue3-CMS.assets/image-20230726000148404.png" alt="image-20230726000148404" style="zoom:67%;" />
+
+
+
+会自动生成- views下  路径/组件，再将此路径匹配到routers 添加映射关系
+
+
+
+<img src="vue3-CMS.assets/image-20230726000649025.png" alt="image-20230726000649025" style="zoom:80%;" />
