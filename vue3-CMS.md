@@ -1864,7 +1864,7 @@ setup() {
 
 
 
-## 💓🐟测试- 用postMen 想学使用进行测试 
+## 💓🐟测试- 用postMen 想学 并进行测试 
 
 
 
@@ -1971,7 +1971,7 @@ userMenus此为登录时已经返回的菜单信息， 已被存储于 vueX-logi
 
 第二种添加方式： 如枚举方式， 为角色添加对应组件映射
 
-vue-router加载， 这种保证角色获得的组件唯一， 但是有缺陷当新增角色时， 需要生成枚举类型
+vue-router加载， 这种保证角色获得的组件唯一， 但是有缺陷  当新增角色时， 需要生成枚举类型
 
 
 
@@ -1995,3 +1995,296 @@ vue-router加载， 这种保证角色获得的组件唯一， 但是有缺陷�
 
 
 <img src="vue3-CMS.assets/image-20230726000649025.png" alt="image-20230726000649025" style="zoom:80%;" />
+
+
+
+### 路由路径生成- 代码解析
+
+
+
+```ts
+const dashboard = () => import('@/views/main/analysis/dashboard/dashboard.vue')
+export default {
+  path: '/main/analysis/dashboard',
+  name: 'dashboard',
+  component: dashboard,
+  children: []
+}
+
+```
+
+**这是一个路由routes, 可在主路径中，添加此routes，相当于拥有此路径， 动态权限组件， 就是进行匹配，将url同这个path进行匹配， 有该url就对当前组件进行注册**
+
+
+
+> 是的，你理解得很正确！
+>
+> 这个路由配置代码表示一个路由对象，它描述了一个路径为 `/main/analysis/dashboard` 的路由。在 Vue Router 中，路由配置对象用于描述页面的路径、名称以及对应的组件。
+>
+> 具体解释如下：
+>
+> 1. `const dashboard = () => import('@/views/main/analysis/dashboard/dashboard.vue')`：这里使用动态导入的方式来引入 `dashboard` 组件。动态导入的语法是 `() => import('组件路径')`，它是异步加载组件的方式，可以实现按需加载，提高应用的性能。
+>
+> 2. `export default { ... }`：这是一个默认导出的对象，表示一个 Vue Router 的路由配置。在这里，它描述了一个路径为 `/main/analysis/dashboard` 的路由。
+>
+> 3. `path: '/main/analysis/dashboard'`：表示这个路由对应的路径是 `/main/analysis/dashboard`。
+>
+> 4. `name: 'dashboard'`：给这个路由设置一个名称为 `dashboard`，可以在代码中使用这个名称来进行路由导航。
+>
+> 5. `component: dashboard`：表示这个路由对应的组件是 `dashboard`，即上面动态导入的组件。
+>
+> 6. `children: []`：这个路由没有子路由，所以是一个空数组。
+>
+> 在主路径中添加这个路由配置，相当于告诉 Vue Router，当用户访问 `/main/analysis/dashboard` 这个路径时，要渲染 `dashboard` 组件。同时，你可以根据后端提供的菜单数据来动态生成类似这样的路由配置，从而实现根据菜单权限来动态加载组件和配置路由。这样做可以实现前端的权限控制，使用户只能访问具有权限的页面。
+
+
+
+# day27 - 18点20分
+
+# 进度七
+
+
+
+## 面试要领
+
+候机法则-   聊天- 沟通 -  技巧-  扩展
+
+
+
+##    所有路由组件导入
+
+```ts
+
+  // 1.先去加载默认所有的routes
+  const allRoutes: RouteRecordRaw[] = []
+  const routeFiles = require.context('../router/main', true, /\.ts/)
+  routeFiles.keys().forEach((key) => {
+    const route = require('../router/main' + key.split('.')[1])
+    allRoutes.push(route.default)
+  })
+```
+
+
+
+这里使用require.context获取一个上下文对象，并且内部有keys()放回，返回的所匹配到的模块路径, 这个路径是相对路径，如在main下, 会显示为 **./ system/xx.ts**, 所以在这里要以spilit对其进行分割， 并取下标为1的 xx， 再进行拼接，获取模块
+
+再将各模块规则进行导入（routes），用push导入， 相当于现在的allRoutes获得了所有main下的组件routes， 如果此时将规则增加给 vue-router则拥有所有访问权限
+
+
+
+allRoutes.push(route） 和 ..(route.defalut)， 二者没区别， 但是常用语route.default更直观表示了模块的默认导出
+
+
+
+**context内部结构**
+
+> 在使用 `require.context` 时，会得到一个上下文对象，这个对象内部包含了匹配到的模块信息。上下文对象具有以下属性：
+>
+> 1. `resolve`：一个函数，用于获取模块的绝对路径。
+> 2. `keys`：一个函数，用于获取所有匹配到的模块的路径数组。
+> 3. `id`：一个字符串，表示上下文模块的唯一标识符。
+> 4. `default`：一个函数，用于获取默认导出的模块。
+> 5. `context`：一个函数，用于获取匹配到的模块。
+> 6. 匹配到的模块路径：作为上下文对象的属性，每个匹配到的模块路径都指向对应的模块。
+>
+> 举个例子：
+>
+> 假设在目录 `./modules` 下有两个文件：`a.ts` 和 `b.ts`。我们使用 `require.context` 来获取这两个文件：
+>
+> ```javascript
+> const context = require.context('./modules', true, /\.ts/)
+> ```
+>
+> 上下文对象 `context` 的结构如下：
+>
+> ```javascript
+> {
+>   resolve: Function,
+>   keys: Function,
+>   id: './modules sync \\.ts$',
+>   default: Function,
+>   context: Function,
+>   './a.ts': ModuleA,
+>   './b.ts': ModuleB
+> }
+> ```
+>
+> 其中，`ModuleA` 和 `ModuleB` 表示分别匹配到的模块内容。这些模块内容会根据匹配到的路径作为属性，存放在上下文对象内部。这样，在使用 `keys()` 方法时，就能够根据路径获取对应的模块。例如，`context('./a.ts')` 将返回 `ModuleA`，`context('./b.ts')` 将返回 `ModuleB`。
+
+
+
+
+
+## 💓🐟bug 重现 - 一级路径需要命名
+
+添加动态路由时
+
+```ts
+  {
+    // 路径需要为其添加名字
+    name: 'main',
+    path: '/main',
+    component: () => import('@/views/main/main.vue')
+  },
+  
+  
+ const routes = mapMenusToRoutes(userMenus)
+     //逐一遍历添加进规则- mainChildren
+   routes.forEach((route) => {
+   router.addRoute('main', route)
+  })
+```
+
+
+
+**添加路由时， children， 一个参数为路径名， 如在main下添加其children， 标识子路径，路径需要存在 且命名， 否则会识别为根路径直接跳转， demo中已犯过这次错误**
+
+
+
+## 🔺✨ 动态路由权限配置- 思路理清
+
+定义函数， 将所有组件（最高权限时所拥有的配置，全部功能模块）路由加载规则，全部注册在RouteRecordRaw
+
+
+
+### **mapMenusToRoutes 函数 - 动态分配路由权限**
+
+1.找到所有路由路径配置模块 并进行注册
+
+使用到require这个函数，webPack自带函数，require.context去指定路径递归查找，三个参数（路径， 递归查找（boolean）, / \\.ts /(文件类型- 正则表达式) ），返回对象， 通过keys() 获取所匹配到 包含模块路径的数组， 但是路径是 相对路径，需要用split对其进行分割， 拼接为完整路径， 用require导入所有模块， 最后将模块规则放入allRoutes中
+
+```ts
+ // 先加载默认所有routes
+  const allRoutes: RouteRecordRaw[] = []
+  // 这里使用webpack的require方法执行context 返回上下文
+  //  参数解析： 路径， 递归查找（设置为true）， 正则表达式， \转义
+  const routeFiles = require.context('../router/main', true, /\.ts/)
+  // 返回所有路径的方法， 但是需要对相对路径进行分跟 ./system/xx.ts ,以. 分割
+  routeFiles.keys().forEach((key) => {
+    const route = require('../router/main' + key.split('.')[1])
+    allRoutes.push(route.default)
+  })
+```
+
+
+
+2. 为用户赋值 匹配权限
+
+根据传入的menus进行匹配 ，遍历，menu路径与已保存Allroutes的进行匹配， 使用find方法， const route = allRoutes.find((route) => route.path === menu.url), 再将匹配到的进行返回， 当为多级菜单时， 进行递归调用
+
+```ts
+  const _recurseGetRoute = (menus: any[]) => {
+    for (const menu of menus) {
+      if (menu.type === 2) {
+        const route = allRoutes.find((route) => route.path === menu.url)
+        //  应该提前注册所有组件， 一般不可能出现匹配不了的情况
+        //  但是当路径写错， 后端新增menu， 前端未更新会导致false
+        if (route) routes.push(route)
+      } else {
+        _recurseGetRoute(menu.children)
+      }
+    }
+  }
+```
+
+
+
+
+
+### 在登陆逻辑处理时匹配用户权限并进行注册组件
+
+使用mapMenusToRoutes， 并对路径规则数组，遍历后注册
+
+​	-有坑， 一级路径需要命名， 否则变成路径跳转
+
+```ts
+    changeUserMenus(state, userMenus: any) {
+      state.userMenus = userMenus
+
+      // 注册动态路由组件
+      console.log('注册动态路由组件')
+      // 将userMenus -> routes， 数组
+      const routes = mapMenusToRoutes(userMenus)
+      //逐一遍历添加进规则- mainChildren
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
+    }
+```
+
+
+
+不能直接赋予整个数组是routes，不进行遍历
+
+> 你是对的，`router.addRoute` 函数需要将每个路由规则逐个添加，而不是将整个数组直接赋给 `router.main.children`。这是因为 `router.addRoute` 是用来**动态添加单个路由规则**的方法。
+>
+> 在你的代码中，`routes` 是一个包含多个路由规则的数组，你需要逐个将每个路由规则添加到路由器中。所以你使用了 `forEach` 遍历 `routes`，对每个路由规则都调用了 `router.addRoute('main', route)` 来添加到名为 `'main'` 的路由配置下。
+>
+> 如果直接将整个数组赋给 `router.main.children`，Vue Router 不会正确解析它，并将其视为单独的路由规则。因此，你需要遍历数组，并将每个路由规则逐个添加到路由器中，确保每个路由规则都被正确解析和添加。这样，当用户点击菜单时，路由器就会根据配置的路由规则正确显示相应的组件。
+
+
+
+### 为每个子孙 菜单绑定点击事件 修改Url
+
+功能实现完毕
+
+
+
+```
+     <el-menu-item
+                :index="subitem.id + ''"
+                @click="handleMenuItemClick(subitem)"
+              >
+```
+
+并将当前的subItem传入， 菜单信息进行传入
+
+
+
+点击事件： 修改Url, 当前url不存在/未定义时 时， 则not-found
+
+```ts
+    //  使用路由
+    const router = useRouter()
+
+    // 触发事件， 将当前所点击的菜单信息获取，并修改url
+    const handleMenuItemClick = (item: any) => {
+      console.log('------')
+      router.push({
+        path: item.url ?? '/not-found'
+      })
+    }
+```
+
+
+
+### 补充 - 优化用户体验
+
+可将默认路径，重定向至main， 当用户登录过，有了缓存数据后（token）， 可直接进入主界面，无需重回登录界面
+
+定义导航守卫， 对初次登录用户（无token）return 至login界面， 当用户手动输入 /main/不存在的路径时， 将其返回至users界面
+
+```ts
+//  添加导航守卫
+router.beforeEach((to) => {
+  if (to.path !== './login') {
+    const token = localCache.getCache('token')
+    if (!token) {
+      return './login'
+    }
+  }
+
+  console.log(router.getRoutes())
+  console.log(to)
+
+  // 这里主要实现 当去达路径 在main下- 当不存在时将其返回user界面
+  if (to.path.indexOf('/main') !== -1) {
+    if (to.name === 'notFound') {
+      to.name = 'user'
+    }
+  }
+})
+```
+
+
+

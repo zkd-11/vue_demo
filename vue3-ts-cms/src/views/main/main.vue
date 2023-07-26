@@ -5,11 +5,18 @@
         <!-- 传入折叠布尔值 -  -->
         <nav-menu :collapse="isCollapse" />
       </el-aside>
+
       <el-container class="page">
         <el-header class="page-header">
           <nav-header @foldChange="handleFoldChange" />
         </el-header>
-        <el-main class="page-content">悟律的后台冲冲</el-main>
+
+        <el-main class="page-content">
+          <!-- 需要添加路由加载占位符 -->
+          <div class="page-info">
+            <router-view></router-view>
+          </div>
+        </el-main>
       </el-container>
     </el-container>
   </div>

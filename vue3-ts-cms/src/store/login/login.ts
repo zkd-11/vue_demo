@@ -6,6 +6,9 @@ import { IAccount } from '@/service/login/type'
 import { ILoginState } from './types'
 import { IRootState } from '../types'
 
+// 导入路由映射表函数-
+import { mapMenusToRoutes } from '@/utils/map-menus'
+
 // 导入三个请求分别对应 登录请求- 用户请求 - 菜单请求
 import {
   accountLoginRequest,
@@ -37,6 +40,15 @@ const loginModule: Module<ILoginState, IRootState> = {
     },
     changeUserMenus(state, userMenus: any) {
       state.userMenus = userMenus
+
+      // 注册动态路由组件
+      console.log('注册动态路由组件')
+      // 将userMenus -> routes， 数组
+      const routes = mapMenusToRoutes(userMenus)
+      //逐一遍历添加进规则- mainChildren
+      routes.forEach((route) => {
+        router.addRoute('main', route)
+      })
     }
   },
   actions: {
@@ -63,6 +75,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       // 4.跳到首页
       router.push('/main')
     },
+
     // phoneLoginAction({ commit }, payload: any) {
     //   console.log('执行pla', payload)
     // } //后面实现 逻辑， 上传手机的号码即可
