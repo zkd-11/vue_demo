@@ -105,7 +105,7 @@ class HYrequest {
   }
 
   // 这里的request函数， 内部再发起真正的http请求，通过instance实例的request方法
-  request<T>(config: HYRequestConfig<T>): Promise<T> {
+  request<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       // 有拦截器的存在时进行执行拦截器内函数，再将config返回
       if (config.interceptors?.requestInterceptor) {
@@ -141,19 +141,20 @@ class HYrequest {
     })
   }
 
-  get<T>(config: HYRequestConfig<T>): Promise<T> {
+  // 当不传入时， 默认将参数设置为any型， 返回promise对象属性也为 any类型
+  get<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'GET' })
   }
 
-  post<T>(config: HYRequestConfig<T>): Promise<T> {
+  post<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'POST' })
   }
 
-  delete<T>(config: HYRequestConfig<T>): Promise<T> {
+  delete<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'DELETE' })
   }
 
-  patch<T>(config: HYRequestConfig<T>): Promise<T> {
+  patch<T = any>(config: HYRequestConfig<T>): Promise<T> {
     return this.request<T>({ ...config, method: 'PATCH' })
   }
 }
