@@ -51,7 +51,7 @@ class HYrequest {
     //请求- 后添加 先执行，响应先添加先执行
     this.instance.interceptors.request.use(
       (config) => {
-        console.log('默认实例拦截器: 请求成功拦截')
+        // console.log('默认实例拦截器: 请求成功拦截')
 
         if (this.showLoading) {
           // 执行加载动画组件 lock 为执行蒙版- text加载时文本
@@ -70,7 +70,7 @@ class HYrequest {
     )
     this.instance.interceptors.response.use(
       (res) => {
-        console.log('默认实例拦截器: 响应成功拦截')
+        // console.log('默认实例拦截器: 响应成功拦截')
 
         // 请求成功后 将loading移除, 不一定有使用加载动画配置，不需要使用if
         this.loading?.close()

@@ -1,4 +1,7 @@
+import { IBreadcrumb } from '@/base-ui/breadcrumb'
 import { RouteRecordRaw } from 'vue-router'
+
+let firstMenu: any = null
 
 export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   const routes: RouteRecordRaw[] = []
@@ -18,6 +21,9 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   //  type ===1 说明为二级菜单
   //  需要先遍历子菜单
   //  type ===2 说明一级菜单， 直接映射即可， 此处需要使用到 递归
+  // 多层时， 从最底层往外扩
+
+  // 加下划线_表示内部辅助函数_ 内有递归处理，不适用于外部
 
   const _recurseGetRoute = (menus: any[]) => {
     for (const menu of menus) {
@@ -25,7 +31,13 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
         const route = allRoutes.find((route) => route.path === menu.url)
         //  应该提前注册所有组件， 一般不可能出现匹配不了的情况
         //  但是当路径写错， 后端新增menu， 前端未更新会导致false
+
         if (route) routes.push(route)
+
+        // 将首个Menu进行赋值， 解除main刷新无法导向失败
+        if (!firstMenu) {
+          firstMenu = menu
+        }
       } else {
         _recurseGetRoute(menu.children)
       }
@@ -35,3 +47,71 @@ export function mapMenusToRoutes(userMenus: any[]): RouteRecordRaw[] {
   _recurseGetRoute(userMenus)
   return routes
 }
+
+// 为注册映射函数 进行扩展功能， 直接在面包屑函数 进行调用即可
+//  获得面包屑文本数组
+// 获取面包屑 文本 路径文本
+export function pathMapBreadcrumbs(userMenus: any, currentPath: string): any {
+  const breadcrumbs: IBreadcrumb[] = []
+  pathMapToMenu(userMenus, currentPath, breadcrumbs)
+
+  return breadcrumbs
+}
+
+export function pathMapToMenu(
+  userMenus: any,
+  currentPath: string,
+  breadcrumbs?: IBreadcrumb[]
+): any {
+  for (const menu of userMenus) {
+    if (menu.type === 1) {
+      const findMenu = pathMapToMenu(menu.children ?? [], currentPath)
+      if (findMenu) {
+        breadcrumbs?.push({ name: menu.name })
+        breadcrumbs?.push({ name: findMenu.name, path: findMenu.url })
+        return findMenu
+      }
+    } else if (menu.type === 2 && menu.url === currentPath) {
+      return menu
+    }
+  }
+}
+export { firstMenu }
+
+// // 获取面包屑 文本 路径文本
+// export function pathMapBreadcrumbs(userMenus: any, currentPath: string): any {
+//   const breadcrumbs: IBreadcrumb[] = []
+
+//   for (const menu of userMenus) {
+//     if (menu.type === 1) {
+//       const findMenu = pathMapToMenu(menu.children ?? [], currentPath)
+//       if (findMenu) {
+//         // 因为是顶层所以不用跳转， 也无URL，去除
+//         breadcrumbs.push({ name: menu.name })
+//         breadcrumbs.push({ name: findMenu.name, path: findMenu.url })
+//         return findMenu
+//       }
+//     } else if (menu.type === 2 && menu.url === currentPath) {
+//       return menu
+//     }
+//     return breadcrumbs
+//   }
+// }
+
+// export function pathMapToMenu(userMenus: any, currentPath: string): any {
+//   for (const menu of userMenus) {
+//     if (menu.type === 1) {
+//       // 进行遍历获取匹配， 将当前路径与菜单信息 进行比对
+//       const findMenu = pathMapToMenu(menu.children ?? [], currentPath)
+//       if (findMenu) {
+//         return findMenu
+//       }
+//     }
+//     // 此部分是为 无子菜单的  菜单逻辑判断，返回本身，
+//     // 在此案例中，作为递归的调用出口
+//     //  遍历至子菜单时， 将菜单Menu 进行返回
+//     else if (menu.type === 2 && menu.url === currentPath) {
+//       return menu
+//     }
+//   }
+// }

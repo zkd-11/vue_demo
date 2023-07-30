@@ -2315,7 +2315,7 @@ import Loading from './Loading.vue';
 >        <button @click="focusInput">Focus Input</button>
 >      </div>
 >    </template>
->                      
+>                            
 >    <script>
 >    export default {
 >      methods: {
@@ -2989,7 +2989,7 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, unref } from 'vue';
->                          
+>                                    
 >      const count = ref(0);
 >      const unwrappedCount = unref(count);
 >      console.log(unwrappedCount); // 输出 0
@@ -3003,7 +3003,7 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, isRef } from 'vue';
->                          
+>                                    
 >      const count = ref(0);
 >      const isCountRef = isRef(count);
 >      console.log(isCountRef); // 输出 true
@@ -3018,12 +3018,12 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRefs } from 'vue';
->              
+>                  
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->              
+>                  
 >      const { name, age } = toRefs(state);
 >      console.log(name.value); // 输出 'John'
 >      console.log(age.value); // 输出 25
@@ -3038,11 +3038,11 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { shallowRef } from 'vue';
->                          
+>                                    
 >      const obj = { name: 'John' };
 >      const shallowObjRef = shallowRef(obj);
 >      console.log(shallowObjRef.value.name); // 输出 'John'
->                          
+>                                    
 >      // 注意：只有对象本身的改变会触发响应
 >      obj.name = 'Jane';
 >      console.log(shallowObjRef.value.name); // 输出 'Jane'
@@ -3062,12 +3062,12 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { reactive, toRef } from 'vue';
->              
+>                  
 >      const state = reactive({
 >        name: 'John',
 >        age: 25,
 >      });
->              
+>                  
 >      const nameRef = toRef(state, 'name');
 >      console.log(nameRef.value); // 输出 'John'
 >      ```
@@ -3081,11 +3081,11 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, computed } from 'vue';
->              
+>                  
 >      const count = ref(0);
 >      const doubledCount = computed(() => count.value * 2);
 >      console.log(doubledCount.value); // 输出 0
->              
+>                  
 >      // 注意：doubledCount 是一个响应式的计算属性
 >      count.value = 5;
 >      console.log(doubledCount.value); // 输出 10
@@ -3098,13 +3098,13 @@ import Loading from './Loading.vue';
 >    - 示例：
 >      ```javascript
 >      import { ref, watchEffect } from 'vue';
->                          
+>                                    
 >      const count = ref(0);
->                          
+>                                    
 >      watchEffect(() => {
 >        console.log(`count 变化了：${count.value}`);
 >      });
->                          
+>                                    
 >      count.value = 1; // 输出 'count 变化了：1'
 >      ```
 >
@@ -3890,7 +3890,7 @@ onClick 需要被识别为 click， 所以从2开始截取， 并转化为click
 > - WeakMap 的键对象是弱引用的，不会阻止键对象的垃圾回收。
 > - WeakMap 不支持遍历，因为键对象可能在任何时候被垃圾回收。
 >
-> 总之，WeakMap 提供了一种存储键值对的方式，可以在一些特定场景下提供更好的内存管理和安全性。
+> 总之，WeakMap 提供了一种存储键值对的方式，可以在一些特定场景下提供更好的内存管理和安全性。 
 
 
 

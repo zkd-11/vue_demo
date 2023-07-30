@@ -26,8 +26,12 @@ const app = createApp(App)
 // 表示调用封装出来的index.ts函数，函数作用为注册全局组件
 // globalRegister(app)
 app.use(globalRegister)
-app.use(router)
+
 app.use(store)
+
+// 刷新后的数据要正确使用， 路由的注册，需要提前于 app.use(store)
+setupStore()
+app.use(router)
 
 app.mount('#app')
 
@@ -36,14 +40,13 @@ app.mount('#app')
 // console.log(process.env.VUE_APP_BASE_NAME)
 
 // 这里实质上 相当于实例化对象调用方法- 传入配置
-hyRequest
-  .request<any>({
-    url: 'http://123.207.32.32:8000/home/multidata',
-    method: 'GET'
-  })
-  .then((res) => {
-    console.log(res.data)
-  })
+hyRequest.request<any>({
+  url: 'http://123.207.32.32:8000/home/multidata',
+  method: 'GET'
+})
+// .then((res) => {
+//   console.log(res.data)
+// })
 
 // hyRequest.request({
 //   url: '/home/multidata',
@@ -95,5 +98,3 @@ hyRequest
 //   })
 
 // hyRequest.get()
-
-setupStore()

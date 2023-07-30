@@ -15,14 +15,14 @@ const hyquest = new HYrequest({
       if (token) {
         config.headers.Authorization = `Bearer ${token}`
       }
-      console.log('请求成功拦截')
+      // console.log('请求成功拦截')
       return config
     },
     requestInterceptorCatch: (err) => {
       return err
     },
     responseInterceptor: (res) => {
-      console.log('响应成功拦截')
+      // console.log('响应成功拦截')
       return res
     },
     responseInterceptorCatch: (err) => {

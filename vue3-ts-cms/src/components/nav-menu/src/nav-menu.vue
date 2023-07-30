@@ -10,11 +10,12 @@
     <!--
       unique-opened 默认为false,可同时打开多个菜单
       collapse 折叠， true表示折叠
+
+      default-active不能写死， 该值影响刷新后重定向位置
     -->
     <el-menu
-      default-active="2"
+      :default-active="defaultValue"
       class="el-menu-vertical"
-      :unique-opened="false"
       :collapse="collapse"
       background-color="#0c2135"
       text-color="#b7bdc3"
@@ -55,10 +56,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { useStore } from '@/store'
-import { useRouter } from 'vue-router'
-
+import { useRouter, useRoute } from 'vue-router'
+import { pathMapToMenu } from '@/utils/map-menus'
 // vuex - typescript  => pinia
 
 export default defineComponent({
@@ -75,6 +76,14 @@ export default defineComponent({
     //  使用路由
     const router = useRouter()
 
+    // 路由规则
+    const route = useRoute()
+    const currentPath = route.path
+
+    // data , 传入时 应将ref属性的value值传入
+    const menu = pathMapToMenu(userMenus.value, currentPath)
+    const defaultValue = ref(menu.id + '')
+
     // 触发事件， 将当前所点击的菜单信息获取，并修改url
     const handleMenuItemClick = (item: any) => {
       console.log('------')
@@ -84,7 +93,8 @@ export default defineComponent({
     }
     return {
       userMenus,
-      handleMenuItemClick
+      handleMenuItemClick,
+      defaultValue
     }
   }
 })

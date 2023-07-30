@@ -42,7 +42,7 @@ const loginModule: Module<ILoginState, IRootState> = {
       state.userMenus = userMenus
 
       // 注册动态路由组件
-      console.log('注册动态路由组件')
+      // console.log('注册动态路由组件')
       // 将userMenus -> routes， 数组
       const routes = mapMenusToRoutes(userMenus)
       //逐一遍历添加进规则- mainChildren

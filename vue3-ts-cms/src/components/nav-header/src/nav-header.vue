@@ -6,19 +6,25 @@
       @click="handleFoldClick"
     ></i>
     <div class="content">
-      <div>面包屑</div>
+      <hy-breadcrumb :breadcrumbs="breadcrumbs" />
       <user-info />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import UserInfo from './user-info.vue'
+import HyBreadcrumb from '@/base-ui/breadcrumb'
+
+import { useStore } from '@/store'
+import { useRoute } from 'vue-router'
+import { pathMapBreadcrumbs } from '@/utils/map-menus'
 
 export default defineComponent({
   components: {
-    UserInfo
+    UserInfo,
+    HyBreadcrumb
   },
   emits: ['foldChange'],
   setup(props, { emit }) {
@@ -28,9 +34,20 @@ export default defineComponent({
       emit('foldChange', isFold.value)
     }
 
+    // 面包屑的数据: [{name: , path: }]
+    const store = useStore()
+    const breadcrumbs = computed(() => {
+      const userMenus = store.state.login.userMenus
+      const route = useRoute()
+      const currentPath = route.path
+      // return 返回为： 面包屑 菜单对象（名字 、 path）
+      return pathMapBreadcrumbs(userMenus, currentPath)
+    })
+
     return {
       isFold,
-      handleFoldClick
+      handleFoldClick,
+      breadcrumbs
     }
   }
 })
@@ -48,8 +65,8 @@ export default defineComponent({
 
   .content {
     display: flex;
-    justify-content: space-between; // 均匀分布 j-c: space-between
-    align-items: center; /* aic 垂直居中 */
+    justify-content: space-between;
+    align-items: center;
     flex: 1;
     padding: 0 20px;
   }

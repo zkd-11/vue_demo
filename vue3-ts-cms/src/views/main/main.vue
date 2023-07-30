@@ -69,7 +69,7 @@ export default defineComponent({
   display: flex;
   color: #333;
   text-align: center;
-  align-items: center;
+  align-items: center; //垂直居中
 }
 
 .el-header {
@@ -90,6 +90,11 @@ export default defineComponent({
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+//  为main下的界面进行赋值
+.page-info {
+  background-color: #fff;
 }
 
 .el-main {
