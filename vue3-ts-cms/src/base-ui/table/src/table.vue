@@ -1,6 +1,38 @@
 <template>
   <div class="hy-table">
-    <el-table :data="listData" border style="width: 100%">
+    <!-- 设置header头部 -->
+    <div class="header">
+      <slot name="header">
+        <div class="title">{{ title }}</div>
+
+        <div class="handler">
+          <slot name="headerHandler"></slot>
+        </div>
+      </slot>
+    </div>
+    <!-- selection-change 用于获取选择的行 , 并将之向外触发-->
+    <el-table
+      :data="listData"
+      border
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
+      <!-- 添加序号列 和 选择列  -->
+      <el-table-column
+        v-if="showSelectColumn"
+        type="selection"
+        align="center"
+        width="60"
+      >
+      </el-table-column>
+      <el-table-column
+        v-if="showIndexColumn"
+        type="index"
+        label="序号"
+        align="center"
+        width="80"
+      >
+      </el-table-column>
       <template v-for="propItem in propList" :key="propItem.prop">
         <el-table-column v-bind="propItem" align="center">
           <!-- 设置插槽， 为父组件提供 动态设置指定具有插槽名的指定列样式 -->
@@ -12,6 +44,21 @@
         </el-table-column>
       </template>
     </el-table>
+    <!-- 插入尾部 -->
+    <div class="footer">
+      <slot name="footer">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-sizes="[100, 200, 300, 400]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400"
+        >
+        </el-pagination>
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -20,6 +67,10 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   props: {
+    title: {
+      type: String,
+      default: ''
+    },
     listData: {
       type: Array,
       required: true
@@ -28,12 +79,53 @@ export default defineComponent({
       // 将其断言为 内部数据为any类型的数组
       type: Array as () => any[],
       required: true
+    },
+    showIndexColumn: {
+      type: Boolean,
+      default: false
+    },
+    showSelectColumn: {
+      type: Boolean,
+      default: false
     }
   },
-  setup() {
-    return {}
+  emits: ['selectionChange'],
+  setup(props, { emit }) {
+    const handleSelectionChange = (value: any) => {
+      console.log(value)
+      // 触发事件， 向父组件传递
+      emit('selectionChange', value)
+    }
+    return {
+      handleSelectionChange
+    }
   }
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.header {
+  display: flex;
+  height: 45px;
+  padding: 0 5px;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .handler {
+    align-items: center;
+  }
+}
+
+.footer {
+  margin-top: 15px;
+
+  .el-pagination {
+    text-align: right;
+  }
+}
+</style>

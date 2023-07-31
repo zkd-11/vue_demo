@@ -2559,16 +2559,16 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >    - 使用示例：
 >      ```javascript
 >      import { useRoute } from 'vue-router';
->           
+>                          
 >      export default {
 >        setup() {
 >          const route = useRoute();
->           
+>                          
 >          // 使用当前路由信息
 >          console.log('当前路由路径：', route.path);
 >          console.log('当前路由参数：', route.params);
 >          console.log('当前路由查询参数：', route.query);
->           
+>                          
 >          return {};
 >        },
 >      };
@@ -2580,16 +2580,16 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >    - 使用示例：
 >      ```javascript
 >      import { useRouter } from 'vue-router';
->           
+>                          
 >      export default {
 >        setup() {
 >          const router = useRouter();
->           
+>                          
 >          // 编程式导航示例
 >          const handleButtonClick = () => {
 >            router.push('/some-route'); // 导航至 '/some-route'
 >          };
->           
+>                          
 >          return {
 >            handleButtonClick,
 >          };
@@ -3446,4 +3446,707 @@ scope.row. enable， 表示通过作用域对象，获取当前行的enable表�
 # day 29  7.30   20点20分
 
 # 🔺✨进度九
+
+
+
+## 全局属性声明后仍报错- 待处理- 能正常使用
+
+
+
+## （一）对user- table表格样式优化
+
+### 1. 对按钮进行显示优化
+
+plain表示镂空显示， 背景色空白
+
+type为其逻辑判断为其选择样式 -  绿钮  和 红钮
+
+
+
+**Plain属性** -  朴素色， 淡化背景色 将其转化为 更清爽的颜色
+
+<img src="vue3-CMS.assets/image-20230730221111824.png" alt="image-20230730221111824" style="zoom: 80%;" />
+
+```ts
+<el-button
+            plain
+            size="mini"
+            :type="scope.row.enable ? 'success' : 'danger'"
+            >{{ scope.row.enable ? '启用' : '禁用' }}</el-button
+```
+
+
+
+### 2. 对UTC时间进行转化
+
+### 2.1.  全局注册属性- $filters对象
+
+#### 2.1.1.  引入dayjs，并实现格式化time函数
+
+```ts
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
+
+// 默认 dayJs 插件不对utc时间进行处理
+dayjs.extend(utc)
+
+const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss'
+
+export function formatUtcString(
+  utcString: string,
+  format: string = DATE_TIME_FORMAT
+) {
+  // 表示对utc时间使用 格式转化- 转化为 format格式
+  return dayjs.utc(utcString).format(format)
+}
+
+```
+
+
+
+#### 2.1.2 全局注册属性
+
+导出函数  至 Global  -   index.ts， 为$filters全局属性装载 -  格式化**time**函数
+
+```ts
+import { App } from 'vue'
+import { formatUtcString } from '@/utils/date-format'
+
+// 全局注册的属性对象， 具有多个函数
+export default function registerProperties(app: App) {
+  app.config.globalProperties.$filters = {
+    foo() {
+      console.log('foo')
+    },
+    formatTime(value: string) {
+      return formatUtcString(value)
+    }
+  }
+}
+```
+
+
+
+**index.ts中使用**
+
+```ts
+import { App } from 'vue'
+import registerElement from './register-element'
+import registerProperties from './register-properties'
+
+// ts 组件类型声明
+export function globalRegister(app: App): void {
+  app.use(registerElement)
+  app.use(registerProperties)
+}
+
+```
+
+
+
+**在main.ts， 直接使用该函数即可注册全局属性**
+
+#### 2.1.3. 在动态插槽中  格式化时间
+
+```ts
+  <template #createAt="scope">
+          <span>{{ $filters.formatTime(scope.row.createAt) }}</span>
+        </template>
+```
+
+
+
+## （二） 增加表格三列
+
+### 1. 增加选择列和序号列
+
+让其变得更灵活， 在遍历元素前添加此列， 并使用配置传入 showSelectColumn，showIndexColumn  决定是否显示该列
+
+**父组件传入配置信息**
+
+```ts
+      <hy-table
+        :listData="userList"
+        :propList="propList"
+        :showSelectColumn="showSelectColumn"
+        :show-index-column="showIndexColumn"
+      >
+      
+    const showIndexColumn = true
+    const showSelectColumn = true
+
+    return {
+      searchFormConfig,
+      userList,
+      propList,
+      userCount,
+      showIndexColumn,
+      showSelectColumn
+    }
+```
+
+
+
+```ts
+        <!-- 添加序号列 和 选择列  -->
+      <el-table-column
+        v-if="showSelectColumn"
+        type="selection"
+        align="center"
+        width="60"
+      >
+      </el-table-column>
+      <el-table-column
+        v-if="showIndexColumn"
+        type="index"
+        label="序号"
+        align="center"
+        width="80"
+      >
+```
+
+序号列不传入label， 因为具有默认属性， 全选or 全不选
+
+#### 1-1选中的属性通过表头设置
+
+触发事件， 事件可设置emit传递， 串联组件间， 对选中数据进行处理
+
+```ts
+    <el-table
+      :data="listData"
+      border
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
+```
+
+向父组件， 传递选中的数据
+
+```ts
+  emits: ['selectionChange'],
+  setup(props, { emit }) {
+    const handleSelectionChange = (value: any) => {
+      console.log(value)
+      // 触发事件， 向父组件传递
+      emit('selectionChange', value)
+    }
+```
+
+
+
+### 2. 配置中传入自定义操作列
+
+```ts
+ // 插入自定义列操作列
+      { label: '操作', minWidth: '120', slotName: 'handler' }
+      
+```
+
+#### 2.1 父组件使用动态插槽， 个性化样式
+
+因为该列为自定义列， 数据中并无对应 数据， 不需要使用 作用域对象去进行获取数
+
+```ts
+ <template #handler>
+          <el-button icon="el-icon-edit" size="mini" type="text">
+            编辑
+          </el-button>
+          <el-button icon="el-icon-delete" size="mini" type="text">
+            删除
+          </el-button>
+        </template>
+```
+
+
+
+## (三) 表头表尾设置
+
+### 1. 增加表头
+
+两个插槽
+
+ 传入文本表头名， 居左显示 表头名
+
+选择插槽二    slot-- 通过headerHander   传入右表头功能块  新建用户
+
+直接对整个表头进行插槽 插入
+
+```ts
+<div class="header">
+      <slot name="header">
+        <div class="title">{{ title }}</div>
+
+        <div class="handler">
+          <slot name="headerHandler"></slot>
+        </div>
+      </slot>
+    </div>
+```
+
+#### 1.1 表头使用
+
+```ts
+  <!-- 头部插槽 -->
+        <template #headerHandler>
+          <el-button type="primary" size="mini">新建用户</el-button>
+        </template>
+
+表头名为传入参数， 将用户列表直接插入
+```
+
+
+
+### 2. 表尾直接固定化插入完整分页器
+
+```ts
+  <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="currentPage4"
+          :page-sizes="[100, 200, 300, 400]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="400"
+        >
+```
+
+<img src="vue3-CMS.assets/image-20230730235009962.png" alt="image-20230730235009962" style="zoom:80%;" />
+
+
+
+#### 2.2 对elementsUi 汉化
+
+思路： 将app.vue根组件， 包裹提供的汉化组件， el-config-provider ， 设置local= 'zhcn'
+
+```ts
+    <el-config-provider :locale="zhCn">
+      <router-view></router-view>
+    </el-config-provider>
+    
+    import { ElConfigProvider } from 'element-plus'
+	import zhCn from 'element-plus/lib/locale/lang/zh-cn'
+
+<script>
+components: {
+    ElConfigProvider
+  },
+  setup() {
+    return {
+      zhCn
+    }
+  }
+
+```
+
+<img src="vue3-CMS.assets/image-20230730235352080.png" alt="image-20230730235352080" style="zoom:80%;" />
+
+
+
+
+
+
+
+## （四）Content 组件配置抽取封装
+
+将user组件抽取而出， 放入page-content, 再将配置信息（静态）直接传入contet.config.js文件中 ， page-content 再将配置信息传入 table， user界面 直接引入- page-content即可
+
+
+
+### 1.  将静态属性抽取为content.config.js
+
+```ts
+export const contentTableConfig = {
+  title: '用户列表',
+  propList: [
+    { prop: 'name', label: '用户名', minWidth: '100' },
+    { prop: 'realname', label: '真实姓名', minWidth: '100' },
+    { prop: 'cellphone', label: '手机号码', minWidth: '100' },
+    { prop: 'enable', label: '状态', minWidth: '100', slotName: 'status' },
+    {
+      prop: 'createAt',
+      label: '创建时间',
+      minWidth: '250',
+      slotName: 'createAt'
+    },
+    {
+      prop: 'updateAt',
+      label: '更新时间',
+      minWidth: '250',
+      slotName: 'updateAt'
+    },
+    { label: '操作', minWidth: '120', slotName: 'handler' }
+  ],
+  showIndexColumn: true,
+  showSelectColumn: true
+}
+export const contentTableConfig = {
+  title: '用户列表',
+  propList: [
+    { prop: 'name', label: '用户名', minWidth: '100' },
+    { prop: 'realname', label: '真实姓名', minWidth: '100' },
+    { prop: 'cellphone', label: '手机号码', minWidth: '100' },
+    { prop: 'enable', label: '状态', minWidth: '100', slotName: 'status' },
+    {
+      prop: 'createAt',
+      label: '创建时间',
+      minWidth: '250',
+      slotName: 'createAt'
+    },
+    {
+      prop: 'updateAt',
+      label: '更新时间',
+      minWidth: '250',
+      slotName: 'updateAt'
+    },
+    { label: '操作', minWidth: '120', slotName: 'handler' }
+  ],
+  showIndexColumn: true,
+  showSelectColumn: true
+}
+
+```
+
+
+
+### 2.  将content内容封装为组件page-content
+
+将原先 使用动态插槽等template模板内直接传入 该组件， 再将user内部所要传入的静态属性抽取放在config文件， 最后在user引用并传入该配置文件
+
+```ts
+引入重点
+<hy-table :listData="dataList" v-bind="contentTableConfig">
+      <!-- 头部插槽 -->
+      <template #headerHandler>
+        <el-button type="primary" size="mini">新建用户</el-button>
+      </template>...
+
+
+```
+
+
+
+#### 2.1  动态disPatch 触发action
+
+通过接收pageName, 在内部使用字符拼接的形式,  将pageName发送
+
+```ts
+setup(props) {
+    const store = useStore()
+    store.dispatch('system/getPageListAction', {
+      pageName: props.pageName,
+      queryInfo: {
+        offset: 0,
+        size: 10
+      }
+    })
+
+    const dataList = computed(() =>
+      store.getters[`system/pageListData`](props.pageName)
+    )
+    // const userCount = computed(() => store.state.system.userCount)
+
+    return {
+      dataList
+    }
+```
+
+
+
+### 3.   System模块中  对action重写
+
+ 由于接口规范，根据取得的pageName, 在内部进行字符拼接，发送不同post请求，
+
+再用slice方法， pageName.slice(0,1).toUppercase( ) + PageName.slice(1)拼接为mutation的方法， 去发送请求并保存数据至 state内部
+
+
+
+当api不规范时， 也可使用switch去匹配对应的路径， 发送请求， 或map映射关系？
+
+```ts
+actions: {
+    async getPageListAction({ commit }, payload: any) {
+      // 1.获取pageUrl
+      const pageName = payload.pageName
+      // 由使用者传入pageName, 比较规范可以用拼接的形式
+      const pageUrl = `/${pageName}/list`
+      // switch (pageName) {
+      //   case 'users':
+      //     pageUrl = '/users/list'
+      //     break
+      //   case 'role':
+      //     pageUrl = '/role/list'
+      //     break
+      // }
+
+      // 2.对页面发送请求
+      const pageResult = await getPageListData(pageUrl, payload.queryInfo)
+      // 3.将数据存储到state中
+      const { list, totalCount } = pageResult.data
+
+      // 触发的事件 需要PageName首字母大写
+      // 相当于取出字符串首字母再拼接第一个后的所有字母
+      const changePageName =
+        pageName.slice(0, 1).toUpperCase() + pageName.slice(1)
+      commit(`change${changePageName}List`, list)
+      commit(`change${changePageName}Count`, totalCount)
+
+      // switch (pageName) {
+      //   case 'users':
+      //     commit(`changeUserList`, list)
+      //     commit(`changeUserCount`, totalCount)
+      //     break
+      //   case 'role':
+      //     commit(`changeRoleList`, list)
+      //     commit(`changeRoleCount`, totalCount)
+      //     break
+      // }
+    }
+  }
+```
+
+ 
+
+#### 3.1  定义getter方法 获取 State数据
+
+字符串形式  拼接获取
+
+```ts
+ getters: {
+    pageListData(state) {
+      return (pageName: string) => {
+        return (state as any)[`${pageName}List`]
+        // switch (pageName) {
+        //   case 'users':
+        //     return state.usersList
+        //   case 'role':
+        //     return state.roleList
+        // }
+      }
+    }
+```
+
+
+
+### 4. page-content 更加灵活获取ListData
+
+在特定页， 传入特定的名， 即可根据需求获得对应的数据
+
+
+
+取出子模块的 pageListData 方法
+
+```ts
+ const dataList = computed(() =>
+      store.getters[`system/pageListData`](props.pageName)
+    )
+```
+
+
+
+## （五）Components 组件（搜索表单） 优化
+
+原先的标签value值为写死的
+
+```ts
+  setup() {
+    const formData = ref({
+      id: '',
+      name: '',
+      password: '',
+      sport: '',
+      createTime: ''
+    })
+```
+
+
+
+### 1  重置功能实现， 动态决定Prop属性 
+
+现将其转为  遍历formItems, 由fiedld决定 
+
+
+
+formOriginData是静态对象数据，  formData是将前者数据拷贝作为其数据，并转化为响应式， 但是与前者无关， 所以后面通过遍历
+
+ formData.value[`${key}`] = formOriginData[key]， 将其进行重置
+
+```ts
+ setup(props) {
+    // 双向绑定的属性应该是由配置文件的field来决定
+    // 1.优化一: formData中的属性应该动态来决定
+    const formItems = props.searchFormConfig?.formItems ?? []
+
+    // 保留原始的空数据， 定义一个对象去存储原数据 实现重置功能
+    const formOriginData: any = {}
+    for (const item of formItems) {
+      formOriginData[item.field] = ''
+    }
+    // 将formData响应式数据初始为''传入 form
+    // form 间接emit时修改formData, 并不影响originData
+    const formData = ref(formOriginData)
+
+    // 2.优化二: 当用户点击重置
+    const handleResetClick = () => {
+      for (const key in formOriginData) {
+        formData.value[`${key}`] = formOriginData[key]
+      }
+    }
+
+    return {
+      formData,
+      handleResetClick
+    }
+  }
+})
+```
+
+
+
+
+
+## (六) 快速生成Role界面
+
+由于Component已转化为独立极强的组件， 只需传入配置文件， 即可快速搭建界面
+
+
+
+### 1. 将有默认值的参数转化为 可选参数
+
+```ts
+type IFormType = 'input' | 'password' | 'select' | 'datepicker'
+
+export interface IFormItem {
+  field: string
+  type: IFormType
+  label: string
+  rules?: any[]
+  placeholder?: any
+  // 针对select
+  options?: any[]
+  // 针对特殊的属性
+  otherOptions?: any
+}
+
+export interface IForm {
+  formItems: IFormItem[]
+  labelWidth?: string
+  colLayout?: any
+  itemLayout?: any
+}
+
+```
+
+  labelWidth?: string
+  colLayout?: any
+  itemLayout?: any
+
+在 user中配置文件中 可不传入此类型
+
+
+
+### 2.  Role页面 引入 搜索&内容配置组件- 
+
+```ts
+<template>
+  <div class="role">
+    <page-search :searchFormConfig="searchFormConfig"></page-search>
+    <page-content
+      :contentTableConfig="contentTableConfig"
+      pageName="role"
+    ></page-content>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+import PageSearch from '@/components/page-search'
+import PageContent from '@/components/page-content'
+
+import { searchFormConfig } from './config/search.config'
+import { contentTableConfig } from './config/content.config'
+
+export default defineComponent({
+  name: 'role',
+  components: {
+    PageContent,
+    PageSearch
+  },
+  setup() {
+    return {
+      searchFormConfig,
+      contentTableConfig
+    }
+  }
+})
+```
+
+
+
+#### 2.1 内容配置文件
+
+```ts
+export const contentTableConfig = {
+  title: '用户列表',
+  propList: [
+    { prop: 'name', label: '角色名', minWidth: '100' },
+    { prop: 'intro', label: '权限介绍', minWidth: '100' },
+    {
+      prop: 'createAt',
+      label: '创建时间',
+      minWidth: '250',
+      slotName: 'createAt'
+    },
+    {
+      prop: 'updateAt',
+      label: '更新时间',
+      minWidth: '250',
+      slotName: 'updateAt'
+    },
+    { label: '操作', minWidth: '120', slotName: 'handler' }
+  ],
+  showIndexColumn: true,
+  showSelectColumn: true
+}
+
+```
+
+
+
+#### 2.2搜索配置文件
+
+```ts
+import { IForm } from '@/base-ui/form'
+
+export const searchFormConfig: IForm = {
+  labelWidth: '120px',
+  formItems: [
+    {
+      field: 'name',
+      type: 'input',
+      label: '角色名称',
+      placeholder: '请输入角色名称'
+    },
+    {
+      field: 'intro',
+      type: 'input',
+      label: '权限介绍',
+      placeholder: '请输入权限介绍'
+    },
+    {
+      field: 'createTime',
+      type: 'datepicker',
+      label: '创建时间',
+      otherOptions: {
+        startPlaceholder: '开始时间',
+        endPlaceholder: '结束时间',
+        type: 'daterange'
+      }
+    }
+  ]
+}
+
+```
+
+
 

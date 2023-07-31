@@ -2,38 +2,83 @@ import { Module } from 'vuex'
 import { IRootState } from '@/store/types'
 import { ISystemState } from './types'
 
-// 导入 post 请求
 import { getPageListData } from '@/service/main/system/system'
 
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
   state() {
     return {
-      userList: [],
-      userCount: 0
+      usersList: [],
+      usersCount: 0,
+      roleList: [],
+      roleCount: 0
     }
   },
   mutations: {
-    changeUserList(state, userList: any[]) {
-      state.userList = userList
+    changeUsersList(state, userList: any[]) {
+      state.usersList = userList
     },
-    changeUserCount(state, userCount: number) {
-      state.userCount = userCount
+    changeUsersCount(state, userCount: number) {
+      state.usersCount = userCount
+    },
+    changeRoleList(state, list: any[]) {
+      state.roleList = list
+    },
+    changeRoleCount(state, count: number) {
+      state.roleCount = count
+    }
+  },
+  getters: {
+    pageListData(state) {
+      return (pageName: string) => {
+        return (state as any)[`${pageName}List`]
+        // switch (pageName) {
+        //   case 'users':
+        //     return state.usersList
+        //   case 'role':
+        //     return state.roleList
+        // }
+      }
     }
   },
   actions: {
     async getPageListAction({ commit }, payload: any) {
-      console.log(payload.pageUrl)
-      console.log(payload.queryInfo)
+      // 1.获取pageUrl
+      const pageName = payload.pageName
+      // 由使用者传入pageName, 比较规范可以用拼接的形式
+      const pageUrl = `/${pageName}/list`
+      // switch (pageName) {
+      //   case 'users':
+      //     pageUrl = '/users/list'
+      //     break
+      //   case 'role':
+      //     pageUrl = '/role/list'
+      //     break
+      // }
 
-      // 1.对页面发送请求
-      const pageResult = await getPageListData(
-        payload.pageUrl,
-        payload.queryInfo
-      )
+      // 2.对页面发送请求
+      const pageResult = await getPageListData(pageUrl, payload.queryInfo)
+
+      // 3.将数据存储到state中
       const { list, totalCount } = pageResult.data
-      commit('changeUserList', list)
-      commit('changeUserCount', totalCount)
+
+      // 触发的事件 需要PageName首字母大写
+      // 相当于取出字符串首字母再拼接第一个后的所有字母
+      const changePageName =
+        pageName.slice(0, 1).toUpperCase() + pageName.slice(1)
+      commit(`change${changePageName}List`, list)
+      commit(`change${changePageName}Count`, totalCount)
+
+      // switch (pageName) {
+      //   case 'users':
+      //     commit(`changeUserList`, list)
+      //     commit(`changeUserCount`, totalCount)
+      //     break
+      //   case 'role':
+      //     commit(`changeRoleList`, list)
+      //     commit(`changeRoleCount`, totalCount)
+      //     break
+      // }
     }
   }
 }
