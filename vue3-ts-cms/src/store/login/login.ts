@@ -8,6 +8,8 @@ import { IRootState } from '../types'
 
 // 导入路由映射表函数-
 import { mapMenusToRoutes } from '@/utils/map-menus'
+// 导入权限表函数-
+import { mapMenusToPermissions } from '@/utils/map-menus'
 
 // 导入三个请求分别对应 登录请求- 用户请求 - 菜单请求
 import {
@@ -27,7 +29,8 @@ const loginModule: Module<ILoginState, IRootState> = {
     return {
       token: '',
       userInfo: {},
-      userMenus: []
+      userMenus: [],
+      permissions: []
     }
   },
   getters: {},
@@ -49,6 +52,10 @@ const loginModule: Module<ILoginState, IRootState> = {
       routes.forEach((route) => {
         router.addRoute('main', route)
       })
+
+      // 在为用户生成菜单时 就需为其绑定权限
+      const permissions = mapMenusToPermissions(userMenus)
+      state.permissions = permissions
     }
   },
   actions: {

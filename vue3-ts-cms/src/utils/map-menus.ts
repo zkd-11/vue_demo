@@ -76,6 +76,24 @@ export function pathMapToMenu(
     }
   }
 }
+
+// 函数为获取 级别为3的菜单权限 转化为字符串
+export function mapMenusToPermissions(userMenus: any[]) {
+  const permissions: string[] = []
+
+  const _recurseGetPermissions = (menus: any[]) => {
+    for (const menu of menus) {
+      if (menu.type === 1 || menu.type === 2) {
+        _recurseGetPermissions(menu.children ?? [])
+      } else if (menu.type === 3) {
+        permissions.push(menu.permission)
+      }
+    }
+  }
+  _recurseGetPermissions(userMenus)
+
+  return permissions
+}
 export { firstMenu }
 
 // // 获取面包屑 文本 路径文本

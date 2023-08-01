@@ -1,9 +1,14 @@
 <template>
   <div class="page-content">
-    <hy-table :listData="dataList" v-bind="contentTableConfig">
+    <hy-table
+      :listData="dataList"
+      :listCount="dataCount"
+      v-model:page="pageInfo"
+      v-bind="contentTableConfig"
+    >
       <!-- 头部插槽 -->
       <template #headerHandler>
-        <el-button type="primary" size="mini">新建用户</el-button>
+        <el-button v-if="isCreate" type="primary" size="mini">新建</el-button>
       </template>
       <!--
           内部动态插槽
@@ -24,24 +29,42 @@
         <span>{{ $filters.formatTime(scope.row.createAt) }}</span>
       </template>
       <template #updateAt="scope">
-        <span>{{ $filters.formatTime(scope.row.createAt) }}</span>
+        <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
       <template #handler>
-        <el-button icon="el-icon-edit" size="mini" type="text">
+        <el-button v-if="isUpdate" icon="el-icon-edit" size="mini" type="text">
           编辑
         </el-button>
-        <el-button icon="el-icon-delete" size="mini" type="text">
+        <el-button
+          v-if="isDelete"
+          icon="el-icon-delete"
+          size="mini"
+          type="text"
+        >
           删除
         </el-button>
+      </template>
+
+      <!-- 在page-content 动态插入剩余的插槽 -->
+      <template
+        v-for="item in otherPropSlots"
+        :key="item.prop"
+        #[item.slotName]="scope"
+      >
+        <template v-if="item.slotName">
+          <slot :name="item.slotName" :row="scope.row"></slot>
+        </template>
       </template>
     </hy-table>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref, watch } from 'vue'
 import HyTable from '@/base-ui/table'
 import { useStore } from '@/store'
+
+import { usePermission } from '@/hooks/use-permission'
 export default defineComponent({
   components: {
     HyTable
@@ -49,7 +72,7 @@ export default defineComponent({
   props: {
     contentTableConfig: {
       type: Object,
-      require: true
+      required: true
     },
     pageName: {
       type: String,
@@ -58,21 +81,62 @@ export default defineComponent({
   },
   setup(props) {
     const store = useStore()
-    store.dispatch('system/getPageListAction', {
-      pageName: props.pageName,
-      queryInfo: {
-        offset: 0,
-        size: 10
-      }
-    })
 
+    // 0. 获取操作的权限
+    const isCreate = usePermission(props.pageName, 'create')
+    const isUpdate = usePermission(props.pageName, 'update')
+    const isDelete = usePermission(props.pageName, 'delete')
+    const isQuery = usePermission(props.pageName, 'query')
+
+    // 1. 双向绑定pageInfo 传入table
+    const pageInfo = ref({ currentPage: 1, pageSize: 10 })
+    watch(pageInfo, () => getPageData())
+
+    // 2. 发送网络请求
+    // 有默认值， 当未传入参数时， 默认调用 空对象
+    const getPageData = (queryInfo: any = {}) => {
+      if (!isQuery) return
+      store.dispatch('system/getPageListAction', {
+        pageName: props.pageName,
+        queryInfo: {
+          offset: (pageInfo.value.currentPage - 1) * pageInfo.value.pageSize,
+          size: pageInfo.value.pageSize,
+          ...queryInfo
+        }
+      })
+    }
+    getPageData()
+
+    // 3. 从vueX 中获取数据
     const dataList = computed(() =>
       store.getters[`system/pageListData`](props.pageName)
     )
-    // const userCount = computed(() => store.state.system.userCount)
+    const dataCount = computed(() =>
+      store.getters[`system/pageListCount`](props.pageName)
+    )
+
+    // 4. 获取动态插槽， 为其它独有表格设置插槽
+    const otherPropSlots = props.contentTableConfig?.propList.filter(
+      (item: any) => {
+        if (item.slotName === 'status') return false
+        if (item.slotName === 'createAt') return false
+        if (item.slotName === 'updateAt') return false
+        if (item.slotName === 'handler') return false
+        return true
+      }
+    )
 
     return {
-      dataList
+      dataList,
+      getPageData,
+      pageInfo,
+      dataCount,
+      otherPropSlots,
+
+      isCreate,
+      isUpdate,
+      isDelete,
+      isQuery
     }
   }
 })
