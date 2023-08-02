@@ -24,6 +24,7 @@
               :label="item.label"
               :rules="item.rules"
               :style="itemStyle"
+              v-if="!item.isHidden"
             >
               <!-- input类型  password 触发 show-password 属性 -->
               <template

@@ -4,6 +4,11 @@ import { ISystemState } from './types'
 
 import { getPageListData } from '@/service/main/system/system'
 
+import {
+  deletePageData,
+  editPageData,
+  createPageData
+} from '@/service/main/system/system'
 const systemModule: Module<ISystemState, IRootState> = {
   namespaced: true,
   state() {
@@ -94,6 +99,57 @@ const systemModule: Module<ISystemState, IRootState> = {
       //     commit(`changeRoleCount`, totalCount)
       //     break
       // }
+    },
+    async deletePageDataAction({ dispatch }, payload: any) {
+      //  1. 获取pageName  和 id
+      // 删除需要获取 /users/id
+      const { pageName, id } = payload
+      const pageUrl = `/${pageName}/${id}`
+
+      // 2.调用删除网络请求
+      await deletePageData(pageUrl)
+
+      // 3. 删除后需要重新请求最新数据
+      dispatch('getPageListAction', {
+        pageName,
+        // 这部分数据可以优化、 暂不不处理
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+
+    // 创建数据
+    async createPageDataAction({ dispatch }, playload: any) {
+      const { pageName, newData } = playload
+      const pageUrl = `/${pageName}`
+      await createPageData(pageUrl, newData)
+
+      // 请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+
+    async editPageDataAction({ dispatch }, payload: any) {
+      // 编辑数据请求
+      const { pageName, editData, id } = payload
+      const pageUrl = `/${pageName}/${id}`
+      await editPageData(pageUrl, editData)
+
+      // 请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
     }
   }
 }

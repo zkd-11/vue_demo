@@ -8,7 +8,13 @@
     >
       <!-- 头部插槽 -->
       <template #headerHandler>
-        <el-button v-if="isCreate" type="primary" size="mini">新建</el-button>
+        <el-button
+          v-if="isCreate"
+          type="primary"
+          size="mini"
+          @click="handleNewClick"
+          >新建数据</el-button
+        >
       </template>
       <!--
           内部动态插槽
@@ -31,8 +37,14 @@
       <template #updateAt="scope">
         <span>{{ $filters.formatTime(scope.row.updateAt) }}</span>
       </template>
-      <template #handler>
-        <el-button v-if="isUpdate" icon="el-icon-edit" size="mini" type="text">
+      <template #handler="scope">
+        <el-button
+          v-if="isUpdate"
+          icon="el-icon-edit"
+          size="mini"
+          type="text"
+          @click="handleEditClick(scope.row)"
+        >
           编辑
         </el-button>
         <el-button
@@ -40,6 +52,7 @@
           icon="el-icon-delete"
           size="mini"
           type="text"
+          @click="handleDeleteClick(scope.row)"
         >
           删除
         </el-button>
@@ -79,7 +92,8 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
+  emits: ['newBtnClick', 'editBtnClick'],
+  setup(props, { emit }) {
     const store = useStore()
 
     // 0. 获取操作的权限
@@ -126,6 +140,23 @@ export default defineComponent({
       }
     )
 
+    // 5. 删除/ 编辑/ 新建操作
+    const handleDeleteClick = (item: any) => {
+      console.log(item)
+      store.dispatch('system/deletePageDataAction', {
+        pageName: props.pageName,
+        id: item.id
+      })
+    }
+    // 新建操作
+    const handleNewClick = () => {
+      emit('newBtnClick')
+    }
+    // 编辑操作
+    const handleEditClick = (item: any) => {
+      emit('editBtnClick', item)
+    }
+
     return {
       dataList,
       getPageData,
@@ -136,7 +167,11 @@ export default defineComponent({
       isCreate,
       isUpdate,
       isDelete,
-      isQuery
+      isQuery,
+
+      handleDeleteClick,
+      handleNewClick,
+      handleEditClick
     }
   }
 })

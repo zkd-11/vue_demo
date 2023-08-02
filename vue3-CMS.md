@@ -4757,13 +4757,13 @@ ref绑定时， 也要绑定的对象return 出去， 否则无法绑定到实�
 
 **主要思路：** 
 
-1. 设置用户总数为实时更新（根据getter请求store获取），在page-content传入至table（高级组件中）, 在vueX的 system中重新生成getUserCount方法
+1. 设置用户总数为实时更新（根据getter请求store获取），从page-content传入至table（高级组件中）, 在vueX的 system中重新生成getUserCount方法
 
 2. page-content组件中  传入pageInfo对象（currentPage)  **ref**  转入， v-model:page = pageInfo ，（为事件重命名， :page= pageInfo  @"up: page,  pageInfo"  (语法糖) ）， 对象中有属性：currentPage 和 pageSize, 决定当前页数和 页包含用户量， 而后将请求转化为 动态， 由于双向绑定， 请求偏移量（页数）等价于 跳转页 乘 页数， 再使用watch监听， 当页数发生改变时， 自动触发请求，更新content
 
 3. 在table中， 对current-change的方法实现， 触发事件emit(update:page')
 
-   ​	修改页用户量， contenet监听后重新发送请求， handleSizeChanges		实现， 触发事件， content监听后，重新发送请求（watch）
+   ​	修改页用户量， contenet监听后重新发送请求， handleSizeChanges		实现， 触发事件， content监听后，重新发送请求（watch监听）
 
  
 
@@ -5021,7 +5021,7 @@ state() {
     <el-table-column v-bind="propItem" align="center" show-overflow-tooltip>
 ```
 
-文本溢出收缩 
+**文本溢出收缩** 
 
  **\<template v-for="propItem in propList" :key="propItem.prop">**
 
@@ -5251,6 +5251,767 @@ const getPageData = (queryInfo: any = {}) => {
 # 🔺✨ 进度十一
 
 # day 31 20:30 
+
+
+
+## （一） 删除按钮- 功能实现
+
+主要思路：发送网络请求- delete，
+
+1. 需先在Service封装delete请求，将删除操作放至vueX进行处理
+2. 在page-content通过作用域插槽Scope绑定行，并为DeleteBtn绑定删除处理函数💓🐟
+3. 在vueX中Action中定义发送删除请求函数，需接受从pageContent接受的id和pageName, 执行aXios封装的删除请求，  删除后重新对数据进行获取
+4. 在DeleteBtn删除处理函数中，将id和pageName传递并触发VueX的Action删除请求
+
+
+
+### 1. 封装Service- Delete网络请求
+
+在Service为System封装删除请求， 需要接受url 
+
+```ts
+// url: /users/id
+export function deletePageData(url: string) {
+  return hyRequest.delete<IDataType>({
+    url: url
+  })
+}
+
+```
+
+
+
+### 2. VueX定义disPatch调用请求
+
+接收pageName和id后，拼接成路径，发送删除请求， 并重新获取最新数据
+
+```ts
+ async deletePageDataAction({ dispatch }, payload: any) {
+      //  1. 获取pageName  和 id
+      // 删除需要获取 /users/id
+      const { pageName, id } = payload
+      const pageUrl = `/${pageName}/${id}`
+
+      // 2.调用删除网络请求
+      await deletePageData(pageUrl)
+
+      // 3. 删除后需要重新请求最新数据
+      dispatch('getPageListAction', {
+        pageName,
+        // 这部分数据可以优化、 暂不不处理
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    }
+```
+
+queryInfo可以关联，写死的数据会导致用户如果在非默认页面删除时，会跳转至默认页面
+
+### 3. 为数据绑定click处理函数，并返回当前行
+
+scope.row表示将当前行返回
+
+```ts
+ <template #handler="scope">
+     <el-button
+        v-if="isDelete"
+        icon="el-icon-delete"
+        size="mini"
+        type="text"
+        @click="handleDeleteClick(scope.row)"
+        >
+     
+```
+
+
+
+### 4. Content函数调用disPatch函数进行删除
+
+由于接收作用域scope返回的行数据，参数item接收， 此时传递item.id对数据传递至disPatch，最终实现删除效果
+
+```ts
+// 5. 删除/ 编辑/ 新建操作
+    const handleDeleteClick = (item: any) => {
+      console.log(item)
+      store.dispatch('system/deletePageDataAction', {
+        pageName: props.pageName,
+        id: item.id
+      })
+    }
+```
+
+
+
+##  （二） 新建用户表单实现
+
+主要思路:
+
+1. 使用到form组件， 暂时先在user界面显示， 引入el-dialog弹窗显示， 由v-model的dialogVisible bool值决定是否显示
+2. el-dialog包裹hy-form组件， 并插入footer插入两个标签，为标签绑定点击将弹窗销毁
+
+### 1. user界面使用el-dialog对话窗
+
+```ts
+ <el-dialog title="新建用户" v-model="dialogVisble" width="30%" center>
+     <hy-form v-bind="modalConfig" v-model="formData"></hy-form>
+<template #footer>
+    <el-button @click="dialogVisble = false">取消</el-button>
+<el-button type="primary" @click="dialogVisble = false"
+>确定</el-button>
+
+传入modelConfig配置后， 需要传入 formData
+```
+
+
+
+### 2. 根据用户信息 传入配置信息
+
+```ts
+import { IForm } from '@/base-ui/form'
+
+export const modalConfig: IForm = {
+  formItems: [
+    {
+      field: 'name',
+      type: 'input',
+      label: '用户名',
+      placeholder: '请输入用户名'
+    },
+    {
+      field: 'realname',
+      type: 'input',
+      label: '真实姓名',
+      placeholder: '请输入真实姓名'
+    },
+    {
+      field: 'password',
+      type: 'password',
+      label: '用户密码',
+      placeholder: '请输入密码'
+    },
+    {
+      field: 'cellphone',
+      type: 'input',
+      label: '电话号码',
+      placeholder: '请输入电话号码'
+    }
+  ],
+  colLayout: { span: 24 },
+  itemStyle: {}
+}
+
+```
+
+
+
+### 3. 将该新建弹窗封装为组件- components- page-modal
+
+提升该功能的复用性， 在其他菜单中只需要导入该组件 
+
+主要思路：
+
+1. 将弹窗进行抽取， 原先组件引用相关属性全部移入到pagemodal组件
+2. 父组件传入配置时， 需要时**动态绑定**💓🐟
+
+```ts
+ <page-modal :modalConfig="modalConfig"></page-modal>
+```
+
+
+
+#### 3.1 pageModal组件封装完成
+
+```ts
+<template>
+  <div class="page-modal">
+    <el-dialog title="新建用户" v-model="dialogVisble" width="30%" center>
+      <hy-form v-bind="modalConfig" v-model="formData"></hy-form>
+      <template #footer>
+        <el-button @click="dialogVisble = false">取消</el-button>
+        <el-button type="primary" @click="dialogVisble = false">确定</el-button>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script lang="ts">
+import { defineComponent, ref } from 'vue'
+import HyForm from '@/base-ui/form'
+
+export default defineComponent({
+  components: {
+    HyForm
+  },
+  props: {
+    modalConfig: {
+      type: Object,
+      required: true
+    }
+  },
+  setup() {
+    const formData = ref({})
+    const dialogVisble = ref(true)
+    return {
+      formData,
+      dialogVisble
+    }
+  }
+})
+</script>
+
+<style scoped lang="less"></style>
+
+```
+
+
+
+### 4. 将表单与content按钮绑定
+
+#### 4. 1将Content组件新建按钮绑定dialogVisble显示
+
+主要思路： 从Content emit到父组件 user， user监听事件，并使用ref绑定pageModel组件， 将pageModal.value.dialogVisble = true
+
+#### 4.2  content绑定事件， 向外触发事件 新建
+
+```ts
+    <template #headerHandler>
+        <el-button
+          v-if="isCreate"
+          type="primary"
+          size="mini"
+          @click="handleNewClick"
+          >新建数据</el-button
+        >
+        
+            // 新建操作
+    const handleNewClick = () => {
+      console.log('向外触发')
+      emit('newBtnClick')
+    }
+```
+
+
+
+#### 4.3 父组件监听事件，ref绑定modal实例， 修改dialogVisble
+
+```ts
+  <page-content
+      ref="pageContentRef"
+      :contentTableConfig="contentTableConfig"
+      pageName="users"
+      @newBtnClick="handleNewData"
+    ></page-content>
+
+    <page-modal :modalConfig="modalConfig" ref="pageModalRef"></page-modal>
+```
+
+修改dialogVisble为true显示
+
+```ts
+
+    const pageModalRef = ref<InstanceType<typeof PageModal>>()
+
+    // 处理Contentemit的新建数据，对新建用户的弹窗设置为true
+    const handleNewData = () => {
+      if (pageModalRef.value) {
+        pageModalRef.value.dialogVisble = true
+      }
+    }
+```
+
+
+
+## （三） 编辑按钮功能实现
+
+主要思路： 回显在modal组件显示，将数据传递父组件，在传递至modal显现
+
+1. 对编辑绑定事件editBtn, 触发父组件， 并将当前作用scope.row传递，行数据传递至父组件
+2. 父组件进行监听conten触发的事件，接收数据，并定义后以defaultInfo对象接收， 展开符赋值，并将modal组件显示Visible改为true
+3. 将defaultInfo传入modal组件， modal组件使用Props接收后，并对其进行监听，当传入时，watch侦听后触发事件， 根据配置传入限制（原先传入hy-form表单数据）， 对formData对应的 field表格进行赋值
+
+
+
+### 1. Content编辑按钮绑定事件，并将当前行数据传递父组件
+
+```ts
+<el-button
+v-if="isUpdate"
+icon="el-icon-edit"
+size="mini"
+type="text"
+@click="handleEditClick(scope.row)"
+>
+编辑
+// 编辑操作
+const handleEditClick = (item: any) => {
+emit('editBtnClick', item)
+}
+```
+
+
+
+### 2. 父组件中，定义响应式对象接受数据并传递给modal组件
+
+之所以要定义为响应式， 响应式才能触发动态传入modal的数据
+
+```ts
+<page-modal
+      :defaultInfo="defaultInfo"
+      :modalConfig="modalConfig"
+      ref="pageModalRef"
+></page-modal>
+    
+ const defaultInfo = ref({})
+    // 处理Contentemit的新建数据，对新建用户的弹窗设置为true
+    const handleNewData = () => {
+      if (pageModalRef.value) {
+        pageModalRef.value.dialogVisble = true
+      }
+    }
+    const handleEditData = (item: any) => {
+      // 将子组件的行数据赋值给defaultInfo
+      defaultInfo.value = { ...item }
+      if (pageModalRef.value) {
+        pageModalRef.value.dialogVisble = true
+      }
+    }
+```
+
+
+
+### 3. modal组件以config配置限制接收指定的数据
+
+formData为传入form的数据， 将响应式对象以配置存在的propItem.field 属性   赋值对应的数据 给 formData, 后显示的内容为原content所处行的数据
+
+**使用watch监听defaultInfo**， 同时 formData也为响应式数据，改变引起form变化
+
+```ts
+  <hy-form v-bind="modalConfig" v-model="formData"></hy-form>
+
+
+props: {
+    modalConfig: {
+      type: Object,
+      required: true
+    },
+    defaultInfo: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  setup(props) {
+    const formData = ref({})
+    const dialogVisble = ref(false)
+
+    // 对defalutInfo 进行监听
+    watch(
+      () => props.defaultInfo,
+      (newValue) => {
+        // 限制item为已传入的配置类型，显示的为form添加表格类型
+        for (const item of props.modalConfig.formItems) {
+          formData.value[`${item.field}`] = newValue[`${item.field}`]
+        }
+      }
+    )
+```
+
+
+
+## (四) 将user中setup函数内通用逻辑操作封装为hook
+
+封装好处， 在其他类同界面组件， 直接引入hook就具备了以上功能
+
+
+
+```ts
+import { ref } from 'vue'
+import PageModal from '@/components/page-modal'
+
+export function usePageModal() {
+  const pageModalRef = ref<InstanceType<typeof PageModal>>()
+  const defaultInfo = ref({})
+  // 处理Contentemit的新建数据，对新建用户的弹窗设置为true
+  const handleNewData = () => {
+    if (pageModalRef.value) {
+      pageModalRef.value.dialogVisble = true
+    }
+  }
+  const handleEditData = (item: any) => {
+    // 将子组件的行数据赋值给defaultInfo
+    defaultInfo.value = { ...item }
+    if (pageModalRef.value) {
+      pageModalRef.value.dialogVisble = true
+    }
+  }
+  return [pageModalRef, defaultInfo, handleNewData, handleEditData]
+}
+
+```
+
+
+
+## （五）解决数据- 显示优化问题
+
+### 1. 新建用户 引用数据为旧数据， 需要重置空对象
+
+因为再点击编辑时， 对modal的formData数据进行修改， 所以在下次新建打开时， formData默认传入form有值， 显示为上次编辑的值， 有两个原因 会话未销毁， 会话传入值未清空 
+
+1. el-dialog设置属性 - destroy-on-close 关闭时将当前实例销毁
+2. hook中， 新建事件将对象defaultInfo重置为空
+
+<img src="vue3-CMS.assets/image-20230802043004979.png" alt="image-20230802043004979" style="zoom:67%;" />
+
+```ts
+    <el-dialog
+      title="新建用户"
+      v-model="dialogVisble"
+      width="30%"
+      center
+      destroy-on-close
+    >
+```
+
+```ts
+  const handleNewData = () => {
+    defaultInfo.value = {}
+    if (pageModalRef.value) {
+      pageModalRef.value.dialogVisble = true
+    }
+  }
+```
+
+
+
+### 2. 新建用户和编辑用户- 密码标签显示与否
+
+解决问题：新建弹窗需要包含密码， 编辑不显示密码
+
+主要思路： 修改isHidden值
+
+1. 为配置传入新属性 isHidden，为true时隐藏，false显示，并且该属性为可选参数，不同页面 isHidden存在非必要
+2. 根据Hidden， 对form，Item渲染时进行逻辑判断
+3. 属于user界面的新建、编辑在此逻辑处理，生成两个函数，新建修改Hidden为false, 编辑将isHidden修改为false传入 hook中的use- modal， 并且都为可选函数
+
+将函数放置user页面，是因为显示与否由该页面决定， 且hook中应当放的数据为共享， 再将函数传入进hook中， hook为可选参数接收回调函数， 加强hook的可拓展性
+
+#### 2.1 设置isHidden属性， 并在form进行判断
+
+此属性为可选参数， 通过在el-form对v-if进行判断， 未含该属性的formItem该属性为undefined， v-if =  !isHidden, 为true， 意味着默认渲染
+
+```ts
+    {
+      field: 'password',
+      type: 'password',
+      label: '用户密码',
+      placeholder: '请输入密码',
+      isHidden: true
+    },
+        
+        <el-form-item
+        :label="item.label"
+        :rules="item.rules"
+        :style="itemStyle"
+		v-if="!item.isHidden"
+			>
+```
+
+
+
+#### 2.2 在user组件对新建/编辑操作定义两个函数修改 isHidden
+
+```ts
+    // pageModal相关的hook逻辑
+    // 1. 处理密码的逻辑
+    const newCallback = () => {
+      const passwordItem = modalConfig.formItems.find(
+        (item) => item.field === 'password'
+      )
+      passwordItem!.isHidden = false
+    }
+    const editCallback = () => {
+      const passwordItem = modalConfig.formItems.find(
+        (item) => item.field === 'password'
+      )
+      passwordItem!.isHidden = true
+    }
+
+```
+
+
+
+#### 2.3 传入Hook- use-modal函数， 调用修改isHidden
+
+hook为共享函数， 具有共同逻辑的抽取， 对于部分页面不需要isHidden属性的修改， 所以对2.2 两个函数的接收为可选， 拓展hook可用性
+
+```ts
+type CallbackFn = () => void
+export function usePageModal(newCb?: CallbackFn, editCb?: CallbackFn) {
+  const pageModalRef = ref<InstanceType<typeof PageModal>>()
+  const defaultInfo = ref({})
+  // 处理Contentemit的新建数据，对新建用户的弹窗设置为true
+  const handleNewData = () => {
+    defaultInfo.value = {}
+    if (pageModalRef.value) {
+      pageModalRef.value.dialogVisble = true
+    }
+    newCb && newCb()
+  }
+  const handleEditData = (item: any) => {
+    // 将子组件的行数据赋值给defaultInfo
+    defaultInfo.value = { ...item }
+    if (pageModalRef.value) {
+      pageModalRef.value.dialogVisble = true
+    }
+    editCb && editCb()
+  }
+  return [pageModalRef, defaultInfo, handleNewData, handleEditData]
+}
+```
+
+
+
+## （六）动态添加新增的部门/角色选择
+
+需求： 将部门和角色选择转化为动态更新， 数据更新选项更新
+
+**思路：** 
+
+1. 从vueX发起请求获取数据保存至根模块中
+2.  在user中使用computed包裹从vueX获取的数据，
+3. modalConfigRef为config的计算属性，抓化为ref对象属性
+4. 更新时，会同步更新
+5. 不转化为响应式属性， 由于请求为异步请求，进入页面请求未返回结果时，配置已赋值， 导致选项不可选， 所以应该以computed计算包裹
+
+
+
+### 1.  config的部门/角色options设置为空
+
+```ts
+ {
+      field: 'departmentId',
+      type: 'select',
+      label: '选择部门',
+      placeholder: '请选择部门',
+      options: []
+    },
+    {
+      field: 'roleId',
+      type: 'select',
+      label: '选择角色',
+      placeholder: '请选择角色',
+      options: []
+    }
+
+```
+
+
+
+
+
+### 2. vueX根模块请求并保存部门/角色列表数据
+
+之所以放在根组件是因为该属性，在其他地方也能使用
+
+```ts
+state() {
+    return {
+        name: 'coderwhy',
+        age: 18,
+        entireDepartment: [],
+        entireRole: []
+    }
+
+mutations: {
+    changeEntireDepartment(state, list) {
+      state.entireDepartment = list
+    },
+    changeEntireRole(state, list) {
+      state.entireRole = list
+    }
+  },
+  getters: {},
+  actions: {
+    async getInitialDataAction({ commit }) {
+      // 1.请求部门和角色数据
+      const departmentResult = await 				getPageListData('/department/list', {
+        offset: 0,
+        size: 1000
+      })
+      const { list: departmentList } = departmentResult.data
+      const roleResult = await getPageListData('/role/list', {
+        offset: 0,
+        size: 1000
+      })
+      const { list: roleList } = roleResult.data
+
+      // 2.保存数据
+      commit('changeEntireDepartment', departmentList)
+      commit('changeEntireRole', roleList)
+    }
+```
+
+
+
+**并在setupStore添加进getInitialDataAction请求函数， 每当刷新重新发送请求，保持数据一致性**
+
+```ts
+export function setupStore() {
+  store.dispatch('login/loadLocalLogin')
+  store.dispatch('getInitialDataAction')
+}
+```
+
+
+
+### 3. 在users组件中，为config中的部门/角色options绑定对应数组数据
+
+#### 3.1🔺✨   将Modalconfig转化为ref对象，并传入modal组件
+
+```ts
+  const modalConfigRef = computed(() => {
+      const departmentItem = modalConfig.formItems.find(
+        (item) => item.field === 'departmentId'
+      )
+      departmentItem!.options = store.state.entireDepartment.map((item) => {
+        return { title: item.name, value: item.id }
+      })
+      const roleItem = modalConfig.formItems.find(
+        (item) => item.field === 'roleId'
+      )
+      roleItem!.options = store.state.entireRole.map((item) => {
+        return { title: item.name, value: item.id }
+      })
+      return modalConfig
+    })
+
+```
+
+#### 3.2	computed的作用
+
+- 解决异步请求，数据绑定延迟导致无选项的问题
+- 每次刷新页面都会重新请求，且由于配置是ref对象，当数据发生变更时，选项能进行更新，更加灵活！
+
+
+
+## （七）新建用户/编辑用户功能实现
+
+**思路：**
+
+1. 首先需要在system子模块中，Service分别定义新建请求（post）和编辑请求(patch)
+2. 在vueX中定义不同action, 对数据进行更改时，都需重新获取数据
+3. 为modal组件的确定功能绑定函数，需要进行逻辑处理，编辑新建表单重用，需要对form.value.length进行判断
+4. 新建时，去触发post请求， 编辑触发patch请求
+
+<img src="vue3-CMS.assets/image-20230802082127914.png" alt="image-20230802082127914" style="zoom:150%;" />
+
+
+
+### 1. Service 封装edit- create请求
+
+```ts
+// 创建
+export function createPageData(url: string, newData: any) {
+  return hyRequest.post<IDataType>({
+    url: url,
+    data: newData
+  })
+}
+
+// 编辑
+export function editPageData(url: string, editData: any) {
+  return hyRequest.patch<IDataType>({
+    url: url,
+    data: editData
+  })
+}
+```
+
+
+
+### 2. 在system定义action请求实现新建/编辑
+
+```ts
+ // 创建数据
+    async createPageDataAction({ dispatch }, playload: any) {
+      const { pageName, newData } = playload
+      const pageUrl = `/${pageName}`
+      await createPageData(pageUrl, newData)
+
+      // 请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    },
+
+    async editPageDataAction({ dispatch }, payload: any) {
+      // 编辑数据请求
+      const { pageName, editData, id } = payload
+      const pageUrl = `/${pageName}/${id}`
+      await editPageData(pageUrl, editData)
+
+      // 请求最新的数据
+      dispatch('getPageListAction', {
+        pageName,
+        queryInfo: {
+          offset: 0,
+          size: 10
+        }
+      })
+    }
+```
+
+
+
+### 3. users传入pageName属性—> page-modal
+
+```ts
+    <page-modal
+      :defaultInfo="defaultInfo"
+      :modalConfig="modalConfigRef"
+      pageName="users"
+      ref="pageModalRef"
+    ></page-modal>
+```
+
+
+
+### 4. page-modal为确认绑定事件- 实现功能
+
+绑定事件， 并触发vueX定义的 action- 新建/编辑
+
+编辑需要传入ID， 确认需进行逻辑判断- 判断defaultInfo对象keys值化绑定数组长度，去分别触发不同事件
+
+在这里使用展开符- 将最新的值传入
+
+```ts
+const handleConfirmClick = () => {
+      dialogVisble.value = false
+      // 将对象的属性名转化为数组，键数组，判断其长度
+      if (Object.keys(props.defaultInfo).length) {
+        // 编辑
+        console.log('编辑用户')
+        store.dispatch('system/editPageDataAction', {
+          pageName: props.pageName,
+          editData: { ...formData.value },
+          // defaultInfo为传入的行数据，具有用户数据，取出其id
+          id: props.defaultInfo.id
+        })
+      } else {
+        // 新建用户
+        console.log('新建用户')
+        store.dispatch('system/createPageDataAction', {
+          pageName: props.pageName,
+          newData: { ...formData.value }
+        })
+      }
+    }
+```
 
 
 
