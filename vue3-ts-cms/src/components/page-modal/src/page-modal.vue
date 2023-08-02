@@ -8,6 +8,8 @@
       destroy-on-close
     >
       <hy-form v-bind="modalConfig" v-model="formData"></hy-form>
+      <!-- 添加默认插槽, 父组件插入标签/组件位置 -->
+      <slot></slot>
       <template #footer>
         <el-button @click="dialogVisble = false">取消</el-button>
         <el-button type="primary" @click="handleConfirmClick">确定</el-button>
@@ -38,6 +40,10 @@ export default defineComponent({
     pageName: {
       type: String,
       required: true
+    },
+    otherInfo: {
+      type: Object,
+      default: () => ({})
     }
   },
   setup(props) {
@@ -66,7 +72,7 @@ export default defineComponent({
         console.log('编辑用户')
         store.dispatch('system/editPageDataAction', {
           pageName: props.pageName,
-          editData: { ...formData.value },
+          editData: { ...formData.value, ...props.otherInfo },
           // defaultInfo为传入的行数据，具有用户数据，取出其id
           id: props.defaultInfo.id
         })
@@ -75,7 +81,8 @@ export default defineComponent({
         console.log('新建用户')
         store.dispatch('system/createPageDataAction', {
           pageName: props.pageName,
-          newData: { ...formData.value }
+          // 将otherInfo传入的权限表也赋值其中
+          newData: { ...formData.value, ...props.otherInfo }
         })
       }
     }

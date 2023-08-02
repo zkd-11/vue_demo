@@ -94,7 +94,26 @@ export function mapMenusToPermissions(userMenus: any[]) {
 
   return permissions
 }
+
 export { firstMenu }
+
+// 获取叶子结点
+export function menuMapLeafKeys(menuList: any[]) {
+  const leftKeys: number[] = []
+
+  const _recurseGetLeaf = (menuList: any[]) => {
+    for (const menu of menuList) {
+      if (menu.children) {
+        _recurseGetLeaf(menu.children)
+      } else {
+        leftKeys.push(menu.id)
+      }
+    }
+  }
+  _recurseGetLeaf(menuList)
+
+  return leftKeys
+}
 
 // // 获取面包屑 文本 路径文本
 // export function pathMapBreadcrumbs(userMenus: any, currentPath: string): any {

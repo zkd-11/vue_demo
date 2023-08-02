@@ -5583,7 +5583,7 @@ emit('editBtnClick', item)
 
 ### 3. modal组件以config配置限制接收指定的数据
 
-formData为传入form的数据， 将响应式对象以配置存在的propItem.field 属性   赋值对应的数据 给 formData, 后显示的内容为原content所处行的数据
+formData为modal组件传入form的数据， 将响应式对象以moal配置存在的propItem.field 属性   赋值对应的数据 给 formData, 后显示的内容为原content所处行的数据
 
 **使用watch监听defaultInfo**， 同时 formData也为响应式数据，改变引起form变化
 
@@ -5656,7 +5656,9 @@ export function usePageModal() {
 
 ### 1. 新建用户 引用数据为旧数据， 需要重置空对象
 
-因为再点击编辑时， 对modal的formData数据进行修改， 所以在下次新建打开时， formData默认传入form有值， 显示为上次编辑的值， 有两个原因 会话未销毁， 会话传入值未清空 
+因为在点击编辑时， 对modal的formData数据进行修改，但是关闭未销毁对话， 所以在下次新建打开时， formData默认传入form有值， 显示为上次编辑的值
+
+有两个原因 会话未销毁， 会话传入值未清空 
 
 1. el-dialog设置属性 - destroy-on-close 关闭时将当前实例销毁
 2. hook中， 新建事件将对象defaultInfo重置为空
@@ -5694,7 +5696,7 @@ export function usePageModal() {
 2. 根据Hidden， 对form，Item渲染时进行逻辑判断
 3. 属于user界面的新建、编辑在此逻辑处理，生成两个函数，新建修改Hidden为false, 编辑将isHidden修改为false传入 hook中的use- modal， 并且都为可选函数
 
-将函数放置user页面，是因为显示与否由该页面决定， 且hook中应当放的数据为共享， 再将函数传入进hook中， hook为可选参数接收回调函数， 加强hook的可拓展性
+将函数放置user页面，是因为显示与否由该页面决定， 且hook中应当放的数据为共享， 再将函数传入进hook中， hook为可选参数接收回调函数， 加强hook的可拓展性，共享性
 
 #### 2.1 设置isHidden属性， 并在form进行判断
 
@@ -5780,9 +5782,9 @@ export function usePageModal(newCb?: CallbackFn, editCb?: CallbackFn) {
 
 1. 从vueX发起请求获取数据保存至根模块中
 2.  在user中使用computed包裹从vueX获取的数据，
-3. modalConfigRef为config的计算属性，抓化为ref对象属性
+3. modalConfigRef为config的计算属性，转化为ref对象属性
 4. 更新时，会同步更新
-5. 不转化为响应式属性， 由于请求为异步请求，进入页面请求未返回结果时，配置已赋值， 导致选项不可选， 所以应该以computed计算包裹
+5. 不转化为响应式属性， 由于请求为异步请求，进入页面时 请求未返回结果时，配置已赋值， 导致选项不可选， 所以应该以computed计算包裹将配置文件转化为响应式配置
 
 
 
@@ -5901,14 +5903,14 @@ export function setupStore() {
 
 1. 首先需要在system子模块中，Service分别定义新建请求（post）和编辑请求(patch)
 2. 在vueX中定义不同action, 对数据进行更改时，都需重新获取数据
-3. 为modal组件的确定功能绑定函数，需要进行逻辑处理，编辑新建表单重用，需要对form.value.length进行判断
+3. 为modal组件的确定功能绑定函数，需要进行逻辑处理，编辑新建表单重用，需要对确定按钮功能进行逻辑判断， 根据- form.value.length进行判断
 4. 新建时，去触发post请求， 编辑触发patch请求
 
 <img src="vue3-CMS.assets/image-20230802082127914.png" alt="image-20230802082127914" style="zoom:150%;" />
 
 
 
-### 1. Service 封装edit- create请求
+### 1. Service 封装edit & create请求
 
 ```ts
 // 创建
@@ -5968,7 +5970,7 @@ export function editPageData(url: string, editData: any) {
 
 
 
-### 3. users传入pageName属性—> page-modal
+### 3.🔺✨users传入pageName属性—> page-modal
 
 ```ts
     <page-modal
@@ -6013,7 +6015,757 @@ const handleConfirmClick = () => {
     }
 ```
 
+<img src="vue3-CMS.assets/image-20230802083316856.png" alt="image-20230802083316856" style="zoom:80%;" />
+
+
+
+# day 32   21点40分
+
+# 🔺✨进度十二
+
+
+
+## （一） 对遗留问题进行解决/ 修改
+
+### 1. 时区问题，调用utcOffset（8）解决
+
+因为东八区， utc为0区， 所以需偏移量8小时
+
+```ts
+
+export function formatUtcString(
+  utcString: string,
+  format: string = DATE_TIME_FORMAT
+) {
+  // 表示对utc时间使用 格式转化- 转化为 format格式
+  return dayjs.utc(utcString).utcOffset(8).format(format)
+}
+
+```
+
+
+
+### 2. 原请求数据部门/角色与请求token放置导致数据请求失败
+
+当用户进行刷新时，会重新执行VuxX根模块的setup去将本地缓存取出，维持表单现状（vueX刷新会丢失数据）， 但是由于请求和获取角色/部门请求都为异步操作，会出现token慢响应的状态， 当未含token直接调用时会出现 部门/角色选项无数据
+
+思路： 
+
+1. 将intialDataAction重新放置登录逻辑token获取后调用
+2. 本地token缓存取出后（刷新页面时取得token后的操作），调用， 确保该请求在含token的情况下去发送请求
+3. 为nav-header中绑定退出函数， 并处理响应逻辑， 测试， 成功~
+
+
+
+#### 2.1 在VueX- Login模块的逻辑代码中/刷新处理中触发intialDataAction
+
+二者的作用：
+
+1.  确保登录时token获取后去发送请求获取角色/部门选项
+
+2.  确保刷新时， token获取后发送请求..
+
+   **登录逻辑处理模块**
+
+```ts
+  actions: {
+    // 第一个参数为上下文对象
+    async accountLoginAction({ commit }, payload: IAccount) {
+      // 1.实现登录逻辑
+      const loginResult = await accountLoginRequest(payload)
+      const { id, token } = loginResult.data
+      commit('changeToken', token)
+      localCache.setCache('token', token)
+
+      // 💓🐟fix: 登录获得token对 部门/角色表单数据请求- 触发根路径的animation
+      this.dispatch('getInitialDataAction', null, { root: true })
+
+```
+
+刷新缓存取出模块
+
+```ts
+   loadLocalLogin({ commit }) {
+      const token = localCache.getCache('token')
+      if (token) {
+        commit('changeToken', token)
+        // 💓🐟
+        this.dispatch('getInitialDataAction', null, { root: true })
+      }
+```
+
+
+
+##### disPatch参数解析- 第三个参数
+
+第二个为传入的payload信息
+
+> 第三个参数是一个选项对象，可以传递给 Vuex action 的选项。除了 `root` 属性外，还有其他一些属性可以在这个选项对象中使用。以下是常用的一些属性：
+>
+> 1. `root`: 用于指定是否在根级别触发 action，设置为 `true` 表示在根级别触发，设置为 `false`（默认）表示在当前 module 内触发。
+>
+> 2. `dispatch`: 一个布尔值，表示是否要在触发 action 时自动调用 `dispatch` 方法。默认为 `true`。如果设置为 `false`，则不会触发任何其他 action。
+>
+> 3. `commit`: 一个布尔值，表示是否要在触发 action 时自动调用 `commit` 方法。默认为 `true`。如果设置为 `false`，则不会触发任何 mutation。
+>
+> 4. `rootGetters`: 一个对象，包含根级别的 getters 函数。可以通过这个属性访问根 module 的 getters。
+>
+> 5. `rootState`: 一个对象，包含根级别的 state。可以通过这个属性访问根 module 的 state。
+>
+> 6. `silent`: 一个布尔值，表示是否在触发 action 时抑制 console 警告，默认为 `false`。如果设置为 `true`，则不会显示任何 console 警告。
+>
+> 7. 其他自定义属性：你还可以在这个选项对象中添加其他自定义属性，以便在 action 中使用。
+>
+
+#### 2.2 为user-info实现退出功能并测试- 成功
+
+```ts
+  setup() {
+    const store = useStore()
+    const name = computed(() => store.state.login.userInfo.name)
+
+    const router = useRouter()
+    const exitLogin = () => {
+      LocalCache.deleteCache('token')
+      router.push('/main')
+    }
+```
+
+
+
+## 🔺✨（简历- 面经）封装思想
+
+1. 如有独有的逻辑无法合并，则在相关的组件进行逻辑处理
+2. 公共逻辑的组件禁止混入不可共享的逻辑信息， 提高更高的组件复用性， 如有复杂的功能需要实现，再对组件进行封装， 一层不能解决的事件， 就进行多次封装 
+3. 封装相当于： 组件- 组装成界面- 设置开关去决定是否使用哪个组件， 组件灵活性很高， 可快速开发具有相同功能不同数据的界面
+
+> 你的总结对封装思想有一定的理解，但还可以进行一些补充和调整。以下是对你总结中提到的几个点的进一步说明：
+>
+> 1. **独有逻辑的处理：**
+>    正确，当某个逻辑只适用于特定组件，而无法在其他地方进行合并，将这些逻辑放在相关的组件中进行处理是合适的。这有助于保持代码的清晰性和可维护性。
+>
+> 2. **公共逻辑的复用和组装：**
+>    正确，确保公共逻辑的组件能够被广泛复用是很重要的。避免在这些组件中混入与其它不相关的逻辑，这有助于提高组件的复用性和维护性。而对于复杂功能的实现，可以在需要时对组件进行更深层次的封装，但同时要确保不要让组件变得过于庞大和难以理解。
+>
+> 3. **封装的灵活性：**
+>    正确，封装的目的之一是为了提供一种灵活的方式来组装和配置界面。通过设置开关或提供不同的属性，可以轻松地改变组件的行为，从而适应不同的使用场景。
+>
+> 总体来说，你的总结已经涵盖了封装思想的核心要点。然而，还可以进一步强调以下几点：
+>
+> - **单一职责原则：** 在封装组件时，努力使每个组件只专注于一个特定的职责或功能。这有助于提高组件的可维护性和重用性。
+>
+> - **可测试性：** 考虑如何设计组件，使其更易于进行单元测试。良好的封装能够让你更容易编写和执行针对特定功能的测试。
+>
+> - **文档和示例：** 封装的组件应该伴随着清晰的文档和示例，以便其他开发人员能够理解如何正确使用这些组件，以及它们的可配置选项和功能。
+>
+> - **权衡抽象和复杂性：** 封装应该追求合适的抽象层次，不要过度封装导致组件过于复杂。要在可读性、可维护性和功能完整性之间找到平衡。
+>
+> 最终，封装是一个不断演进的过程。通过实践和与其他开发人员的交流，你将不断提升自己在封装思想上的技能。
+
+<img src="vue3-CMS.assets/image-20230802230051891.png" alt="image-20230802230051891" style="zoom: 67%;" />
+
+## （二） 利用封装好的组件- 快速开发角色页面
+
+原界面有conten和search组件， 现需引入modal组件
+
+ 		新建用户功能由于需要为其添加权限，因为content回显数据不包含权限，  此部分不属于modal所拥有， 需要额外独立开发， 不将其放置modal组件中- 尽量使组件可用性强， 不属于公共逻辑的代码不放入中间组件
+
+**简单功能思路（不含权限分配）**
+
+1.  引入modal组件， hook函数， 建立modal配置文件
+2. 将 hook函数return将元组数据return并绑定对应组件或事件
+3.  需传入pageName, 传入defaultInfo和配置信息后， 简单功能开发完成
+
+
+
+### 1. 配置文件设置
+
+```ts
+import { IForm } from '@/base-ui/form'
+
+export const modalConfig: IForm = {
+  formItems: [
+    {
+      field: 'name',
+      type: 'input',
+      label: '角色名',
+      placeholder: '请输入角色名'
+    },
+    {
+      field: 'intro',
+      type: 'input',
+      label: '角色介绍',
+      placeholder: '请输入角色介绍'
+    }
+  ],
+  colLayout: { span: 24 },
+  itemStyle: {}
+}
+
+```
+
+
+
+### 2. 组件引入，和相应属性的设置- 配置modal组件
+
+```ts
+  <div class="role">
+    <page-search :searchFormConfig="searchFormConfig"></page-search>
+    <page-content
+      :contentTableConfig="contentTableConfig"
+      pageName="role"
+      @new-btn-click="handleNewData"
+      @edit-btn-click="handleEditData"
+    ></page-content>
+
+    <page-modal
+      pageName="role"
+      :modalConfig="modalConfig"
+      ref="pageModalRef"
+      :defaultInfo="defaultInfo"
+    ></page-modal>
+  </div>
+  
+
+import PageModal from '@/components/page-modal'
+import { modalConfig } from './config/modal.config'
+import { usePageModal } from '@/hooks/use-page-modal'
+
+  setup() {
+ 	 const [pageModalRef, defaultInfo, handleNewData, handleEditData] =  usePageModal()
+
+```
+
+<img src="vue3-CMS.assets/image-20230802231017669.png" alt="image-20230802231017669" style="zoom:67%;" />
+
+
+
+## 🔺✨（三）为role界面的modal新添用户界面中绑定权限菜单
+
+**需求：**
+
+**为角色菜单表：定义新的角色并绑定具有的权限**
+
+新建菜单需要包括具体的权限菜单， 该权限在content中只是一个展示权限命名， 该部分内容需要额外添加（获取权限数据并进行绑定）， 相当于拓展了modal的功能， 最终需要需要实现在点击添加权限时， 能显示具体的权限菜单
+
+**思路：**
+
+1.  在vueX的system模块中， 请求菜单getPageListData，（ 获取菜单数据列表，拥有菜单= 拥有权限）， 并保存至state中 EnitreMenu中
+2. modal设置插槽供 父组件插入- 传入数据
+3. role组件为modal插入 菜单组件eleTree(可选多级菜单展开box)至插槽中
+4. role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
+5. eleTree绑定函数可获取选择的菜单信息， 在role中获取后进行保存，并将选中的菜单信息传入modal
+6. modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
+7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的data同配置的otherConfig进行合并
+8. 合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
+
+<img src="vue3-CMS.assets/image-20230803011716736.png" alt="image-20230803011716736" style="zoom:67%;" />
+
+该图表示从- role通过vueX取出menList 传递给elTree组件，role接收elTree选中信息传递进modal， modal获取otherInfo配置信息合并后， 发送请求- 修改 和 创建请求（成功）
+
+
+
+### 1. VueX中请求所有权限数据（菜单数据）并保存
+
+```ts
+    changeEntireMenu(state, list) {
+      state.entireMenu = list
+    }
+    
+        const menuResult = await getPageListData('/menu/list', {})
+      const { list: menuList } = menuResult.data
+
+      // 2. 保存数据
+      commit('changeEntireDepartment', departmentList)
+      commit('changeEntireRole', roleList)
+      commit('changeEntireMenu', menuList)
+```
+
+### 2. modal组件设置插槽- role组件插入el-tree菜单组件
+
+```ts
+modal组件中<slot></slot>
+
+role父组件
+      <el-tree
+        :data="menus"
+        show-checkbox
+        node-key="id"
+        :props="{ children: 'children', label: 'name' }"
+        @check="handleCheckChange"
+      >
+
+```
+
+data表示：传入的菜单数据
+
+show-checkbox： 表示为菜单具有可选框
+
+props: 表示具有children： 菜单children对应字段， label 对应字段
+
+@check: 表示监听选中的菜单， 向外传递两个参数
+
+> 1. **data1: any** 这个参数代表传递给 `data` 属性的数组中该节点所对应的对象。在 `ElTree` 组件中，你可能会将一个对象数组传递给 `data` 属性，每个对象代表一个树节点。这个参数表示当前处理的节点的信息，可以包含节点的 id、label、children 等属性。
+> 2. **data2: any** 这个参数是树目前的选中状态对象，包含了四个属性：
+>    - `checkedNodes`: 一个数组，包含当前选中的所有节点的对象。
+>    - `checkedKeys`: 一个数组，包含当前选中的所有节点的 key（可能是节点的 id 等唯一标识）。
+>    - `halfCheckedNodes`: 一个数组，包含当前半选中状态的节点的对象。
+>    - `halfCheckedKeys`: 一个数组，包含当前半选中状态的节点的 key
+
+
+
+### 3. role组件将选中的菜单数据传入modal中
+
+#### 3.1 role组件传入菜单数据到el-tree中
+
+```ts
+      <el-tree
+        :data="menus"
+        show-checkbox
+        node-key="id"
+        :props="{ children: 'children', label: 'name' }"
+        @check="handleCheckChange"
+      >
+```
+
+<img src="vue3-CMS.assets/image-20230803014333262.png" alt="image-20230803014333262" style="zoom: 50%;" />
+
+#### 3.2	对选中数据进行获取， 以响应式对象接收
+
+```ts
+  	const otherInfo = ref({}) 
+	const handleCheckChange = (data1: any, data2: any) => {
+      console.log(data2)
+      // 所选中的子菜单权限
+      const checkedKeys = data2.checkedKeys
+      // 所选中的父菜单权限（半选中表示当该父菜单 被选中其子属性该项默认为半选中状态）
+      const halfCheckedKeys = data2.halfCheckedKeys
+      const menuList = [...checkedKeys, ...halfCheckedKeys]
+      otherInfo.value = { menuList }
+    }
+```
+
+> 在这个函数中，主要的逻辑是从 `data2` 参数中解构出选中的节点和半选中的节点，将它们的 keys（或标识）合并成一个新的数组 `menuList`，然后将这个数组存储在 `otherInfo` 变量中。
+
+
+
+#### 3.3	将选中的菜单数据传入modal组件
+
+```ts
+    <page-modal
+      pageName="role"
+      :modalConfig="modalConfig"
+      ref="pageModalRef"
+      :defaultInfo="defaultInfo"
+      :otherInfo="otherInfo"
+    >
+```
+
+
+
+### 4. modal接收选中的菜单信息，并重写编辑/创建请求
+
+```ts
+    otherInfo: {
+      type: Object,
+      default: () => ({})
+    }
+    
+     const handleConfirmClick = () => {
+      dialogVisble.value = false
+      // 将对象的属性名转化为数组，键数组，判断其长度
+      if (Object.keys(props.defaultInfo).length) {
+        // 编辑
+        console.log('编辑用户')
+        store.dispatch('system/editPageDataAction', {
+          pageName: props.pageName,
+          editData: { ...formData.value, ...props.otherInfo },
+          // defaultInfo为传入的行数据，具有用户数据，取出其id
+          id: props.defaultInfo.id
+        })
+      } else {
+        // 新建用户
+        console.log('新建用户')
+        store.dispatch('system/createPageDataAction', {
+          pageName: props.pageName,
+          // 将otherInfo传入的权限表也赋值其中
+          newData: { ...formData.value, ...props.otherInfo }
+        })
+      }
+    }
+```
+
+<img src="vue3-CMS.assets/image-20230803014228497.png" alt="image-20230803014228497" style="zoom:80%;" />
+
+
+
+## （三）编辑功能菜单回显
+
+**需求：** 使用编辑功能时，默认菜单为空白，未绑定到menuList, 现需将el-tree绑定，点击编辑时绑定菜单数据
+
+**思路：**
+
+1.  点击编辑时获取菜单数据，需要使用到hook的回调函数， 将回调函数设置为可传入 可选参数， role
+2. **role组件**传入回调函数后，Hook（upm）将当前行数据 item 传入，获取menuItem成功
+3. 为elTree设置传入菜单数据- 叶子结点（mapLeav函数）
+   - 传入的菜单数据应是从叶子节点开始勾选，因为如选择根节点时会将所有子菜单进行绑定，导致数据不准确
+4. 在回调函数中对elTree的菜单属性进行设置， 需使用ref获取elTree实例， 同时在内部需要使用nextTick函数
+   -  在点击编辑的那一时刻，还未获取到实例，所以需使用nextTick（微任务原理）函数， 将获取实例置于其中，确保绑定实例后进行操作
+
+
+
+### 1. 获取选中角色菜单数据- 使用hook- UPM回调函数传出
+
+在content使用编辑时绑定的函数中有item， 所以需要在role中使用editCallback传入其中， 接收来自content传出的item
+
+#### 1.1  在UPM将Item传入回调函数
+
+将回调函数设置为可接收可选参数，Role传入回调函数获取ITem
+
+编辑被点击时， 传入item，当前角色信息传入
+
+```ts
+type CallbackFn = (item?: any) => void
+
+  const handleEditData = (item: any) => {
+    // 将子组件的行数据赋值给defaultInfo
+    defaultInfo.value = { ...item }
+    if (pageModalRef.value) {
+      pageModalRef.value.dialogVisble = true
+    }
+    editCb && editCb(item)
+  }
+```
+
+
+
+### 2.	获取菜单的叶子节点
+
+#### 2.1  获取菜单的叶子节点
+
+ElTree， 需要选中叶子结点去选中框， 因为选中根菜单时默认选中所有子菜单， 导致数据出错
+
+#### 2.2	map-menu定义函数获取叶子节点
+
+```ts
+// 获取叶子结点
+export function menuMapLeafKeys(menuList: any[]) {
+  const leftKeys: number[] = []
+
+  const _recurseGetLeaf = (menuList: any[]) => {
+    for (const menu of menuList) {
+      if (menu.children) {
+        _recurseGetLeaf(menu.children)
+      } else {
+        leftKeys.push(menu.id)
+      }
+    }
+  }
+  _recurseGetLeaf(menuList)
+
+  return leftKeys
+}
+```
+
+
+
+### 3.   绑定ElTree实例，并将叶子节点菜单传入匹配
+
+#### 3. 1  ref绑定ElTree实例
+
+```ts
+ <el-tree
+        ref="elTreeRef"
+        :data="menus"
+        show-checkbox
+        node-key="id"
+        :props="{ children: 'children', label: 'name' }"
+        @check="handleCheckChange"
+      >
+  // 处理pageModal的hook - 获取item数据 并设置编辑 菜单选中状态
+    const elTreeRef = ref<InstanceType<typeof ElTree>>()
+```
+
+
+
+#### 3.2	role定义回调函数， 在回调函数对Eltree进行设置
+
+使用nextTick是避免数据为undefined， 在点击编辑的那一时刻， ref组件未绑定实例， 需要使用nextTIck确保绑定成功后执行函数
+
+- 根据item的muenList传入MapLeafKeys获取叶子节点
+- 再将叶子节点使用实例的setChekedKeys设置菜单
+
+```ts
+ // 处理pageModal的hook - 获取item数据 并设置编辑 菜单选中状态
+    const elTreeRef = ref<InstanceType<typeof ElTree>>()
+    const editCallback = (item: any) => {
+      // 将角色的菜单数组传入函数， 获取叶子节点
+      const leafKeys = menuMapLeafKeys(item.menuList)
+      nextTick(() => {
+        console.log(elTreeRef.value)
+        elTreeRef.value?.setCheckedKeys(leafKeys, false)
+      })
+    }
+```
+
+<img src="vue3-CMS.assets/image-20230803032017588.png" alt="image-20230803032017588" style="zoom:67%;" />
+
+
+
+## （四）数据可视化- Echarts
+
+### 1. 数据可视化
+
+<img src="vue3-CMS.assets/image-20230803032659678.png" alt="image-20230803032659678" style="zoom:67%;" />
+
+
+
+### 2. 数据可视化工具
+
+<img src="vue3-CMS.assets/image-20230803032806152.png" alt="image-20230803032806152" style="zoom:67%;" />
+
+
+
+### 2. 认识Echarts- 特点面试相关🔺✨
+
+<img src="vue3-CMS.assets/image-20230803033130054.png" alt="image-20230803033130054" style="zoom: 80%;" />
+
+
+
+### 3. Echart的使用
+
+<img src="vue3-CMS.assets/image-20230803033738294.png" alt="image-20230803033738294" style="zoom:67%;" />
+
+
+
+## （五）Echarts的简单使用
+
+思路：
+
+1. 导入Echart包， import * as 'echarts'
+2. 需要绑定dom元素， 对dom元素进行初始化， echarts.init初始化
+3. 编写配置文件
+4. 设置配置文件  （生效）
+
+🔺✨ 注意：r绑定初始化需要在onMounted挂载后， 实例存在时初始化
+
+
+
+### 1. 简单使用- 官方案例
+
+```ts
+setup() {
+    const divRef = ref<HTMLElement>()
+    // 需要使用onmounted, 组件挂完在对其进行echarts配置
+    onMounted(() => {
+      // 1. 初始化echarts实例
+      const echartInstance = echarts.init(divRef.value!)
+      // 2. 编写配置文件
+      const option = {
+        title: {
+          text: 'ECharts 入门示例',
+          subtext: '哈哈哈啊'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          }
+        },
+        legend: {
+          data: ['销量']
+        },
+        xAxis: {
+          data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+        },
+        yAxis: {},
+        series: [
+          {
+            name: '销量',
+            type: 'bar',
+            data: [18, 20, 36, 10, 10, 20]
+          }
+        ]
+      }
+      // 3.设置配置,并且开始绘制
+      echartInstance.setOption(option)
+    })
+```
+
+
+
+> 这段代码是在 Vue 3 中使用 Composition API 的 `setup` 函数来集成 ECharts 图表的配置和渲染。下面逐步解释这段代码的内容：
+>
+> 1. `const divRef = ref<HTMLElement>()`：这行代码创建了一个 ref 变量 `divRef`，用于引用一个 DOM 元素。在这里，这个变量将用于获取一个 HTML 元素，通常用于包含 ECharts 图表的容器。
+>
+> 2. `onMounted(() => { ... })`：`onMounted` 是 Vue Composition API 提供的一个钩子函数，它会在组件挂载后（DOM 渲染完毕后）执行传入的回调函数。在这里，你通过这个函数确保在组件挂载后再初始化和渲染 ECharts 图表。
+>
+> 3. 初始化 ECharts 实例：
+>    - `const echartInstance = echarts.init(divRef.value!)`：这行代码创建了一个 ECharts 实例，并将其绑定到之前定义的 `divRef` 所引用的 DOM 元素上。`echarts.init` 接受一个 DOM 元素作为参数，用于承载图表。
+>
+> 4. 编写 ECharts 配置文件：
+>    - 这部分代码定义了 ECharts 图表的配置选项，包括标题、工具提示、图例、X 轴、Y 轴和系列数据等内容。这些配置会决定图表的展现方式和数据呈现。
+>
+> 5. 设置配置并绘制图表：
+>    - `echartInstance.setOption(option)`：这行代码将之前定义的配置选项 `option` 应用到 ECharts 实例上。调用这个方法会根据配置绘制相应的图表。
+>
+> 总体来说，这段代码的逻辑是在组件挂载后，通过 `divRef` 获取一个 DOM 元素，然后使用这个元素来初始化 ECharts 实例，将配置选项应用到实例上，从而绘制相应的图表。这是一种常见的方式来在 Vue 中使用 ECharts 来绘制图表。
+
+
+
+### 2. 配置文件解析
+
+> 当你编写 ECharts 配置文件时，实际上是在定义如何呈现图表以及图表的各个组成部分的样式和数据。以下是你提供的示例配置文件的各个部分的解释：
+>
+> ```javascript
+> const option = {
+>   title: {
+>     text: 'ECharts 入门示例', // 图表标题文本
+>     subtext: '哈哈哈啊' // 图表副标题文本
+>   },
+>   tooltip: {
+>     trigger: 'axis', // 提示框触发类型，axis 表示通过轴触发
+>     axisPointer: {
+>       type: 'cross' // 提示框的指示器类型，cross 表示显示十字准星指示器
+>     }
+>   },
+>   legend: {
+>     data: ['销量'] // 图例，用于标识每个系列的含义，这里仅有一个系列 '销量'
+>   },
+>   xAxis: {
+>     data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'] // X 轴的刻度数据
+>   },
+>   yAxis: {}, // Y 轴配置
+>   series: [
+>     {
+>       name: '销量', // 系列名称，与图例关联
+>       type: 'bar', // 系列类型，这里是柱状图
+>       data: [18, 20, 36, 10, 10, 20] // 每个系列的数据
+>     }
+>   ]
+> };
+> ```
+>
+> 现在逐个解释各个部分：
+>
+> 1. **title：** 设置图表的标题和副标题。`text` 表示主标题，`subtext` 表示副标题。
+>
+> 2. **tooltip：** 提示框配置，当鼠标悬停在图表上时会显示的信息。`trigger` 指定触发类型，这里使用 `axis` 表示通过轴触发，`axisPointer` 指示器配置，用于在轴上显示指示器。
+>
+> 3. **legend：** 图例配置，图例用于标识图表中的每个系列（数据系列）的含义。`data` 数组中的值与系列名称相关联，这里只有一个系列 '销量'。
+>
+> 4. **xAxis：** X 轴配置，定义图表的横轴（水平轴）。`data` 数组包含了 X 轴的刻度标签数据，这些标签对应于数据点。
+>
+> 5. **yAxis：** Y 轴配置，定义图表的纵轴（垂直轴）。在这个示例中，只是一个空的配置，你可以在其中定义 Y 轴的样式和刻度等。
+>
+> 6. **series：** 系列配置，用于定义图表的数据系列。每个系列可以是不同类型的图表（如柱状图、线图等）。这里使用的是柱状图 (`type: 'bar'`)，每个数据点的值在 `data` 数组中。
+>
+> 这些配置项一起定义了图表的外观和数据呈现方式。你可以根据自己的需求调整这些配置项，以达到想要的图表效果。在 ECharts 中，配置项非常丰富，可以通过配置实现各种不同类型的图表，以及添加交互、动画等效果。
+
+
+
+#### 2.1 init配置信息
+
+```
+ const echartInstance = echarts.init(divRef.value!, 'light', {  renderer: 'svg'})
+```
+
+> 代码片段 `const echartInstance = echarts.init(divRef.value!, 'light', { renderer: 'svg' })` 是初始化 ECharts 图表实例的代码，并且在初始化时传入了一些配置选项。与你之前提供的代码相比，这段代码在初始化 ECharts 实例时多了一个配置项 `renderer: 'svg'`。
+>
+> 让我解释一下这段代码：
+>
+> 1. `divRef.value!`：这是之前提到的 `divRef`，它是一个 `ref` 变量，引用了一个 DOM 元素。通过 `divRef.value`，你将这个 DOM 元素传递给 `echarts.init` 函数，作为 ECharts 图表的容器。
+>
+> 2. `'light'`：这是 ECharts 的主题设置。ECharts 提供了不同的主题，'light' 是其中一种。主题可以影响图表的颜色、样式等外观效果。
+>
+> 3. `{ renderer: 'svg' }`：这是一个配置对象，用于设置 ECharts 初始化时的一些选项。在这里，`renderer` 选项设置为 `'svg'`，表示使用 SVG 渲染器来绘制图表。SVG（可缩放矢量图形）是一种用于绘制图形的 XML 格式，它可以在不失真的情况下缩放。ECharts 支持多种渲染器，包括 'canvas' 和 'svg'，你可以根据需要选择适合的渲染器。
+>
+> 与你之前提供的代码相比，这段代码的区别在于主题和渲染器的设置。你之前的代码并没有显式地指定主题和渲染器，而是在 `setOption` 部分配置了图表的样式和数据。而这段代码在初始化时直接指定了主题为 'light'，并设置了渲染器为 'svg'。
+>
+> 两段代码的核心逻辑都是为了初始化 ECharts 实例，然后通过不同的方式来配置图表的样式和数据，从而实现图表的呈现。
+
+### 3. 渲染- Canva  VS  SVG
+
+**canva:** 适合渲染大规模图标，动画渲染效果好， 不适用于高分辨率显示- 失真
+
+**SVG：** 渲染规模正常图形， 动画效果较差， 但是不失真，适用于高分辨率显示
+
+<img src="vue3-CMS.assets/image-20230803041416176.png" alt="image-20230803041416176" style="zoom:67%;" />
+
+> 'canvas' 和 'svg' 是两种不同的渲染技术，用于在浏览器中绘制图形和图表。ECharts 提供了对这两种渲染技术的支持，你可以根据具体需求选择适合的渲染方式。
+>
+> 以下是 'canvas' 和 'svg' 的比较：
+>
+> **Canvas 渲染：**
+>
+> - **绘图方式：** Canvas 使用 JavaScript 来绘制图形，可以通过绘制像素点来创建图形。整个图形被绘制在一个画布上，你可以控制每个像素的颜色和位置。
+>
+> - **性能：** 'canvas' 渲染器通常在大规模图表绘制时具有较好的性能，因为它在底层操作像素。适用于需要高性能绘制的场景。
+>
+> - **动画：** 在 'canvas' 渲染模式下，ECharts 会生成一系列图像帧，通过更新像素来实现动画效果。因此，'canvas' 渲染对于图表动画的支持较好。
+>
+> - **分辨率：** 'canvas' 绘制的图形在不同分辨率下可能会出现失真。需要自行处理高分辨率屏幕适配。
+>
+> **SVG 渲染：**
+>
+> - **绘图方式：** SVG 使用 XML 格式来描述图形，它是一种矢量图形格式。图形被定义为具有几何属性和样式的对象，可以在不同分辨率下无损缩放。
+>
+> - **性能：** 'svg' 渲染器在处理大量图形时性能可能会受到影响，因为它要解析 XML 并渲染矢量对象。
+>
+> - **动画：** SVG 渲染支持一些基本的动画效果，但相对于 'canvas' 渲染，动画效果可能不如 'canvas' 流畅。
+>
+> - **分辨率：** 'svg' 绘制的图形可以在不同分辨率下保持清晰，适合高分辨率屏幕。
+>
+> 选择 'canvas' 还是 'svg' 取决于你的需求和场景。如果需要绘制大规模的图表，特别是涉及大量数据和动画效果时，'canvas' 渲染可能更适合。如果需要保持图表在不同分辨率下的清晰度，或者需要支持复杂的矢量图形，'svg' 渲染可能更适合。通常情况下，ECharts 默认会根据浏览器性能和图表复杂度自动选择合适的渲染方式。
+
+
+
+#### 3.1 两者优缺点对比
+
+> 当比较 'canvas' 和 'svg' 渲染时，它们各自有一些优点和缺点，适用于不同的使用场景：
+>
+> **Canvas 渲染的优点：**
+>
+> 1. **性能优势：** Canvas 渲染在大规模图表绘制时通常具有较好的性能。因为它在底层操作像素，可以更高效地绘制大量的图形和数据点。
+>
+> 2. **动画效果：** Canvas 渲染对于图表动画的支持较好。由于它可以在像素级别进行更新，所以可以实现更流畅的动画效果。
+>
+> 3. **适用于实时数据：** 如果你的图表需要实时更新，比如实时监控图表，Canvas 渲染可能更适合，因为它能够更快地绘制变化的数据。
+>
+> **Canvas 渲染的缺点：**
+>
+> 1. **分辨率适应：** Canvas 绘制的图形在不同分辨率下可能会失真，需要额外的适应工作来保持图形的清晰度。
+>
+> 2. **矢量支持不足：** Canvas 渲染不支持矢量图形，无法保证图形在不同尺寸下保持清晰。
+>
+> **SVG 渲染的优点：**
+>
+> 1. **矢量图形：** SVG 渲染可以保证图形在不同分辨率下保持清晰，适合于需要高质量图形展示的场景。
+>
+> 2. **多样性：** SVG 支持更多的样式和效果，比如渐变、滤镜等，使得图形更具创意性。
+>
+> 3. **适合静态图表：** 如果你的图表是静态的、包含复杂矢量图形的，SVG 渲染可能更适合。
+>
+> **SVG 渲染的缺点：**
+>
+> 1. **性能相对较低：** 在处理大量图形时，SVG 渲染的性能可能较低，因为需要解析 XML 并渲染矢量对象。
+>
+> 2. **动画效果受限：** SVG 渲染支持一些基本的动画效果，但相对于 Canvas 渲染，动画效果可能不如流畅。
+>
+> 综合来说，Canvas 渲染在大规模图表绘制和动画效果上具有优势，适合需要高性能的场景。而 SVG 渲染则适合于静态图表、需要保持高分辨率和矢量图形的场景。在实际使用中，你可以根据图表的复杂度、性能需求和展示效果来选择适合的渲染方式。
 
 
 
 
+
+#### 3.2  二者性能测试
+
+> 对于数据量较少的适用于Svg, 移动端使用Svg渲染效果佳
+
+<img src="vue3-CMS.assets/image-20230803041602104.png" alt="image-20230803041602104" style="zoom:67%;" />
+
+
+
+#### 3.3	二者选择
+
+![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)

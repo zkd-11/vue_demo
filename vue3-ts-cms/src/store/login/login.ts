@@ -67,6 +67,8 @@ const loginModule: Module<ILoginState, IRootState> = {
       commit('changeToken', token)
       localCache.setCache('token', token)
 
+      // 💓🐟fix: 登录获得token对 部门/角色表单数据请求- 触发根路径的animation
+      this.dispatch('getInitialDataAction', null, { root: true })
       // 2.请求用户信息
       const userInfoResult = await requestUserInfoById(id)
       const userInfo = userInfoResult.data
@@ -90,6 +92,8 @@ const loginModule: Module<ILoginState, IRootState> = {
       const token = localCache.getCache('token')
       if (token) {
         commit('changeToken', token)
+        // 💓🐟
+        this.dispatch('getInitialDataAction', null, { root: true })
       }
       const userInfo = localCache.getCache('userInfo')
       if (userInfo) {

@@ -11,7 +11,7 @@ export function formatUtcString(
   format: string = DATE_TIME_FORMAT
 ) {
   // 表示对utc时间使用 格式转化- 转化为 format格式
-  return dayjs.utc(utcString).format(format)
+  return dayjs.utc(utcString).utcOffset(8).format(format)
 }
 
 // export function formatTimestamp(
