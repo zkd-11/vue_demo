@@ -6029,7 +6029,7 @@ const handleConfirmClick = () => {
 
 ### 1. 时区问题，调用utcOffset（8）解决
 
-因为东八区， utc为0区， 所以需偏移量8小时
+因为所处为东八区， utc为0区， 所以需偏移量8小时
 
 ```ts
 
@@ -6137,7 +6137,7 @@ export function formatUtcString(
 
 1. 如有独有的逻辑无法合并，则在相关的组件进行逻辑处理
 2. 公共逻辑的组件禁止混入不可共享的逻辑信息， 提高更高的组件复用性， 如有复杂的功能需要实现，再对组件进行封装， 一层不能解决的事件， 就进行多次封装 
-3. 封装相当于： 组件- 组装成界面- 设置开关去决定是否使用哪个组件， 组件灵活性很高， 可快速开发具有相同功能不同数据的界面
+3. 封装相当于： 组件- 组装成界面- 设置开关（props的数据接收）去决定是否使用哪个组件， 组件灵活性很高， 可快速开发具有相同功能不同数据的界面
 
 > 你的总结对封装思想有一定的理解，但还可以进行一些补充和调整。以下是对你总结中提到的几个点的进一步说明：
 >
@@ -6168,9 +6168,9 @@ export function formatUtcString(
 
 原界面有conten和search组件， 现需引入modal组件
 
- 		新建用户功能由于需要为其添加权限，因为content回显数据不包含权限，  此部分不属于modal所拥有， 需要额外独立开发， 不将其放置modal组件中- 尽量使组件可用性强， 不属于公共逻辑的代码不放入中间组件
+ 		新建用户功能由于需要为其添加权限，  此部分不属于modal所拥有，只展示角色名（具体拥有权限无展示） 需要额外独立开发， 不将其放置modal组件中- 尽量使组件可用性强， 不属于公共逻辑的代码不放入中间组件
 
-**简单功能思路（不含权限分配）**
+**简单功能开发思路（不含权限分配）**
 
 1.  引入modal组件， hook函数， 建立modal配置文件
 2. 将 hook函数return将元组数据return并绑定对应组件或事件
@@ -6246,7 +6246,7 @@ import { usePageModal } from '@/hooks/use-page-modal'
 
 **为角色菜单表：定义新的角色并绑定具有的权限**
 
-新建菜单需要包括具体的权限菜单， 该权限在content中只是一个展示权限命名， 该部分内容需要额外添加（获取权限数据并进行绑定）， 相当于拓展了modal的功能， 最终需要需要实现在点击添加权限时， 能显示具体的权限菜单
+新建菜单需要包括具体的权限菜单， 该权限在content中只是一个展示权限命名， 该部分内容需要额外添加（获取权限数据并进行绑定）， 相当于拓展了modal的功能， 最终需要需要实现在点击添加权限时， 能显示具体的权限菜单，并能上传数据至服务端
 
 **思路：**
 
@@ -6256,7 +6256,7 @@ import { usePageModal } from '@/hooks/use-page-modal'
 4. role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
 5. eleTree绑定函数可获取选择的菜单信息， 在role中获取后进行保存，并将选中的菜单信息传入modal
 6. modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
-7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的data同配置的otherConfig进行合并
+7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
 8. 合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
 
 <img src="vue3-CMS.assets/image-20230803011716736.png" alt="image-20230803011716736" style="zoom:67%;" />
@@ -6347,9 +6347,15 @@ props: 表示具有children： 菜单children对应字段， label 对应字段
 
 > 在这个函数中，主要的逻辑是从 `data2` 参数中解构出选中的节点和半选中的节点，将它们的 keys（或标识）合并成一个新的数组 `menuList`，然后将这个数组存储在 `otherInfo` 变量中。
 
+ **otherInfo.value = { menuList }**
+
+> `otherInfo` 是一个对象，通过赋值的方式在其 `value` 属性中创建了一个名为 `menuList` 的属性，该属性的值是一个数组。
+
 
 
 #### 3.3	将选中的菜单数据传入modal组件
+
+otherInfo的传入，将选中的菜单数据传入
 
 ```ts
     <page-modal
@@ -6401,7 +6407,7 @@ props: 表示具有children： 菜单children对应字段， label 对应字段
 
 ## （三）编辑功能菜单回显
 
-**需求：** 使用编辑功能时，默认菜单为空白，未绑定到menuList, 现需将el-tree绑定，点击编辑时绑定菜单数据
+**需求：** 使用编辑功能时，默认菜单显示为空白未选中状态，未同步角色具有的menuList数据,  现需将el-tree绑定，点击编辑时绑定菜单数据
 
 **思路：**
 
@@ -6416,13 +6422,13 @@ props: 表示具有children： 菜单children对应字段， label 对应字段
 
 ### 1. 获取选中角色菜单数据- 使用hook- UPM回调函数传出
 
-在content使用编辑时绑定的函数中有item， 所以需要在role中使用editCallback传入其中， 接收来自content传出的item
+在content使用编辑时触发父组件Role的事件中， 所绑定的函数中有item， 所以需要在role中使用editCallback传入其中， 接收来自content传出的item
 
 #### 1.1  在UPM将Item传入回调函数
 
 将回调函数设置为可接收可选参数，Role传入回调函数获取ITem
 
-编辑被点击时， 传入item，当前角色信息传入
+编辑被点击时， 传入item，当前角色信息传入  **editCb(item)**
 
 ```ts
 type CallbackFn = (item?: any) => void
@@ -6493,7 +6499,7 @@ export function menuMapLeafKeys(menuList: any[]) {
 使用nextTick是避免数据为undefined， 在点击编辑的那一时刻， ref组件未绑定实例， 需要使用nextTIck确保绑定成功后执行函数
 
 - 根据item的muenList传入MapLeafKeys获取叶子节点
-- 再将叶子节点使用实例的setChekedKeys设置菜单
+- 再将叶子节点使用实例的setCheckedKeys设置菜单
 
 ```ts
  // 处理pageModal的hook - 获取item数据 并设置编辑 菜单选中状态
@@ -6547,7 +6553,7 @@ export function menuMapLeafKeys(menuList: any[]) {
 3. 编写配置文件
 4. 设置配置文件  （生效）
 
-🔺✨ 注意：r绑定初始化需要在onMounted挂载后， 实例存在时初始化
+🔺✨ 注意：r绑定初始化需要在onMounted 组件挂载后， 实例存在时初始化
 
 
 
@@ -6688,7 +6694,7 @@ setup() {
 
 **canva:** 适合渲染大规模图标，动画渲染效果好， 不适用于高分辨率显示- 失真
 
-**SVG：** 渲染规模正常图形， 动画效果较差， 但是不失真，适用于高分辨率显示
+**SVG：** 渲染规模正常图形， 动画效果较差， 但是不失真，适用于高分辨率显示（移动端 使用此渲染效果比canva好， 对移动端适配强）
 
 <img src="vue3-CMS.assets/image-20230803041416176.png" alt="image-20230803041416176" style="zoom:67%;" />
 
@@ -6750,7 +6756,7 @@ setup() {
 >
 > 1. **性能相对较低：** 在处理大量图形时，SVG 渲染的性能可能较低，因为需要解析 XML 并渲染矢量对象。
 >
-> 2. **动画效果受限：** SVG 渲染支持一些基本的动画效果，但相对于 Canvas 渲染，动画效果可能不如流畅。
+> 2. **动画效果受限：** SVG 渲染支持一些基本的动画效果，但相对于 Canvas 渲染，动画效果可能不如Canvas流畅。
 >
 > 综合来说，Canvas 渲染在大规模图表绘制和动画效果上具有优势，适合需要高性能的场景。而 SVG 渲染则适合于静态图表、需要保持高分辨率和矢量图形的场景。在实际使用中，你可以根据图表的复杂度、性能需求和展示效果来选择适合的渲染方式。
 
@@ -6768,4 +6774,297 @@ setup() {
 
 #### 3.3	二者选择
 
+总结：对于一般场景， 规模不大的渲染图标时， 优先使用SVG， 因为其渲染性能更高(PC端)， Svg足以支撑显示， 移动端 优先使用SVG， 各方面都领先！
+
 ![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)
+
+# day33-   14点10分
+
+# 🔺✨ 进度十三（项目完结篇）
+
+
+
+### 🔺✨Tip 高级检索
+
+#### 格式： site: 域名
+
+**案例**
+
+想学下高级检索：
+
+site:v2ex.com/t 毕设项目
+
+site表示域名是吗
+
+> 是的，您理解得正确。在搜索引擎中，`site:` 后面可以跟一个域名，用来指定搜索结果限定在特定的域名下。这样可以帮助您在特定的网站上查找相关信息，而不必搜索整个互联网。
+
+/t是可加的条件，默认不加是
+
+> 对的，您理解得很对。在 V2EX 这种类型的网站上，通常 `/t` 表示主题或话题的路径。您可以通过在 `site:v2ex.com` 后添加 `/t` 路径来限制搜索结果仅在主题路径下进行搜索。如果不添加 `/t`，则搜索引擎会搜索整个网站，包括所有页面和内容。
+
+
+
+## （其它）MD5加密 - CountUp库获取函数
+
+### 1. MD5加密 /其它加密
+
+在新建用户中， 老师登录无法使用原因， 未对上传的密码数据进行加密，但是用户登录发送密码时，服务器验证的为加密后的密码
+
+- 服务器保存的用户密码是加密保存（MD5其中一种）
+- 登录时验证的也为加密的密码
+  - 保证了用户密码的安全性-
+  - 保存密码一致性（服务器保存的密码为机密转换后的）
+    - 这样的处理逻辑是用户在上传过程中为上传加密的密码，即使中间被人截取了，只要非法分子不知道加密的方式， 就无法对密码进行破解
+
+**总结： 服务器  保存or验证的为加密后的密码**
+
+> 你提到的方式是常见的密码安全策略，这些措施旨在确保用户密码的安全性和隐私保护。让我对你所描述的内容进行解释：
+>
+> 1. **密码加密保存：** 使用加密算法（如 MD5 或其他更强大的哈希算法）对用户密码进行加密后，将加密后的值存储在服务器上。这样，即使服务器遭受数据泄露，实际密码也不会直接被泄露。
+>
+> 2. **登录时验证加密密码：** 当用户尝试登录时，输入的密码会经过相同的加密算法进行加密，然后与服务器上存储的加密密码进行比较。如果匹配，就表示密码正确。
+>
+> 3. **安全性保障：** 这种方法确保了用户密码的安全性。即使黑客获取了数据库中的加密密码，由于正常情况下无法将加密密码还原回原始密码（这就是哈希函数的特性），所以密码泄露的风险相对较低。
+>
+> 4. **密码一致性：** 由于所有用户的密码都经过相同的加密算法处理，服务器上存储的是加密后的一致性值。这样的设计确保了用户的密码在存储时被统一处理。
+>
+> 5. **传输过程中的保护：** 你提到即使密码被中间人截取，只要不知道加密方式，就无法破解密码。这是正确的，加密的目的之一是确保即使在传输过程中被拦截，攻击者也无法获得有意义的原始密码。
+>
+> 需要注意的是，尽管使用哈希函数（如 MD5）是一种好的做法，但现在一些更强大的哈希函数和加密算法（如 SHA-256、bcrypt 或 Argon2）更受推荐，因为它们提供了更高的安全性。
+>
+> 然而，密码安全不仅仅是加密和哈希，还涉及到许多其他因素，如防止暴力破解、防范社会工程学攻击等。所以在设计密码系统时，综合考虑各种安全因素是很重要的。
+
+
+
+### 2. 一般大型企业， 采用多层密码进行加密的
+
+> 是的，大型企业通常会采用多层密码进行加密和安全保护，以提高系统和用户数据的安全性。这种多层密码的方法通常被称为“防御性安全”策略，旨在为系统和数据提供更全面的保护。
+>
+> 以下是一些大型企业在密码加密方面常见的安全实践：
+>
+> 1. **多重哈希加密：** 企业可能会使用多重哈希算法，如将用户密码经过多次哈希迭代，以增加密码破解的难度。
+>
+> 2. **Salt（盐）：** 使用随机的“盐”值来加强哈希过程。盐是一个随机字符串，与用户密码组合后再进行哈希。这样即使两个相同的密码在数据库中存储的哈希值也不同，提高了安全性。
+>
+> 3. **加密传输：** 在数据传输过程中使用加密来保护数据，确保用户输入的密码在传输中不被拦截和窃取。
+>
+> 4. **安全认证和授权：** 使用多层身份验证和授权机制来确保只有授权的用户可以访问敏感数据和系统。
+>
+> 5. **访问控制：** 使用细粒度的访问控制来限制用户对系统和数据的访问权限，避免未经授权的访问。
+>
+> 6. **安全审计和监控：** 对系统进行持续的安全审计和监控，以及时发现和应对异常活动。
+>
+> 7. **密码策略：** 强制用户采用强密码，并定期要求更改密码，以减少密码泄露的风险。
+>
+> 8. **双因素认证：** 引入双因素认证，除了密码外，还需要另一种身份验证方式，如手机验证码或硬件令牌。
+>
+> 9. **密码管理：** 使用密码管理工具，确保员工使用不同的复杂密码，并定期更改密码。
+>
+> 总之，大型企业在密码安全方面会采用多种方法和层次的保护措施，以应对不同的威胁和风险。这些措施的目标是确保数据的机密性、完整性和可用性，以及保护用户隐私。
+
+#### 2.1	企业具体采用的加密方式
+
+​	
+
+> - **哈希函数（如 MD5）：** 哈希函数是一种单向的、不可逆的转换，将输入数据映射为固定长度的输出。MD5 是一个广泛使用的哈希函数，但因为它的特性，如碰撞（不同的输入产生相同的输出）和易受暴力破解等问题，不再被推荐用于密码存储。
+>
+> 
+>
+> 在登录时上传密码时，一般情况下不会使用非对称加密，而是使用一种更强大的哈希函数，如 **SHA-256、bcrypt 或 Argon2** 等。
+>
+> 这些哈希函数能够将密码转换为固定长度的哈希值，但由于哈希函数的单向性，无法从哈希值还原出原始密码。当用户登录时，服务器会将输入的密码使用相同的哈希函数进行哈希，然后与存储在数据库中的哈希值进行比较，以进行验证。
+>
+> 总之，非对称加密和哈希函数在密码保护中扮演不同的角色。哈希函数用于密码存储和验证，而非对称加密用于建立安全通信通道和数字签名等。
+
+#### 2.2  SHA-256、bcrypt 或 Argon2(登录加密方式)
+
+由于用户标识不同（ID或用户名），即使不同用户输入相同密码，加盐后也会生成不同的哈希函数， 且由于哈希函数具有不可推导性，服务器验证就为加密后的密码， 所以即使黑客获得了哈希函数也无法取得密码，破解难度大
+
+> 这种密码存储和验证方式的核心原理是哈希函数的单向性和不可逆性。让我进一步解释为什么这种方式能够提供较高的密码安全性，防止黑客破解密码：
+>
+> 1. **不可逆性：** 哈希函数是单向的，意味着从哈希值无法推导出原始的密码。当用户输入密码进行注册或登录时，服务器将密码经过哈希函数转换成固定长度的哈希值。即使黑客获取到这些哈希值，也不能将其逆向转换为原始密码，因为这个过程是不可逆的。
+>
+> 2. **碰撞问题：** 好的哈希函数应该具有抗碰撞的特性，即不同的输入不能产生相同的哈希值。这意味着即使两个不同用户设置相同的密码，它们的哈希值也会是不同的。这种特性降低了黑客通过猜测相同哈希值密码的可能性。
+>
+> 3. **加盐：** 在存储密码的过程中，常常使用“盐”（salt）来增加密码哈希的随机性。盐是一个随机生成的字符串，与密码组合后再进行哈希。这样即使两个相同密码的用户，由于盐值不同，产生的哈希值也会不同。这增加了黑客破解密码的难度。
+>
+> 4. **计算成本：** 强大的哈希函数（如 bcrypt 或 Argon2）被设计为计算成本较高，意味着计算其哈希值需要较长的时间。这有效地降低了黑客使用暴力破解方法破解密码的效率。
+>
+> 总之，这种密码存储和验证方式的核心在于将密码转化为不可逆的哈希值，并采取多重技术措施来提高黑客破解密码的难度。这样即使黑客获得了哈希值，也无法轻易将其还原成原始密码。然而，安全性仍然需要综合多种措施来确保。
+
+**加盐应该是将具体的信息与用户的唯一标识进行绑定**
+
+> 是的，你理解得很正确。在密码存储中，"加盐" 是指将一个随机生成的、唯一的、不可预测的值与用户的密码结合起来，然后再进行哈希。这个随机值被称为 "盐"（salt）。盐的作用是增加密码哈希的随机性和不可预测性，从而提高密码存储的安全性。
+>
+> 加盐通常会使用一个与用户相关的唯一标识，如用户的用户名、用户 ID 或电子邮件地址。这样确保了每个用户都有不同的盐值，即使两个用户设置了相同的密码，由于盐值不同，产生的哈希值也会不同。
+>
+> 这种做法的好处包括：
+>
+> 1. **防止彩虹表攻击：** 彩虹表是一种预先计算出的密码和哈希值对照表，用于加快破解过程。使用盐值后，即使密码相同，由于盐的存在，哈希值也会不同，使彩虹表攻击变得无效。
+>
+> 2. **增加哈希值随机性：** 盐值是随机的，使得黑客无法预测不同用户的盐值，从而无法通过事先准备好的攻击方法来破解哈希。
+>
+> 3. **保护常用密码：** 使用盐值使得即使用户使用常见密码，由于盐的存在，产生的哈希值也会与预先计算的不同。
+>
+> 综上所述，加盐是密码存储中的重要策略之一，能够有效提高密码的安全性，防止常见攻击方法。然而，盐值的生成和管理需要小心处理，以确保安全性。
+
+
+
+### 3. CounterUp库的使用
+
+创作表头数据
+
+<img src="vue3-CMS.assets/image-20230803235900054.png" alt="image-20230803235900054" style="zoom:67%;" />
+
+> `countUp` 是一个 JavaScript 库，用于创建数字增加的动画效果，通常用于展示数字的动态变化，比如金额、计数等。它可以在网页中产生平滑的数字过渡效果，增加用户体验。
+>
+> 这个库允许你将起始数字和目标数字作为参数，然后创建一个动画，使数字从起始值逐渐增加到目标值。你可以在特定的 HTML 元素中显示这个动画，比如一个 `<span>` 元素。
+>
+> 在使用 `countUp` 库之前，你需要引入它的 JavaScript 文件，通常是通过在 HTML 页面的 `<head>` 或底部引入相关的 `<script>` 标签来实现。然后，你可以在自己的 JavaScript 代码中使用 `countUp` 函数来创建数字增加的动画效果。
+>
+> 以下是一个简单的示例，展示如何使用 `countUp` 库：
+>
+> ```html
+> <!DOCTYPE html>
+> <html lang="en">
+> <head>
+>   <meta charset="UTF-8">
+>   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+>   <title>countUp Example</title>
+>   <script src="path-to-countup.js"></script> <!-- 引入 countUp.js 文件 -->
+> </head>
+> <body>
+>   <span id="count"></span> <!-- 用于显示数字动画的元素 -->
+>   <script>
+>     const countElement = document.getElementById('count');
+>     const startValue = 0;
+>     const endValue = 1000;
+>     const options = {
+>       duration: 2, // 动画持续时间（秒）
+>     };
+> 
+>     const countUpInstance = new CountUp(countElement, startValue, endValue, options);
+> 
+>     if (!countUpInstance.error) {
+>       countUpInstance.start(); // 开始动画
+>     } else {
+>       console.error(countUpInstance.error);
+>     }
+>   </script>
+> </body>
+> </html>
+> ```
+>
+> 在这个示例中，`path-to-countup.js` 是 `countUp` 库的 JavaScript 文件路径，你需要替换成实际路径。通过创建 `CountUp` 实例并调用 `.start()` 方法，你可以触发数字增加的动画效果。
+>
+> 记得要查阅 `countUp` 的文档以获取更多详细信息和选项。
+
+
+
+## （一）dashBoard的数据请求保存
+
+需求：需要对信息中心（仪盘表【多种展示方法】）的四个数据发起请求并保存至vueX,此为Echarts数据来源
+
+**五图- 四数据**  分类商品数量（饼图、玫瑰图） 、销量（曲线图） 、 收藏量（柱状图）
+
+​							不同城市商品销量（中国地图）
+
+思路：
+
+1. 需要先定义四种数据的请求（service —  dashBoard模块）
+2. VueX - dashBoard模块发送四种数据请求并保存至dashBoard的state中，action触发mutatoin并保存
+3. dashoBoard组件 使用useStore，disPatch发送请求， 获得四种数据
+
+
+
+### 1. Service - Analysis- dashboard定义四种数据请方法
+
+```ts
+import hyquest from '@/service/index'
+
+enum DashboardAPI {
+  categoryGoodsCount = '/goods/category/count',
+  categoryGoodsSale = '/goods/category/sale',
+  categoryGoodsFavor = '/goods/category/favor',
+  addressGoodsSale = '/goods/address/sale'
+}
+
+export function getCategoryGoodsCount() {
+  return hyquest.get({
+    url: DashboardAPI.categoryGoodsCount
+  })
+}
+export function getCategoryGoodsSale() {
+  return hyquest.get({
+    url: DashboardAPI.categoryGoodsSale
+  })
+}
+export function getCategoryGoodsFavor() {
+  return hyquest.get({
+    url: DashboardAPI.categoryGoodsFavor
+  })
+}
+export function getAddressGoodsSale() {
+  return hyquest.get({
+    url: DashboardAPI.addressGoodsSale
+  })
+}
+
+```
+
+
+
+### 2. vueX中dashboard模块定义Action发送四种请求并保存数据
+
+```ts
+ state() {
+    return {
+      categoryGoodsCount: [],
+      categoryGoodsSale: [],
+      categoryGoodsFavor: [],
+      addressGoodsSale: []
+    }
+  },
+  mutations: {
+    changeCategoryGoodsCount(state, list) {
+      state.categoryGoodsCount = list
+    },
+    changeCategoryGoodsSale(state, list) {
+      state.categoryGoodsSale = list
+    },
+    changeCategoryGoodsFavor(state, list) {
+      state.categoryGoodsFavor = list
+    },
+    changeAddressGoodsSale(state, list) {
+      state.addressGoodsSale = list
+    }
+  },
+  actions: {
+    async getDashboardDataAction({ commit }) {
+      const categoryCountResult = await getCategoryGoodsCount()
+      console.log(categoryCountResult)
+
+      commit('changeCategoryGoodsCount', categoryCountResult.data)
+      const categorySaleResult = await getCategoryGoodsSale()
+      commit('changeCategoryGoodsSale', categorySaleResult.data)
+      const categoryFavorResult = await getCategoryGoodsFavor()
+      commit('changeCategoryGoodsFavor', categoryFavorResult.data)
+      const addressGoodsResult = await getAddressGoodsSale()
+      commit('changeAddressGoodsSale', addressGoodsResult.data)
+    }
+```
+
+
+
+### 3. dashBoard 组件中触发 VueX/dashboard模块的Action
+
+触发后， 发送四种请求， 并保存数据至VueX中
+
+```ts
+     const store = useStore()
+      store.dispatch('dashboard/getDashboardDataAction')
+    })
+```
+
+
+

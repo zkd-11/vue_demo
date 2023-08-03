@@ -15,15 +15,17 @@
       :defaultInfo="defaultInfo"
       :otherInfo="otherInfo"
     >
-      <el-tree
-        ref="elTreeRef"
-        :data="menus"
-        show-checkbox
-        node-key="id"
-        :props="{ children: 'children', label: 'name' }"
-        @check="handleCheckChange"
-      >
-      </el-tree>
+      <div class="menu-tree">
+        <el-tree
+          ref="elTreeRef"
+          :data="menus"
+          show-checkbox
+          node-key="id"
+          :props="{ children: 'children', label: 'name' }"
+          @check="handleCheckChange"
+        >
+        </el-tree>
+      </div>
     </page-modal>
   </div>
 </template>
@@ -100,4 +102,8 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped lang="less">
+.menu-tree {
+  margin-left: 25px;
+}
+</style>

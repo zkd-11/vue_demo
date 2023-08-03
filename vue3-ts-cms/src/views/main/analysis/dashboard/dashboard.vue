@@ -8,6 +8,7 @@
 import { defineComponent, ref, onMounted } from 'vue'
 
 import * as echarts from 'echarts'
+import { useStore } from '@/store'
 export default defineComponent({
   name: 'dashboard',
   setup() {
@@ -47,6 +48,9 @@ export default defineComponent({
       }
       // 3.设置配置,并且开始绘制
       echartInstance.setOption(option)
+
+      const store = useStore()
+      store.dispatch('dashboard/getDashboardDataAction')
     })
 
     return {
