@@ -2559,16 +2559,16 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >    - 使用示例：
 >      ```javascript
 >      import { useRoute } from 'vue-router';
->                               
+>                                    
 >      export default {
 >        setup() {
 >          const route = useRoute();
->                               
+>                                    
 >          // 使用当前路由信息
 >          console.log('当前路由路径：', route.path);
 >          console.log('当前路由参数：', route.params);
 >          console.log('当前路由查询参数：', route.query);
->                               
+>                                    
 >          return {};
 >        },
 >      };
@@ -2580,16 +2580,16 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >    - 使用示例：
 >      ```javascript
 >      import { useRouter } from 'vue-router';
->                               
+>                                    
 >      export default {
 >        setup() {
 >          const router = useRouter();
->                               
+>                                    
 >          // 编程式导航示例
 >          const handleButtonClick = () => {
 >            router.push('/some-route'); // 导航至 '/some-route'
 >          };
->                               
+>                                    
 >          return {
 >            handleButtonClick,
 >          };
@@ -6778,7 +6778,7 @@ setup() {
 
 ![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)
 
-# day33-   14点10分
+# day33-   22点10分
 
 # 🔺✨ 进度十三（项目完结篇）
 
@@ -6880,7 +6880,7 @@ site表示域名是吗
 
 由于用户标识不同（ID或用户名），即使不同用户输入相同密码，加盐后也会生成不同的哈希函数， 且由于哈希函数具有不可推导性，服务器验证就为加密后的密码， 所以即使黑客获得了哈希函数也无法取得密码，破解难度大
 
-> 这种密码存储和验证方式的核心原理是哈希函数的单向性和不可逆性。让我进一步解释为什么这种方式能够提供较高的密码安全性，防止黑客破解密码：
+> 这种密码存储和验证方式的核心原理是**哈希函数的单向性和不可逆性**。让我进一步解释为什么这种方式能够提供较高的密码安全性，防止黑客破解密码：
 >
 > 1. **不可逆性：** 哈希函数是单向的，意味着从哈希值无法推导出原始的密码。当用户输入密码进行注册或登录时，服务器将密码经过哈希函数转换成固定长度的哈希值。即使黑客获取到这些哈希值，也不能将其逆向转换为原始密码，因为这个过程是不可逆的。
 >
@@ -6892,7 +6892,9 @@ site表示域名是吗
 >
 > 总之，这种密码存储和验证方式的核心在于将密码转化为不可逆的哈希值，并采取多重技术措施来提高黑客破解密码的难度。这样即使黑客获得了哈希值，也无法轻易将其还原成原始密码。然而，安全性仍然需要综合多种措施来确保。
 
-**加盐应该是将具体的信息与用户的唯一标识进行绑定**
+**加盐应该是使用用户的唯一标识 进行加盐 后与密码结合  进行绑定**
+
+​	加盐后可使得密码和哈希不具有 1：1对比性， 彩虹表破解失效
 
 > 是的，你理解得很正确。在密码存储中，"加盐" 是指将一个随机生成的、唯一的、不可预测的值与用户的密码结合起来，然后再进行哈希。这个随机值被称为 "盐"（salt）。盐的作用是增加密码哈希的随机性和不可预测性，从而提高密码存储的安全性。
 >
@@ -6965,9 +6967,11 @@ site表示域名是吗
 
 需求：需要对信息中心（仪盘表【多种展示方法】）的四个数据发起请求并保存至vueX,此为Echarts数据来源
 
-**五图- 四数据**  分类商品数量（饼图、玫瑰图） 、销量（曲线图） 、 收藏量（柱状图）
+**五图- 四数据**  
 
-​							不同城市商品销量（中国地图）
+分类商品数量（饼图、玫瑰图） 、销量（曲线图） 、 收藏量（柱状图）
+
+不同城市商品销量（中国地图）
 
 思路：
 
@@ -7067,4 +7071,791 @@ export function getAddressGoodsSale() {
 ```
 
 
+
+## （二）dashboard界面布局设置 上三 下二 ，并设置title
+
+需求： 需要界面显示上三下二（ 五图表分布） 并且每个图表内部需要使用上下分布的样式
+
+思路： 
+
+​	**上三下二：**
+
+1.  页面上部分： el-col 行组件包裹， 内部3 el-row组件， 分别对应 ：span 7   10   7  左中右比例分布
+2. 页面下部分：  同理： span: 12 12 （24）各占一半
+
+​	内部上下结构： 使用el -card 组件，封装hy-card组件引入至 dashboard
+
+
+
+### 1. 引入el-card 卡片组件（内容分层）
+
+分为title - 图表
+
+将图表分为显示， title可插入标题
+
+​	内容设置插槽 供图表插入
+
+样式解析：  
+
+ &:deep(.el-card__header) {
+    padding: 10px 20px !important;
+  }
+
+表示深层穿透器， 选择组件内部的头部， 并将样式重新调整， 这里主要调整为上下10px，左右20px, 不设置时， 该header高度过高，样式不好看
+
+
+
+```ts
+  <el-card class="box-card">
+    <template #header>
+      <div class="card-header">
+        <span>{{ title }}</span>
+      </div>
+    </template>
+    <div class="item">
+      <slot></slot>
+    </div>
+
+.box-card {
+  &:deep(.el-card__header) {
+    padding: 10px 20px !important;
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+
+.item {
+  margin-bottom: 10px;
+  // border: 1px solid red;
+}
+```
+
+
+
+### 2. 使用el-row 行组件 和 单元格 el-col组件 构成 上三下二
+
+gutter属性传入表示单元格间距x元素， span表示划分，行内按照 x/24 划分区域
+
+```ts
+ <el-row :gutter="10">
+      <el-col :span="7">
+        <hy-card title="分类商品数量(饼图)"></hy-card>
+      </el-col>
+      <el-col :span="10">
+        <hy-card title="不同城市商品销量"></hy-card>
+      </el-col>
+      <el-col :span="7">
+        <hy-card title="分类商品数量(玫瑰图图)"></hy-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10" class="content-row">
+      <el-col :span="12">
+        <hy-card title="分类商品销量(饼图)"></hy-card>
+      </el-col>
+      <el-col :span="12">
+        <hy-card title="分类商品的收藏量"></hy-card>
+      </el-col>
+    </el-row>
+```
+
+
+
+
+
+## （三）对图表进行抽取为base-ui组件， 通过传入配置，生成图表-    setup内置script的使用
+
+需求： 在图表需要进行抽取， 并且由父组件传入配置，设置图标的样式， 结合vue3 setup内置脚本的使用， props的接受 属性声明和默认参数（setUp内置写法）
+
+后面可对使用配置这些操作在进行一层抽取
+
+思路： 
+
+1. 抽取为base-ui图表组件， 父组件引用该组件并传入配置即可使用
+2. setup 内置脚本， 使用defineProps定义接收的参数类型（不加？默认必传）， witheDefaults接收的第一个参数为defineProps函数， 第二个为参数赋值 默认值
+
+后面可对父组件传入的配置再次抽取 ， 只需传入动态的数据即可
+
+
+
+### 1. 初次抽取为组件base-echart - 并使用setup内置script
+
+props的接收改变， 现在脚本本身就为seup函数， 不需要return
+
+Props接收： 
+
+- defineProps 为定义接收父组件的数据
+- withDefaults 包含两个参数， 第一个参数defineProps，格式d..s<对象，接收的数据类型> （）， 第二个参数： 对参数进行默认赋值 
+
+💓🐟： 图表需要为其设置style, 设置其宽度高度 ， 否则图表不显示， 并且需动态传入， 静态传入时，传入的变量值只会被**解析为字符串**
+
+
+
+三部曲： echarts.init(echartDivRef.value!) 初始化，编写配置，再进行配置加载**（onMounted）**须在组件挂载完才能对其绑定
+
+```ts
+<template>
+  <div
+    class="base-echart"
+    ref="echartDivRef"
+    :style="{ width: width, height: height }"
+  ></div>
+</template>
+
+<script lang="ts" setup>
+import { ref, onMounted, defineProps, withDefaults } from 'vue'
+import { EChartsOption } from 'echarts'
+import * as echarts from 'echarts'
+
+// 定义props
+const props = withDefaults(
+  defineProps<{
+    options: EChartsOption
+    width?: string
+    height?: string
+  }>(),
+  {
+    width: '100%',
+    height: '360px '
+  }
+)
+const echartDivRef = ref<HTMLElement>()
+onMounted(() => {
+  const echartInstance = echarts.init(echartDivRef.value!)
+  echartInstance.setOption(props.options)
+  console.log(props.options)
+})
+```
+
+
+
+### 2.  dashboard 传入配置
+
+
+
+```ts
+  setup() {
+    const store = useStore()
+    store.dispatch('dashboard/getDashboardDataAction')
+
+    const option = {
+      title: {
+        text: 'ECharts 入门示例',
+        subtext: '哈哈哈啊'
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross'
+        }
+      },
+      legend: {
+        data: ['销量']
+      },
+      xAxis: {
+        data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+      },
+      yAxis: {},
+      series: [
+        {
+          name: '销量',
+          type: 'bar',
+          data: [18, 20, 36, 10, 10, 20]
+        }
+      ]
+    }
+
+    return {
+      option
+    }
+```
+
+
+
+
+
+## 🔺✨ SSR（后端开发技术）提升用户体验-返回骨架Html页面
+
+SSR 是通过在服务器端预先渲染页面内容， 可以理解为请求的数据由原先的需要转化为html页面并再进行加载， 现在直接返回一个加载好的骨架页面
+
+
+
+> 您理解得很正确！服务器端渲染（SSR）的基本概念就是在服务器端预先渲染页面内容，并将渲染好的 HTML 页面直接返回给客户端，而不仅仅是返回数据。这样，客户端浏览器在接收到 HTML 页面时，就能够立即显示出页面的内容，而无需等待浏览器下载和执行 JavaScript，以及发起其他数据请求。
+>
+> 具体来说，SSR 的过程可以总结为以下几个步骤：
+>
+> 1. **请求：** 用户访问网页时，浏览器向服务器发出请求。
+> 2. **服务器端渲染：** 服务器接收到请求后，会预先渲染页面的 HTML 内容，并将数据嵌入到 HTML 中。
+> 3. **返回 HTML：** 渲染好的 HTML 页面直接发送给客户端浏览器。
+> 4. **显示页面：** 浏览器接收到 HTML 后，可以立即显示页面内容，无需等待其他资源加载。
+>
+> 这种方式确实能够提供更快的首屏加载速度，因为用户能够立即看到页面的核心内容，而不需要等待其他资源加载和 JavaScript 执行。同时，SSR 也有助于改善搜索引擎优化（SEO），因为搜索引擎能够更容易地抓取和索引服务器端渲染的页面内容。
+>
+> 需要注意的是，虽然 SSR 能够提供更好的首屏加载性能和 SEO，但在一些情况下也会带来一些额外的开发和配置复杂性。开发人员需要确保在服务器端正确处理数据获取、页面渲染和路由等方面，以实现良好的 SSR 效果。
+
+
+
+ 应该会使得服务器消耗性能吧， 还是说这样会使请求的数据增多， 但是体验感提升
+
+> 您提到的两个方面都是考虑服务器端渲染（SSR）时需要权衡的因素：
+>
+> 1. **服务器性能：** 确实，在进行 SSR 时，服务器会更多地参与页面的渲染和数据处理，这可能会增加服务器的负载和消耗性能。与传统的客户端渲染（CSR）相比，SSR 要求服务器在每次请求时都进行页面渲染，而不仅仅是返回静态资源。因此，您可能需要为服务器提供足够的计算资源，以确保它能够有效地处理大量的页面渲染请求。
+>
+> 2. **数据请求增多：** 另一方面，由于页面在服务器端渲染时需要获取数据并嵌入到 HTML 中，可能会导致页面请求的数据量增加。每次请求需要获取页面内容和数据，这可能会导致一些额外的网络流量。但是，通过在服务器端渲染时将页面的核心内容直接嵌入到 HTML 中，用户在访问页面时能够更快地看到内容，从而提升了用户体验。
+>
+> 在决定是否使用 SSR 时，您需要根据项目的需求和优先级进行权衡。如果您的应用需要更快的首屏加载速度、更好的 SEO 和更好的用户体验，那么使用 SSR 是一个不错的选择。然而，您也需要确保您的服务器具备足够的性能来处理 SSR 请求，并且在开发过程中需要关注页面渲染的性能优化，以确保服务器能够高效地处理大量的页面渲染请求。
+
+
+
+## (四) 将base-echart公共逻辑封装为hook
+
+需求： 当使用新的图表库时不需在base-echart修改，并且需要使这部分代码具有可共享性，相同的逻辑处理（初始化， 使用配置, setSize）可在别处使用
+
+**思路：**
+
+1. 将base-echart图表的初始化和使用配置等逻辑代码抽取为hook
+2. 在hook进行相关的逻辑处理， 并对页面缩小，页面自动调整做优化，setSize
+3. hook中暂时实现功能
+   1. 初始化图表实例
+   2. 返回配置使用函数（参数接收： 配置）
+   3. 监听页面变化重新设置size， 并将该函数返回至调用该hook组件， 可进行其他逻辑处理 ，
+   4.  后续有其他共同的逻辑代码 或是需要修改某功能，直接在此hook修改
+
+### 1. 将e-chart公共逻辑抽取为hook, 并使用resize函数动态调整
+
+抽取的函数为
+
+  const echartInstance = echarts.init(echartDivRef.value!)
+  echartInstance.setOption(props.options)
+
+为什么不使用元组return？
+
+1. ​	因为 这样可以按需使用{进行解构}， 元组需要全部解构
+2. ​	echart的当前使用并不需使用全部
+
+经过外部调用该hook后， dom绑定元素成功实例化， 并可以使用内部函数，setOption和updataSize， 外部直接调用传入配置直接调用setOption, 更简洁， 且还添加了 resize功能函数， 自动调整表格函数
+
+```ts
+import * as echarts from 'echarts'
+
+export default function (el: HTMLElement) {
+  console.log('11')
+
+  const echartInstance = echarts.init(el)
+
+  const setOptions = (options: echarts.EChartsOption) => {
+    echartInstance.setOption(options)
+  }
+
+  // 返回更新图表
+  const updateSize = () => {
+    echartInstance.resize()
+  }
+
+  // 对浏览器进行监听， 变化是自动调整图表
+  window.addEventListener('resize', () => {
+    echartInstance.resize()
+  })
+
+  return {
+    echartInstance,
+    setOptions,
+    updateSize
+  }
+}
+```
+
+
+
+### 2. base-echat 调用 公共hook函数 useEchart
+
+```ts
+const echartDivRef = ref<HTMLElement>()
+onMounted(() => {
+  const { setOptions } = useEchart(echartDivRef.value!)
+  setOptions(props.options)
+})
+</script>
+```
+
+
+
+## （五） 将配置信息抽取为对应不同类型图表组件，父组件只需要传入具体展示的数据
+
+**需求如图：** 
+
+需要进行解耦， 父组件只需要传入动态数据， 相应的使用模型（图表类型）展示数据封装为 xx组件（如pip chart）， 使得界面更简洁， 不同组件对应不同信息， 我在父组件只需要传入显示的数据即可（具体展示类型 由使用模型决定），模型动态接收数据
+
+**思路**：
+
+1.  将配置信息抽取放置对应模型（具体图表类型）组件
+2. 模型只需接收来自父组件的动态数据
+3. 模型需要进行监听，当数据配置发生改变时， 重新传递配置信息至base-echart，此部分需用到computed包裹， 将设置属性函数包裹为响应式属性
+4. base-echart 需要使用 watchEffect侦听 配置信息 ， 当配置信息更改时， 重新渲染图表
+
+
+
+<img src="vue3-CMS.assets/image-20230804052700020.png" alt="image-20230804052700020" style="zoom:67%;" />
+
+
+
+### 1. 封装pipEchart模型， 并动态接收来自父组件的数据
+
+在该饼模型中， 动态接收来自父组件传递的数据， 使用computed包裹，并将配置信息传入base-echart组件中
+
+ pieData: IDataType[]， 此行表示接受的数据为 {name: string, value:any} 对象  数组
+
+​	父组件传入时， 需将组件数据 使用map映射为 属性名相同的 对象 数组  并传入
+
+```ts
+import { IDataType } from '../types'
+
+const props = defineProps<{ pieData: IDataType[] }>()
+
+const options = computed(() => {
+  return {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      orient: 'horizontal',
+      left: 'left'
+    },
+    series: [
+      {
+        name: '分类数据',
+        type: 'pie',
+        radius: '50%',
+        // 动态接收父组件传递的数据
+        data: props.pieData,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }
+    ]
+  }
+})
+```
+
+**样式解析：**
+
+> 1. **tooltip：** 这是提示框组件的配置，`trigger: 'item'` 表示触发方式是在图形项上触发。
+>
+> 2. **legend：** 这是图例组件的配置，`orient: 'horizontal'` 表示图例水平排列，`left: 'left'` 表示图例位于图表的左侧。
+>
+> 3. **series：** 这是系列数据配置的数组，其中包含一个对象，定义了一个饼图的系列。具体解析如下：
+>
+>    - **name：** 系列的名称，这里设置为 '分类数据'。
+>
+>    - **type：** 系列的类型，这里设置为 'pie'，表示是一个饼图。
+>
+>    - **radius：** 饼图的半径，这里设置为 '50%'，表示半径为图表宽度的一半。
+>
+>    - **data：** 饼图的数据，这里使用了 `props.pieData`，表示从外部传入的饼图数据。
+>
+>    - emphasis：
+>
+>       强调样式配置，这里设置了阴影效果。
+>
+>      - itemStyle：
+>
+>         图形项的样式配置。
+>
+>        - **shadowBlur：** 阴影的模糊大小。
+>        - **shadowOffsetX：** 阴影的 X 方向偏移。
+>        - **shadowColor：** 阴影的颜色。
+
+
+
+### 2. 父组件动态获取数据，并传入pip-echart中
+
+因为pip组件接受的数据类型为 {name: string , value: any}， 但是 父组件所获取的信息为{name: string,  goodsCount: string}数组， 所以需要使用map将属性名转化为一致， 再传入
+
+```ts
+<pie-echart :pieData="categoryGoodsCount"></pie-echart>
+
+ // 请求数据
+    store.dispatch('dashboard/getDashboardDataAction')
+
+    // 获取商品数量数据
+    const categoryGoodsCount = computed(() => {
+      return store.state.dashboard.categoryGoodsCount.map((item: any) => {
+        return { name: item.name, value: item.goodsCount }
+      })
+    })
+```
+
+
+
+### 3. 💓🐟base-echart 使用watchEffect进行侦听数据并实时更新数据
+
+💓🐟 确认下为什么切换为computed无法执行， 使用watchEffect会默认执行一次， 后面数据发生变化时， 会自动调用渲染函数
+
+```ts
+const echartDivRef = ref<HTMLElement>()
+onMounted(() => {
+  const { setOptions } = useEchart(echartDivRef.value!)
+  watchEffect(() => {
+    setOptions(props.options)
+  })
+})
+```
+
+
+
+## （六） 玫瑰图-  曲线图的配置
+
+玫瑰图大致思路同饼图一致， 曲线图需要传入的数据不是成对的， 需要分开传两个数组， 一个为Xlabel数组（x轴显示的内容）， Ylabel（Y轴显示的内容）
+
+曲线图主要思路：
+
+1. 在父组件中， 获取数据， 在map前定义两个数组， 在map内部直接push将对应的属性push进去
+2. 将两个数组合并为一个对象返回， 使用v-bind进行绑定传入给line-echart组件，会自动解构赋值
+
+### 1. 玫瑰配置文件基本一致 （需要查下样式）
+
+很晚了， 先略过 ， 看到记得重新查下样式
+
+```ts
+ return {
+    // legend: {
+    //   top: 'bottom'
+    // },
+    toolbox: {
+      show: true,
+      feature: {
+        mark: { show: true },
+        dataView: { show: true, readOnly: false },
+        restore: { show: true },
+        saveAsImage: { show: true }
+      }
+    },
+    series: [
+      {
+        name: '类别数据',
+        type: 'pie',
+        // 半径设置
+        radius: [10, 100],
+        center: ['50%', '50%'],
+        roseType: 'area',
+        itemStyle: {
+          borderRadius: 8
+        },
+        data: props.roseData
+      }
+    ]
+  }
+```
+
+
+
+### 2.	曲线图的模型创建
+
+思路：大致思路一致， 主要为传入的参数需为两个数组，原先只需要传入一个数组对象（对象具有两个属性- 为两个数组 ）
+
+1. 定义两个数组对象，对数据进行获取
+2. 遍历商品销量数组， 对其属性进行分割， 分别push至两个数组
+3. 返回一个数组对象， 使用v-bind绑定传入line-echart 会自动解构传入数组
+4. 曲线图内部需要对 接收props声明属性 
+
+样式需要再过一遍💓🐟
+
+
+
+#### 2.1 分类销量 -  数据获取  v-bind 解构传入
+
+```ts
+<hy-card title="分类商品销量(曲线图)">
+    <line-echart v-bind="categoryGoodsSale"></line-echart>
+</hy-card>
+
+
+    // 获取分类商品销量
+    const categoryGoodsSale = computed(() => {
+      const xLabels: string[] = []
+      const values: any[] = []
+      const categoryGoodSale = store.state.dashboard.categoryGoodsSale
+      for (const item of categoryGoodSale) {
+        xLabels.push(item.name)
+        values.push(item.goodsCount)
+      }
+      return { xLabels, values }
+    })
+```
+
+
+
+#### 2.2  LineEchart接收配置， 声明数据并将配置传入-BaseEchart
+
+```ts
+<template>
+  <div class="pie-echart">
+    <base-echart :options="options"></base-echart>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { computed, defineProps, withDefaults } from 'vue'
+import BaseEchart from '@/base-ui/echart'
+
+const props = withDefaults(
+  // 需要对象 包裹
+  defineProps<{
+    title?: string
+    xLabels: string[]
+    values: any[]
+  }>(),
+  {
+    title: ''
+  }
+)
+const options = computed(() => {
+  return {
+    title: {
+      text: props.title
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985'
+        }
+      }
+    },
+    legend: {},
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: false,
+        data: props.xLabels
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value'
+      }
+    ],
+    series: [
+      {
+        name: '分别销量',
+        type: 'line',
+        stack: '总量',
+        areaStyle: {},
+        emphasis: {
+          focus: 'series'
+        },
+        data: props.values
+      }
+    ]
+  }
+})
+</script>
+<style scoped lang="less"></style>
+
+```
+
+
+
+
+
+## (七) 条形图模型 配置
+
+此部分 类同（玫瑰图 ）
+
+**样式解析**
+
+> ```ts
+> const options = computed(() => {
+>   return {
+>     xAxis: {
+>       data: props.xLabels,   // x 轴的标签数据
+>       axisLabel: {
+>         inside: true,         // x 轴标签文本显示在轴内部
+>         color: '#fff'         // x 轴标签文本颜色
+>       },
+>       axisTick: {
+>         show: false          // 不显示 x 轴刻度线
+>       },
+>       axisLine: {
+>         show: false          // 不显示 x 轴线
+>       },
+>       z: 10                  // x 轴所在层级
+>     },
+>     yAxis: {
+>       axisLine: {
+>         show: false          // 不显示 y 轴线
+>       },
+>       axisTick: {
+>         show: false          // 不显示 y 轴刻度线
+>       },
+>       axisLabel: {
+>         color: '#999'        // y 轴标签文本颜色
+>       }
+>     },
+>     dataZoom: [
+>       {
+>         type: 'inside'       // 数据缩放类型为内部
+>       }
+>     ],
+>     series: [
+>       {
+>         type: 'bar',          // 数据系列类型为条状图
+>         showBackground: true, // 显示背景
+>         itemStyle: {
+>           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+>             { offset: 0, color: '#83bff6' },
+>             { offset: 0.5, color: '#188df0' },
+>             { offset: 1, color: '#188df0' }
+>           ])                  // 条状图每个柱子的渐变颜色样式
+>         },
+>         emphasis: {
+>           itemStyle: {
+>             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+>               { offset: 0, color: '#2378f7' },
+>               { offset: 0.7, color: '#2378f7' },
+>               { offset: 1, color: '#83bff6' }
+>             ])                 // 鼠标悬停时的强调颜色样式
+>           }
+>         },
+>         data: props.values    // 数据系列的具体数据，从 props 中传入
+>       }
+>     ]
+>   }
+> })
+> 
+> ```
+>
+> 
+
+
+
+
+
+## （八）中国地图绘制
+
+**主要思路：**
+
+1.  需要绘制中国地图（全局注册）（json文件），全局注册地图，在use-echartHook中进行注册，由echarts.registerMap('china', chinaMapData)
+2.  获取所有中国城市经纬度  Ts文件 
+3.  定义城市名映射经纬度函数，匹配城市经纬度文件， 将value值前拼接经纬度， 确保城市能显示在正确位置
+4.  最终显示在地图的数据实际为： name,  geoCoord(经纬度)拼接value值（第二个值会在正确的位置显示）
+5.  父组件中 传入的为对象， 需要将对象属性重命名后 使用map 遍历返回
+
+
+
+### 1.  引入中国data文件， 并在hook注册该地图
+
+
+
+![image-20230804234030618](vue3-CMS.assets/image-20230804234030618.png)
+
+
+
+JSon文件需要在decalare文件中声明才能正确使用✔
+
+```ts
+// 需要使用decalre 声明该json文件
+import chinaMapData from '../data/china.json'
+
+// 为图表全局注册地图
+echarts.registerMap('china', chinaMapData)
+
+```
+
+
+
+### 2.  定义函数根据字典文件，去对value值进行拼接经纬度
+
+在page-echart下，
+
+ 创建文件夹-（utitles） 
+
+- coordinate为经纬度城市字典
+-  covert- coordinate-data ，value转换为 经纬度- value， 匹配地图正确显示
+
+字典 - 部分显示
+
+```ts
+export const coordinateData: any = {
+  海门: [121.15, 31.89],
+  鄂尔多斯: [109.781327, 39.608266],
+  招远: [120.38, 37.35],
+  舟山: [122.207216, 29.985295],
+  齐齐哈尔: [123.97, 47.33],
+  盐城: [120.13, 33.38],
+  赤峰: [118.87, 42.28],
+  青岛: [120.33, 36.07],
+  乳山: [121.52, 36.89],...}
+```
+
+
+
+**函数 - value拼接**
+
+res为对象数组，  每个对象为 城市名  经纬度value值 
+
+```ts
+import { coordinateData } from './coordinate-data'
+
+export const convertData = function (data: any) {
+  const res = []
+  for (let i = 0; i < data.length; i++) {
+    // 在这里相当于对传入的城市名进行转换，获取经纬度
+    // 最后将数据切换为 经纬度 拼接 value
+
+    // 最终具体城市所处位置能在地图的具体位置显示
+    const geoCoord = coordinateData[data[i].name]
+    if (geoCoord) {
+      res.push({
+        name: data[i].name,
+        value: geoCoord.concat(data[i].value)
+      })
+    }
+  }
+  return res
+}
+
+```
+
+
+
+### 3. 父组件动态传入-对象（城市销量数组）
+
+ 传入的属性要转化为 IDtype形式， 属性名需要对应
+
+```ts
+<el-col :span="10">
+<hy-card title="不同城市商品销量">
+<map-echart :mapData="addressGoodsSale"></map-echart>
+</hy-card>
+</el-col>
+      
+      
+    // 获取全部商品销量
+    const addressGoodsSale = computed(() => {
+    return store.state.dashboard.addressGoodsSale.map((item: any) => {
+    return { name: item.address, value: item.count }
+    })
+    })
+```
 
