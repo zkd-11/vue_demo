@@ -2,7 +2,9 @@
 
 
 
-# 🔺✨   day23- 13:50  CMS- BEGIN-
+# 🔺✨   进度一 - 二
+
+day23- 13:50  CMS- BEGIN-
 
 ## 技术栈
 
@@ -632,9 +634,11 @@ http://httpbin.org/， 提供一个测试请求的网站
 
 
 
-# 🔺✨day24- 13点20分
 
-# 进度三
+
+# 🔺✨进度三
+
+**day24- 13点20分**
 
 ## 🔺✨axios封装 思路
 
@@ -1017,7 +1021,7 @@ this.loading = ElLoading.service({
 
 
 
-# 进度四
+# 🔺✨进度四
 
 ## tsConfig.json 配置文件
 
@@ -1280,9 +1284,11 @@ const loginAction = () => {
 
 
 
-# 🔺✨day25  -  20点30分
+
 
 # 🔺✨进度五
+
+**day25  -  20点30分**
 
 
 
@@ -1700,11 +1706,11 @@ export function setupStore() {
 
 
 
-# 🔺✨ day26 -  15点20分
 
 
+# 🔺✨进度六
 
-# 进度六
+**day26 -  15点20分**
 
 
 
@@ -2035,9 +2041,11 @@ export default {
 
 
 
-# day27 - 18点20分
 
-# 进度七
+
+# 🔺✨进度七
+
+day27 - 18点20分
 
 
 
@@ -2488,9 +2496,9 @@ v-bind="item.otherOptions"
 
 
 
-# day28   7.28  - 20点
+# 🔺✨进度八
 
-# 进度八
+**day28   7.28  - 20点**
 
 
 
@@ -2559,16 +2567,15 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >
 >      ```javascript
 >      import { useRoute } from 'vue-router';
->   
+
 >      export default {
 >        setup() {
 >          const route = useRoute();
->   
+
 >          // 使用当前路由信息
 >          console.log('当前路由路径：', route.path);
 >          console.log('当前路由参数：', route.params);
 >          console.log('当前路由查询参数：', route.query);
->   
 >          return {};
 >        },
 >      };
@@ -2589,6 +2596,13 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >        setup() {
 >          const router = useRouter();
 >      
+=======
+>                                    
+>      export default {
+>        setup() {
+>          const router = useRouter();
+>                                    
+
 >          // 编程式导航示例
 >          const handleButtonClick = () => {
 >            router.push('/some-route'); // 导航至 '/some-route'
@@ -2607,7 +2621,7 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 
 
 
-# 💓🐟侧边栏 刷新优化
+## 💓🐟侧边栏 刷新优化
 
 ## （一）刷新  重定向至原访问菜单
 
@@ -3143,7 +3157,7 @@ export default defineComponent({
 
 
 
-# （九）🔺✨ 用户table组件的封装 HY - table 
+### （九）🔺✨ 用户table组件的封装 HY - table 
 
 思路：
 
@@ -3435,9 +3449,9 @@ scope.row. enable， 表示通过作用域对象，获取当前行的enable表�
 
 
 
-# day 29  7.30   20点20分
-
 # 🔺✨进度九
+
+**day 29  7.30   20点20分**
 
 
 
@@ -5240,7 +5254,7 @@ const getPageData = (queryInfo: any = {}) => {
 
 # 🔺✨ 进度十一
 
-# day 31 20:30 
+day 31 20:30 
 
 
 
@@ -6238,6 +6252,7 @@ import { usePageModal } from '@/hooks/use-page-modal'
 **思路：**
 
 1.  在vueX的system模块中， 请求菜单getPageListData，（ 获取菜单数据列表，拥有菜单= 拥有权限）， 并保存至state中 EnitreMenu中
+<<<<<<< HEAD
 2.  modal设置插槽供 父组件插入- 传入数据
 3.  role组件为modal插入 菜单组件eleTree(可选多级菜单展开box)至插槽中
 4.  role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
@@ -6245,6 +6260,7 @@ import { usePageModal } from '@/hooks/use-page-modal'
 6.  modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
 7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
 8.  合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
+>>>>>>>>> Temporary merge branch 2
 
 <img src="vue3-CMS.assets/image-20230803011716736.png" alt="image-20230803011716736" style="zoom:67%;" />
 
@@ -6765,8 +6781,6 @@ setup() {
 
 ![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)
 
-# day33-   14点10分
-
 # 🔺✨ 进度十三（项目完结篇）
 
 **day33-   22点10分**
@@ -6917,6 +6931,7 @@ site表示域名是吗
 > <!DOCTYPE html>
 > <html lang="en">
 > <head>
+<<<<<<< HEAD
 > <meta charset="UTF-8">
 > <meta name="viewport" content="width=device-width, initial-scale=1.0">
 > <title>countUp Example</title>
@@ -6940,6 +6955,31 @@ site表示域名是吗
 > console.error(countUpInstance.error);
 > }
 > </script>
+=======
+>   <meta charset="UTF-8">
+>   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+>   <title>countUp Example</title>
+>   <script src="path-to-countup.js"></script> <!-- 引入 countUp.js 文件 -->
+> </head>
+> <body>
+>   <span id="count"></span> <!-- 用于显示数字动画的元素 -->
+>   <script>
+>     const countElement = document.getElementById('count');
+>     const startValue = 0;
+>     const endValue = 1000;
+>     const options = {
+>       duration: 2, // 动画持续时间（秒）
+>     };
+> 
+>     const countUpInstance = new CountUp(countElement, startValue, endValue, options);
+> 
+>     if (!countUpInstance.error) {
+>       countUpInstance.start(); // 开始动画
+>     } else {
+>       console.error(countUpInstance.error);
+>     }
+>   </script>
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 > </body>
 > </html>
 > ```
@@ -7854,7 +7894,7 @@ export const convertData = function (data: any) {
 
 **day34 -  10点**
 
-# (接口文档)
+## (接口文档)
 
 [接口文档](https://documenter.getpostman.com/view/12387168/TzzDKb12)
 
@@ -8271,7 +8311,6 @@ systemctl enable nginx
 ## 2023-11-16前需要 升级服务器系统
 
 ![image-20230808140529407](vue3-CMS.assets/image-20230808140529407.png)
-
 
 
 
