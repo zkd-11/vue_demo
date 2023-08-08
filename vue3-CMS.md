@@ -2607,7 +2607,10 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >          const handleButtonClick = () => {
 >            router.push('/some-route'); // 导航至 '/some-route'
 >          };
+<<<<<<< HEAD
 >      
+=======
+>                                    
 >          return {
 >            handleButtonClick,
 >          };
@@ -6260,7 +6263,15 @@ import { usePageModal } from '@/hooks/use-page-modal'
 6.  modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
 7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
 8.  合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
->>>>>>>>> Temporary merge branch 2
+=======
+2. modal设置插槽供 父组件插入- 传入数据
+3. role组件为modal插入 菜单组件eleTree(可选多级菜单展开box)至插槽中
+4. role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
+5. eleTree绑定函数可获取选择的菜单信息， 在role中获取后进行保存，并将选中的菜单信息传入modal
+6. modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
+7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
+8. 合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
+
 
 <img src="vue3-CMS.assets/image-20230803011716736.png" alt="image-20230803011716736" style="zoom:67%;" />
 
@@ -6781,9 +6792,17 @@ setup() {
 
 ![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)
 
+<<<<<<< HEAD
+# day33-   14点10分
+
 # 🔺✨ 进度十三（项目完结篇）
 
 **day33-   22点10分**
+=======
+# day33-   22点10分
+
+# 🔺✨ 进度十三（项目完结篇）
+
 
 ### 🔺✨Tip 高级检索
 
@@ -6895,7 +6914,11 @@ site表示域名是吗
 
 **加盐应该是使用用户的唯一标识 进行加盐 后与密码结合  进行绑定**
 
+<<<<<<< HEAD
 	加盐后可使得密码和哈希不具有 1：1对比性， 彩虹表破解失效
+=======
+​	加盐后可使得密码和哈希不具有 1：1对比性， 彩虹表破解失效
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 > 是的，你理解得很正确。在密码存储中，"加盐" 是指将一个随机生成的、唯一的、不可预测的值与用户的密码结合起来，然后再进行哈希。这个随机值被称为 "盐"（salt）。盐的作用是增加密码哈希的随机性和不可预测性，从而提高密码存储的安全性。
 >
@@ -7105,12 +7128,21 @@ export function getAddressGoodsSale() {
 
 思路： 
 
+<<<<<<< HEAD
 	**上三下二：**
 
 1.  页面上部分： el-col 行组件包裹， 内部3 el-row组件， 分别对应 ：span 7   10   7  左中右比例分布
 2.  页面下部分：  同理： span: 12 12 （24）各占一半
 
 	内部上下结构： 使用el -card 组件，封装hy-card组件引入至 dashboard
+=======
+​	**上三下二：**
+
+1.  页面上部分： el-col 行组件包裹， 内部3 el-row组件， 分别对应 ：span 7   10   7  左中右比例分布
+2. 页面下部分：  同理： span: 12 12 （24）各占一半
+
+​	内部上下结构： 使用el -card 组件，封装hy-card组件引入至 dashboard
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 
 
@@ -7120,7 +7152,11 @@ export function getAddressGoodsSale() {
 
 将图表分为显示， title可插入标题
 
+<<<<<<< HEAD
 	内容设置插槽 供图表插入
+=======
+​	内容设置插槽 供图表插入
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 样式解析：  
 
@@ -7350,7 +7386,11 @@ SSR 是通过在服务器端预先渲染页面内容， 可以理解为请求的
    1. 初始化图表实例
    2. 返回配置使用函数（参数接收： 配置）
    3. 监听页面变化重新设置size， 并将该函数返回至调用该hook组件， 可进行其他逻辑处理 ，
+<<<<<<< HEAD
    4. 后续有其他共同的逻辑代码 或是需要修改某功能，直接在此hook修改
+=======
+   4.  后续有其他共同的逻辑代码 或是需要修改某功能，直接在此hook修改
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 ### 1. 将e-chart公共逻辑抽取为hook, 并使用resize函数动态调整
 
@@ -7361,8 +7401,13 @@ SSR 是通过在服务器端预先渲染页面内容， 可以理解为请求的
 
 为什么不使用元组return？
 
+<<<<<<< HEAD
 1. 	因为 这样可以按需使用{进行解构}， 元组需要全部解构
 2. 	echart的当前使用并不需使用全部
+=======
+1. ​	因为 这样可以按需使用{进行解构}， 元组需要全部解构
+2. ​	echart的当前使用并不需使用全部
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 经过外部调用该hook后， dom绑定元素成功实例化， 并可以使用内部函数，setOption和updataSize， 外部直接调用传入配置直接调用setOption, 更简洁， 且还添加了 resize功能函数， 自动调整表格函数
 
@@ -7420,9 +7465,15 @@ onMounted(() => {
 **思路**：
 
 1.  将配置信息抽取放置对应模型（具体图表类型）组件
+<<<<<<< HEAD
 2.  模型只需接收来自父组件的动态数据
 3.  模型需要进行监听，当数据配置发生改变时， 重新传递配置信息至base-echart，此部分需用到computed包裹， 将设置属性函数包裹为响应式属性
 4.  base-echart 需要使用 watchEffect侦听 配置信息 ， 当配置信息更改时， 重新渲染图表
+=======
+2. 模型只需接收来自父组件的动态数据
+3. 模型需要进行监听，当数据配置发生改变时， 重新传递配置信息至base-echart，此部分需用到computed包裹， 将设置属性函数包裹为响应式属性
+4. base-echart 需要使用 watchEffect侦听 配置信息 ， 当配置信息更改时， 重新渲染图表
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 
 
@@ -7436,7 +7487,11 @@ onMounted(() => {
 
  pieData: IDataType[]， 此行表示接受的数据为 {name: string, value:any} 对象  数组
 
+<<<<<<< HEAD
 	父组件传入时， 需将组件数据 使用map映射为 属性名相同的 对象 数组  并传入
+=======
+​	父组件传入时， 需将组件数据 使用map映射为 属性名相同的 对象 数组  并传入
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 ```ts
 import { IDataType } from '../types'
@@ -7490,11 +7545,19 @@ const options = computed(() => {
 >
 >    - emphasis：
 >
+<<<<<<< HEAD
 >      强调样式配置，这里设置了阴影效果。
 >
 >      - itemStyle：
 >
 >        图形项的样式配置。
+=======
+>       强调样式配置，这里设置了阴影效果。
+>
+>      - itemStyle：
+>
+>         图形项的样式配置。
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 >
 >        - **shadowBlur：** 阴影的模糊大小。
 >        - **shadowOffsetX：** 阴影的 X 方向偏移。
@@ -7713,6 +7776,7 @@ const options = computed(() => {
 
 > ```ts
 > const options = computed(() => {
+<<<<<<< HEAD
 > return {
 > xAxis: {
 > data: props.xLabels,   // x 轴的标签数据
@@ -7768,6 +7832,63 @@ const options = computed(() => {
 > }
 > ]
 > }
+=======
+>   return {
+>     xAxis: {
+>       data: props.xLabels,   // x 轴的标签数据
+>       axisLabel: {
+>         inside: true,         // x 轴标签文本显示在轴内部
+>         color: '#fff'         // x 轴标签文本颜色
+>       },
+>       axisTick: {
+>         show: false          // 不显示 x 轴刻度线
+>       },
+>       axisLine: {
+>         show: false          // 不显示 x 轴线
+>       },
+>       z: 10                  // x 轴所在层级
+>     },
+>     yAxis: {
+>       axisLine: {
+>         show: false          // 不显示 y 轴线
+>       },
+>       axisTick: {
+>         show: false          // 不显示 y 轴刻度线
+>       },
+>       axisLabel: {
+>         color: '#999'        // y 轴标签文本颜色
+>       }
+>     },
+>     dataZoom: [
+>       {
+>         type: 'inside'       // 数据缩放类型为内部
+>       }
+>     ],
+>     series: [
+>       {
+>         type: 'bar',          // 数据系列类型为条状图
+>         showBackground: true, // 显示背景
+>         itemStyle: {
+>           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+>             { offset: 0, color: '#83bff6' },
+>             { offset: 0.5, color: '#188df0' },
+>             { offset: 1, color: '#188df0' }
+>           ])                  // 条状图每个柱子的渐变颜色样式
+>         },
+>         emphasis: {
+>           itemStyle: {
+>             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+>               { offset: 0, color: '#2378f7' },
+>               { offset: 0.7, color: '#2378f7' },
+>               { offset: 1, color: '#83bff6' }
+>             ])                 // 鼠标悬停时的强调颜色样式
+>           }
+>         },
+>         data: props.values    // 数据系列的具体数据，从 props 中传入
+>       }
+>     ]
+>   }
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 > })
 > 
 > ```
@@ -7818,7 +7939,11 @@ echarts.registerMap('china', chinaMapData)
  创建文件夹-（utitles） 
 
 - coordinate为经纬度城市字典
+<<<<<<< HEAD
 - covert- coordinate-data ，value转换为 经纬度- value， 匹配地图正确显示
+=======
+-  covert- coordinate-data ，value转换为 经纬度- value， 匹配地图正确显示
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
 
 字典 - 部分显示
 
@@ -7886,6 +8011,7 @@ export const convertData = function (data: any) {
     })
 ```
 
+<<<<<<< HEAD
 
 
 
@@ -8316,3 +8442,5 @@ systemctl enable nginx
 
 
 
+=======
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
