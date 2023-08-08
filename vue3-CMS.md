@@ -66,7 +66,7 @@ trim_trailing_whitespace = false
 
 ### eslint插件下载- VSCOde
 
-​    'plugin:prettier/recommended'
+    'plugin:prettier/recommended'
 
 > `'plugin:prettier/recommended'` 是一个 ESLint 配置规则，用于结合 ESLint 和 Prettier 来统一管理代码格式和风格。
 >
@@ -80,13 +80,13 @@ trim_trailing_whitespace = false
 >
 > ```json
 > {
->   "extends": [
->     "eslint:recommended",
->     "plugin:prettier/recommended" // 启用 'plugin:prettier/recommended' 规则
->   ],
->   "rules": {
->     // 可以在这里覆盖或添加其他 ESLint 规则
->   }
+> "extends": [
+> "eslint:recommended",
+> "plugin:prettier/recommended" // 启用 'plugin:prettier/recommended' 规则
+> ],
+> "rules": {
+> // 可以在这里覆盖或添加其他 ESLint 规则
+> }
 > }
 > ```
 >
@@ -233,7 +233,7 @@ trim_trailing_whitespace = false
 >
 > ```json
 > "commitizen": {
->   "path": "cz-conventional-changelog"
+> "path": "cz-conventional-changelog"
 > }
 > ```
 >
@@ -337,16 +337,16 @@ cmd的升级版 - 但是对于一些指令， 会报错， 切换为默认的cmd
 >
 > ```vue
 > <template>
->   <el-button type="primary">点击我</el-button>
+> <el-button type="primary">点击我</el-button>
 > </template>
 > 
 > <script>
 > import { ElButton } from 'element-plus';
 > 
 > export default {
->   components: {
->     ElButton,
->   },
+> components: {
+> ElButton,
+> },
 > };
 > </script>
 > ```
@@ -490,9 +490,9 @@ declare let $store: any,
 > ```html
 > <!-- 在其他组件的模板中直接使用全局组件 -->
 > <template>
->   <div>
->     <my-global-component></my-global-component>
->   </div>
+> <div>
+> <my-global-component></my-global-component>
+> </div>
 > </template>
 > ```
 >
@@ -900,10 +900,10 @@ showLoading: boolean ， 开启动画开关， 当无传入时默认开启动画
 
 ```ts
 this.loading = ElLoading.service({
-​      lock: true,
-​      text: '正在请求数据....',
-​      background: 'rgba(0, 0, 0, 0.5)'
-​     })
+      lock: true,
+      text: '正在请求数据....',
+      background: 'rgba(0, 0, 0, 0.5)'
+     })
 ```
 
 在信息返回后， 需要对动画进行关闭， 调用
@@ -918,7 +918,7 @@ this.loading = ElLoading.service({
 
 执行逻辑判断， 最后需要对showLoading 设置为DEAFULT_LOADING （true）
 
-​	不设置会影响下次请求
+	不设置会影响下次请求
 
 ```ts
  // 单独请求有自带拦截器执行响应拦截器
@@ -939,7 +939,6 @@ this.loading = ElLoading.service({
 ## 💓🐟对象的请求封装为Promise对象 （这部分有点懵）
 
 ```ts
-
   request<T>(config: HYRequestConfig<T>): Promise<T> {
     return new Promise((resolve, reject) => {
       // 有拦截器的存在时进行执行拦截器内函数，再将config返回
@@ -1003,14 +1002,14 @@ this.loading = ElLoading.service({
 >
 > ```javascript
 > hyRequest.get({
->   url: '/api/data', // 请求的URL
->   params: { key: 'value' }, // 请求参数
->   headers: { 'Content-Type': 'application/json' }, // 请求头
->   // 其他配置...
+> url: '/api/data', // 请求的URL
+> params: { key: 'value' }, // 请求参数
+> headers: { 'Content-Type': 'application/json' }, // 请求头
+> // 其他配置...
 > }).then((response) => {
->   // 处理响应数据
+> // 处理响应数据
 > }).catch((error) => {
->   // 处理请求错误
+> // 处理请求错误
 > });
 > ```
 >
@@ -1322,7 +1321,6 @@ E问题：有时候IDE（集成开发环境）可能会出现缓存问题，导�
 > 6. 尝试关闭VSCode，删除项目根目录下的`node_modules`目录和`package-lock.json`（或`yarn.lock`）文件，然后重新运行`npm install`或`yarn install`重新安装依赖。
 >
 > 如果你尝试了上述方法仍然无法解决问题，可以尝试在VSCode中打开另一个TypeScript文件，然后再切换回你的目标文件，有时候这样能够刷新缓存并解决问题。
->
 
 
 
@@ -1643,7 +1641,6 @@ export function requestUserMenusByRoleId(id: number) {
 ## 根路径设置为main路径，再添加路由守卫
 
 ```ts
-
 router.beforeEach((to) => {
   if (to.path !== '/login') {
     const token = localCache.getCache('token')
@@ -1668,7 +1665,6 @@ router.beforeEach((to) => {
 
 
 ```ts
-
 export function setupStore() {
   store.dispatch('login/loadLocalLogin')
 }
@@ -2054,7 +2050,6 @@ export default {
 ##    所有路由组件导入
 
 ```ts
-
   // 1.先去加载默认所有的routes
   const allRoutes: RouteRecordRaw[] = []
   const routeFiles = require.context('../router/main', true, /\.ts/)
@@ -2195,7 +2190,7 @@ allRoutes.push(route） 和 ..(route.defalut)， 二者没区别， 但是常用
 
 使用mapMenusToRoutes， 并对路径规则数组，遍历后注册
 
-​	-有坑， 一级路径需要命名， 否则变成路径跳转
+	-有坑， 一级路径需要命名， 否则变成路径跳转
 
 ```ts
     changeUserMenus(state, userMenus: any) {
@@ -2341,16 +2336,16 @@ router.beforeEach((to) => {
 > ```html
 > <!-- 父组件1 -->
 > <template>
->   <div>
->     <my-form />
->   </div>
+> <div>
+> <my-form />
+> </div>
 > </template>
 > 
 > <!-- 父组件2 -->
 > <template>
->   <div>
->     <my-form />
->   </div>
+> <div>
+> <my-form />
+> </div>
 > </template>
 > ```
 >
@@ -2358,10 +2353,10 @@ router.beforeEach((to) => {
 >
 > ```javascript
 > props: {
->   itemStyle: {
->     type: Object,
->     default: () => ({ padding: '10px 40px' })
->   }
+> itemStyle: {
+> type: Object,
+> default: () => ({ padding: '10px 40px' })
+> }
 > }
 > ```
 >
@@ -2391,9 +2386,9 @@ v-bind="item.otherOptions"
 >
 > ```html
 > <el-input
->   :placeholder="item.placeholder"
->   v-bind="item.otherOptions"
->   :show-password="item.type === 'password'"
+> :placeholder="item.placeholder"
+> v-bind="item.otherOptions"
+> :show-password="item.type === 'password'"
 > />
 > ```
 >
@@ -2428,7 +2423,7 @@ v-bind="item.otherOptions"
 这部分内容， 对搜索表单进行一个抽取， 作为一个模板组件， 接收由父组件（使用者）传递而来的数据（config），内部进行解析
 
 1. labelWidth， 文本宽度
-2.  colLayout   单行分布数， 24/x ， 有默认值， 为相应数据- 识别像素分布
+2. colLayout   单行分布数， 24/x ， 有默认值， 为相应数据- 识别像素分布
 3. 最基本的label ， 表格类型- input password  select datepicker, 在遍历中， 内部设置多个template进行  逻辑判断渲染
 
 
@@ -2445,21 +2440,21 @@ v-bind="item.otherOptions"
 > type IFormType = 'input' | 'password' | 'select' | 'datepicker'
 > 
 > export interface IFormItem {
->   type: IFormType
->   label: string
->   rules?: any[]
->   placeholder?: any
->   // 针对select
->   options?: any[]
->   // 针对特殊的属性
->   otherOptions?: any
+> type: IFormType
+> label: string
+> rules?: any[]
+> placeholder?: any
+> // 针对select
+> options?: any[]
+> // 针对特殊的属性
+> otherOptions?: any
 > }
 > 
 > export interface IForm {
->   formItems: IFormItem[]
->   labelWidth?: string
->   colLayout: any
->   itemLayout: any
+> formItems: IFormItem[]
+> labelWidth?: string
+> colLayout: any
+> itemLayout: any
 > }
 > 
 > ```
@@ -2481,9 +2476,9 @@ v-bind="item.otherOptions"
 
 默认： default 函数导出， 懂~ 	
 
-​    type: Array as PropType<IFormItem[]>
-
-​	类型断言： **声明数组类型**
+    type: Array as PropType<IFormItem[]>
+    
+    类型断言： **声明数组类型**
 
 
 
@@ -2515,7 +2510,7 @@ v-bind="item.otherOptions"
 >
 > 原先为app.use(Router),  排序在setup前（刷新重新获取数据- 并去触发方法  注册路由）
 >
->  需要 将注册路由（动态权限） 提前在useStore前， route的正确转发 ， 需要路由注册完毕， 才能实现跳转
+> 需要 将注册路由（动态权限） 提前在useStore前， route的正确转发 ， 需要路由注册完毕， 才能实现跳转
 
 
 
@@ -2553,43 +2548,52 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 > `useRoute` 和 `useRouter` 是 Vue Router 提供的两个 Composition API 函数，用于在 Vue 3 中更方便地访问当前路由信息和路由实例。
 >
 > 1. `useRoute`：
+>
 >    - `useRoute` 函数用于在组件中访问当前路由的信息。
+>
 >    - 它返回一个包含当前路由信息的响应式对象，包括 `path`、`params`、`query`、`hash` 等路由信息。
+>
 >    - 当前路由信息会随着路由的变化而更新，因此组件中使用的数据会自动响应路由的变化。
+>
 >    - 使用示例：
+>
 >      ```javascript
 >      import { useRoute } from 'vue-router';
->                               
+>   
 >      export default {
 >        setup() {
 >          const route = useRoute();
->                               
+>   
 >          // 使用当前路由信息
 >          console.log('当前路由路径：', route.path);
 >          console.log('当前路由参数：', route.params);
 >          console.log('当前路由查询参数：', route.query);
->                               
+>   
 >          return {};
 >        },
 >      };
 >      ```
 >
 > 2. `useRouter`：
+>
 >    - `useRouter` 函数用于在组件中访问路由实例，可以通过该实例进行编程式导航。
+>
 >    - 它返回当前路由的路由实例，通过这个实例，我们可以使用诸如 `push`、`replace` 等方法进行页面导航。
+>
 >    - 使用示例：
+>
 >      ```javascript
 >      import { useRouter } from 'vue-router';
->                               
+>      
 >      export default {
 >        setup() {
 >          const router = useRouter();
->                               
+>      
 >          // 编程式导航示例
 >          const handleButtonClick = () => {
 >            router.push('/some-route'); // 导航至 '/some-route'
 >          };
->                               
+>      
 >          return {
 >            handleButtonClick,
 >          };
@@ -2605,7 +2609,7 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 
 # 💓🐟侧边栏 刷新优化
 
-## 刷新  重定向至原访问菜单
+## （一）刷新  重定向至原访问菜单
 
 主要思路： 
 
@@ -2615,11 +2619,11 @@ nav-Bar组件中， 不能将default-active写死，导致默认重定向固定
 
 
 
-### 为 菜单 绑定 特定的Menu ID
+## （二）为 菜单 绑定 特定的Menu ID
 
 
 
-1.  **获取当前菜单**
+### 1. **获取当前菜单**
 
 对二级菜单的递归查询， type为1 
 
@@ -2627,14 +2631,13 @@ nav-Bar组件中， 不能将default-active写死，导致默认重定向固定
 
 出口为 type === 2, url&&CurrentPath比对成功返回
 
-​		**递归**多级菜单-> 从内部到外层 
+		**递归**多级菜单-> 从内部到外层 
 
 menu.children ?? []  当传入的menu无Children， 将空数组赋值，匹配不上
 
 
 
 ```ts
-
 export function pathMapToMenu(userMenus: any, currentPath: string): any {
   for (const menu of userMenus) {
     if (menu.type === 1) {
@@ -2655,12 +2658,9 @@ export function pathMapToMenu(userMenus: any, currentPath: string): any {
 
 ```
 
-
-
-2. **对应ID 绑定，为每个子菜单绑定 default-active**
+### 2. 对应ID 绑定，为每个子菜单绑定 default-active
 
 ```ts
-
 <el-menu  :default-active="defaultValue"   el-menu>
 
     // 路由规则
@@ -2682,7 +2682,7 @@ export function pathMapToMenu(userMenus: any, currentPath: string): any {
 
 
 
-## 解决Main刷新  页面显示失败-  无ID
+## （三）解决Main刷新  页面显示失败-  无ID
 
 因为为菜单绑定了MenuId, 但是当直接访问main路径时， 会先进行渲染 Nav-menu, 但是当前的path- 是在main路径下，  并不存在 Menu，会报错
 
@@ -2690,46 +2690,45 @@ export function pathMapToMenu(userMenus: any, currentPath: string): any {
 
 因为刷新  与初次 无选菜单一致， currenPath都为 Main, 它无法进行匹配，menu.id
 
-​		此时 的 default active 无值， 侧边栏显示不出  页面无显示 （报错）
+		此时 的 default active 无值， 侧边栏显示不出  页面无显示 （报错）
 
 > ```ts
 > const currentPath = route.path
 > 
->   // data , 传入时 应将ref属性的value值传入
+> // data , 传入时 应将ref属性的value值传入
 > 
->   const menu = pathMapToMenu(userMenus.value, currentPath)
+> const menu = pathMapToMenu(userMenus.value, currentPath)
 > 
->   const defaultValue = ref(menu.id + '') //需为字符串形式
+> const defaultValue = ref(menu.id + '') //需为字符串形式
 > ```
 
 
 
-### 为to- Main, 重定向至第一个子菜单
+### 3.1 为to- Main, 重定向至第一个子菜单
 
 FirstMenu的获取， 在初次赋予权限（组件）时，进行逻辑判断赋值
 
 >   **map-menus**   遍历赋值初始子菜单
 
 > ```ts
-> 
 > 	const _recurseGetRoute = (menus: any[]) => {
->     for (const menu of menus) {
->       if (menu.type === 2) {
->         const route = allRoutes.find((route) => route.path === menu.url)
->         //  应该提前注册所有组件， 一般不可能出现匹配不了的情况
->         //  但是当路径写错， 后端新增menu， 前端未更新会导致false
+> for (const menu of menus) {
+> if (menu.type === 2) {
+>   const route = allRoutes.find((route) => route.path === menu.url)
+>   //  应该提前注册所有组件， 一般不可能出现匹配不了的情况
+>   //  但是当路径写错， 后端新增menu， 前端未更新会导致false
 > 
->         if (route) routes.push(route)
+>   if (route) routes.push(route)
 > 
->         // 将首个Menu进行赋值， 解除main刷新无法导向
->         if (!firstMenu) {
->           firstMenu = menu
->         }
->       } else {
->         _recurseGetRoute(menu.children)
->       }
->     }
+>   // 将首个Menu进行赋值， 解除main刷新无法导向
+>   if (!firstMenu) {
+>     firstMenu = menu
 >   }
+> } else {
+>   _recurseGetRoute(menu.children)
+> }
+> }
+> }
 > 
 > ```
 
@@ -2737,7 +2736,7 @@ FirstMenu的获取， 在初次赋予权限（组件）时，进行逻辑判断�
 
 
 
-### 为main重定向至 首个子菜单
+### 3.2 为main重定向至 首个子菜单
 
 ```ts
   if (to.path === '/main') {
@@ -2749,7 +2748,7 @@ FirstMenu的获取， 在初次赋予权限（组件）时，进行逻辑判断�
 
 
 
-## 面包屑的封装使用
+## （四）面包屑的封装使用
 
 菜单文本有序获取， 需用到map-menus， 复合函数使用， 将原函数添加剂第三选项参数
 
@@ -2763,10 +2762,9 @@ FirstMenu的获取， 在初次赋予权限（组件）时，进行逻辑判断�
 
 
 
-​	为原先菜单绑定   后端数据菜单函数中，添加可选参数，面包屑对象数组， 在目标菜单时，进行面包屑文本的获取，使用push添加了上级菜单  和 当前所处菜单的文本和path
+	为原先菜单绑定   后端数据菜单函数中，添加可选参数，面包屑对象数组， 在目标菜单时，进行面包屑文本的获取，使用push添加了上级菜单  和 当前所处菜单的文本和path
 
 ```ts
-
 // 为注册映射函数 进行扩展功能， 直接在面包屑函数 进行调用即可
 //  获得面包屑文本数组
 // 获取面包屑 文本 路径文本
@@ -2799,7 +2797,7 @@ export function pathMapToMenu(
 
 
 
-### 面包屑组件的封装使用
+### 4.1 面包屑组件的封装使用
 
 ```ts
 <template>
@@ -2839,7 +2837,7 @@ export default defineComponent({
 
 
 
-### 面包屑的使用- computed实现动态变化
+### 4.2  面包屑的使用- computed实现动态变化
 
 这里主要应用到的为： computed返回 breadMenus对象类型数组， 并且它会随路径变化去进行更新
 
@@ -2866,7 +2864,7 @@ export default defineComponent({
 
 
 
-## model-value
+## （五）model-value
 
 > `modelValue` 是一个常见的 Vue 组件 props 名称，通常用于实现自定义的双向绑定。在 Vue 3 中，组件可以通过 `v-model` 指令与父组件进行双向数据绑定。当父组件更新 `v-model` 绑定的属性时，子组件的 `modelValue` 属性会自动更新为父组件传递的值；反之，当子组件修改了 `modelValue` 的值时，父组件绑定的数据也会随之更新。
 >
@@ -2875,9 +2873,9 @@ export default defineComponent({
 > ```vue
 > // ChildComponent.vue
 > <template>
->   <div>
->     <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
->   </div>
+> <div>
+> <input :value="modelValue" @input="$emit('update:modelValue', $event.target.value)" />
+> </div>
 > </template>
 > 
 > <script setup>
@@ -2890,10 +2888,10 @@ export default defineComponent({
 > ```vue
 > // ParentComponent.vue
 > <template>
->   <div>
->     <child-component v-model="value" />
->     <p>Parent Value: {{ value }}</p>
->   </div>
+> <div>
+> <child-component v-model="value" />
+> <p>Parent Value: {{ value }}</p>
+> </div>
 > </template>
 > 
 > <script setup>
@@ -2909,11 +2907,7 @@ export default defineComponent({
 
 
 
-
-
-
-
-## 违背数据单向流危害
+## （六）违背数据单向流危害
 
 > 直接修改 `props` 可能会导致以下问题：
 >
@@ -2931,7 +2925,7 @@ export default defineComponent({
 
 
 
-## 展开运算符间接修改父组件数据
+## （七）展开运算符间接修改父组件数据
 
 
 
@@ -3004,7 +2998,7 @@ export default defineComponent({
 
 
 
-## 很顶的组件封装
+## （八）很顶的组件封装
 
 user组件中， 不断抽取而出， 从传入配置， 绑定双向Value， 设置搜索框的顶部文本， 底部按钮， 最后抽取封装为 只需传入配置， 封装为 page - seach,
 
@@ -3103,17 +3097,15 @@ export default defineComponent({
 
 
 
-## hyTable
+### 8.1 hyTable
 
 2.15  -- 3:17
 
-
-
 对table一个抽取封装， 封装用户表
 
-​	封装 request 请求， 去请求表单数据 post{ 内可加限制  偏移量 个数 - 分页器}
-
-​		重新生成一个 系统store, 提取数据 并放入其中 并注册    
+	封装 request 请求， 去请求表单数据 post{ 内可加限制  偏移量 个数 - 分页器}
+	
+		重新生成一个 系统store, 提取数据 并放入其中 并注册    
 
 表格设置
 
@@ -3137,11 +3129,11 @@ export default defineComponent({
 >
 > ```javascript
 > async getPageListAction(context, payload: any) {
->   const commit = context.commit;
->   console.log(payload.pageUrl);
->   console.log(payload.queryInfo);
->   // 使用commit方法
->   commit('mutationName', payload.data);
+> const commit = context.commit;
+> console.log(payload.pageUrl);
+> console.log(payload.queryInfo);
+> // 使用commit方法
+> commit('mutationName', payload.data);
 > }
 > ```
 >
@@ -3151,7 +3143,7 @@ export default defineComponent({
 
 
 
-# 🔺✨ 用户table组件的封装 HY - table 
+# （九）🔺✨ 用户table组件的封装 HY - table 
 
 思路：
 
@@ -3264,11 +3256,11 @@ export interface ISystemState {
 
 
 
-​		接收配置文件， 内部通过遍历proList, 获取proItem 设置每列单元格的格式， 并提供了具名插槽， 当传入的proItem中具有SlotName属性时， 表示该插槽可被个性化
+		接收配置文件， 内部通过遍历proList, 获取proItem 设置每列单元格的格式， 并提供了具名插槽， 当传入的proItem中具有SlotName属性时， 表示该插槽可被个性化
 
 user传递的配置信息 包括要显示的单元格信息， 单元格格式
 
-​	prop信息的设置与后端的接口信息给出有关， 需要知道对应的userList对应信息
+	prop信息的设置与后端的接口信息给出有关， 需要知道对应的userList对应信息
 
 
 
@@ -3373,9 +3365,9 @@ proList为 单元格格式设置， 传递后将限制显示的内容， 请求�
 
 ### 4.3 HY- table， 个性化插槽使用
 
-​		之前的table组件传出的 scope对象 ， 通过使用 slotName = ‘scope’， 通过作用域对象去获取指定的单元格， 并对单元格进行设置， 其中对状态进行样式重写， 状态为1 时转化为启用按钮， 否则为禁用按钮
-
-​			对 创建时间的单元格， 进行字体加粗
+		之前的table组件传出的 scope对象 ， 通过使用 slotName = ‘scope’， 通过作用域对象去获取指定的单元格， 并对单元格进行设置， 其中对状态进行样式重写， 状态为1 时转化为启用按钮， 否则为禁用按钮
+	
+			对 创建时间的单元格， 进行字体加粗
 
 ------
 
@@ -4128,8 +4120,6 @@ export const searchFormConfig: IForm = {
 
 
 
-# 💓🐟 day30    7.31  14点
-
 ## cookie的作用
 
 
@@ -4440,10 +4430,10 @@ SSL/TLS的握手过程是在TCP连接建立后，用于建立安全通信的过�
 > 对称加密和非对称加密是两种常见的加密算法，它们用于保护数据的安全性和机密性。
 >
 > 1. 对称加密：
-> 对称加密是一种加密算法，使用相同的密钥来加密和解密数据。发送方和接收方在进行数据传输之前都必须共享同一个密钥。这种加密算法适用于大量数据的加密和解密，因为它的计算速度较快。然而，由于需要在发送方和接收方之间传递密钥，对称加密在安全性上存在一定的风险，因为密钥可能会被截获或泄露，从而导致数据被解密。
+>    对称加密是一种加密算法，使用相同的密钥来加密和解密数据。发送方和接收方在进行数据传输之前都必须共享同一个密钥。这种加密算法适用于大量数据的加密和解密，因为它的计算速度较快。然而，由于需要在发送方和接收方之间传递密钥，对称加密在安全性上存在一定的风险，因为密钥可能会被截获或泄露，从而导致数据被解密。
 >
 > 2. 非对称加密：
-> 非对称加密是一种加密算法，使用一对密钥，即公钥和私钥。公钥用于加密数据，而私钥用于解密数据。发送方可以公开分享其公钥，而私钥必须保密。接收方使用发送方的公钥加密数据，然后发送给发送方，发送方再使用自己的私钥解密数据。这种加密算法相对较安全，因为即使公钥被截获，也无法解密数据，只有持有私钥的接收方才能解密数据。然而，由于非对称加密计算复杂，它在加密和解密大量数据时可能会比较慢。
+>    非对称加密是一种加密算法，使用一对密钥，即公钥和私钥。公钥用于加密数据，而私钥用于解密数据。发送方可以公开分享其公钥，而私钥必须保密。接收方使用发送方的公钥加密数据，然后发送给发送方，发送方再使用自己的私钥解密数据。这种加密算法相对较安全，因为即使公钥被截获，也无法解密数据，只有持有私钥的接收方才能解密数据。然而，由于非对称加密计算复杂，它在加密和解密大量数据时可能会比较慢。
 >
 > 综合而言，对称加密适用于大量数据的加密和解密，但需要确保密钥的安全性；而非对称加密提供更高的安全性，但在处理大量数据时可能效率较低。因此，通常在实际应用中，两种加密算法会结合使用，以取得安全性和效率的平衡。例如，可以使用非对称加密来安全地传输对称加密所需的密钥，从而确保数据在传输过程中的安全性和机密性。
 
@@ -4763,7 +4753,7 @@ ref绑定时， 也要绑定的对象return 出去， 否则无法绑定到实�
 
 3. 在table中， 对current-change的方法实现， 触发事件emit(update:page')
 
-   ​	修改页用户量， contenet监听后重新发送请求， handleSizeChanges		实现， 触发事件， content监听后，重新发送请求（watch监听）
+   	修改页用户量， contenet监听后重新发送请求， handleSizeChanges		实现， 触发事件， content监听后，重新发送请求（watch监听）
 
  
 
@@ -4987,7 +4977,7 @@ state() {
 >
 > ```html
 > <template v-if="item.slotName">
->   <slot :name="item.slotName" :row="scope.row"></slot>
+> <slot :name="item.slotName" :row="scope.row"></slot>
 > </template>
 > ```
 >
@@ -4999,12 +4989,12 @@ state() {
 >
 > ```html
 > <template #image="scope">
->   <el-image
->     style="width: 60px; height: 60px"
->     :src="scope.row.imgUrl"
->     :preview-src-list="[scope.row.imgUrl]"
+> <el-image
+> style="width: 60px; height: 60px"
+> :src="scope.row.imgUrl"
+> :preview-src-list="[scope.row.imgUrl]"
 >   >
->   </el-image>
+> </el-image>
 > </template>
 > ```
 >
@@ -5510,7 +5500,6 @@ export default defineComponent({
 修改dialogVisble为true显示
 
 ```ts
-
     const pageModalRef = ref<InstanceType<typeof PageModal>>()
 
     // 处理Contentemit的新建数据，对新建用户的弹窗设置为true
@@ -5781,7 +5770,7 @@ export function usePageModal(newCb?: CallbackFn, editCb?: CallbackFn) {
 **思路：** 
 
 1. 从vueX发起请求获取数据保存至根模块中
-2.  在user中使用computed包裹从vueX获取的数据，
+2. 在user中使用computed包裹从vueX获取的数据，
 3. modalConfigRef为config的计算属性，转化为ref对象属性
 4. 更新时，会同步更新
 5. 不转化为响应式属性， 由于请求为异步请求，进入页面时 请求未返回结果时，配置已赋值， 导致选项不可选， 所以应该以computed计算包裹将配置文件转化为响应式配置
@@ -6019,20 +6008,19 @@ const handleConfirmClick = () => {
 
 
 
-# day 32   21点40分
+
 
 # 🔺✨进度十二
 
-
+**day 32   21点40分**
 
 ## （一） 对遗留问题进行解决/ 修改
 
 ### 1. 时区问题，调用utcOffset（8）解决
 
-因为东八区， utc为0区， 所以需偏移量8小时
+因为所处为东八区， utc为0区， 所以需偏移量8小时
 
 ```ts
-
 export function formatUtcString(
   utcString: string,
   format: string = DATE_TIME_FORMAT
@@ -6061,9 +6049,9 @@ export function formatUtcString(
 
 二者的作用：
 
-1.  确保登录时token获取后去发送请求获取角色/部门选项
+1. 确保登录时token获取后去发送请求获取角色/部门选项
 
-2.  确保刷新时， token获取后发送请求..
+2. 确保刷新时， token获取后发送请求..
 
    **登录逻辑处理模块**
 
@@ -6115,7 +6103,6 @@ export function formatUtcString(
 > 6. `silent`: 一个布尔值，表示是否在触发 action 时抑制 console 警告，默认为 `false`。如果设置为 `true`，则不会显示任何 console 警告。
 >
 > 7. 其他自定义属性：你还可以在这个选项对象中添加其他自定义属性，以便在 action 中使用。
->
 
 #### 2.2 为user-info实现退出功能并测试- 成功
 
@@ -6137,7 +6124,7 @@ export function formatUtcString(
 
 1. 如有独有的逻辑无法合并，则在相关的组件进行逻辑处理
 2. 公共逻辑的组件禁止混入不可共享的逻辑信息， 提高更高的组件复用性， 如有复杂的功能需要实现，再对组件进行封装， 一层不能解决的事件， 就进行多次封装 
-3. 封装相当于： 组件- 组装成界面- 设置开关去决定是否使用哪个组件， 组件灵活性很高， 可快速开发具有相同功能不同数据的界面
+3. 封装相当于： 组件- 组装成界面- 设置开关（props的数据接收）去决定是否使用哪个组件， 组件灵活性很高， 可快速开发具有相同功能不同数据的界面
 
 > 你的总结对封装思想有一定的理解，但还可以进行一些补充和调整。以下是对你总结中提到的几个点的进一步说明：
 >
@@ -6168,12 +6155,12 @@ export function formatUtcString(
 
 原界面有conten和search组件， 现需引入modal组件
 
- 		新建用户功能由于需要为其添加权限，因为content回显数据不包含权限，  此部分不属于modal所拥有， 需要额外独立开发， 不将其放置modal组件中- 尽量使组件可用性强， 不属于公共逻辑的代码不放入中间组件
+ 		新建用户功能由于需要为其添加权限，  此部分不属于modal所拥有，只展示角色名（具体拥有权限无展示） 需要额外独立开发， 不将其放置modal组件中- 尽量使组件可用性强， 不属于公共逻辑的代码不放入中间组件
 
-**简单功能思路（不含权限分配）**
+**简单功能开发思路（不含权限分配）**
 
 1.  引入modal组件， hook函数， 建立modal配置文件
-2. 将 hook函数return将元组数据return并绑定对应组件或事件
+2.  将 hook函数return将元组数据return并绑定对应组件或事件
 3.  需传入pageName, 传入defaultInfo和配置信息后， 简单功能开发完成
 
 
@@ -6246,18 +6233,18 @@ import { usePageModal } from '@/hooks/use-page-modal'
 
 **为角色菜单表：定义新的角色并绑定具有的权限**
 
-新建菜单需要包括具体的权限菜单， 该权限在content中只是一个展示权限命名， 该部分内容需要额外添加（获取权限数据并进行绑定）， 相当于拓展了modal的功能， 最终需要需要实现在点击添加权限时， 能显示具体的权限菜单
+新建菜单需要包括具体的权限菜单， 该权限在content中只是一个展示权限命名， 该部分内容需要额外添加（获取权限数据并进行绑定）， 相当于拓展了modal的功能， 最终需要需要实现在点击添加权限时， 能显示具体的权限菜单，并能上传数据至服务端
 
 **思路：**
 
 1.  在vueX的system模块中， 请求菜单getPageListData，（ 获取菜单数据列表，拥有菜单= 拥有权限）， 并保存至state中 EnitreMenu中
-2. modal设置插槽供 父组件插入- 传入数据
-3. role组件为modal插入 菜单组件eleTree(可选多级菜单展开box)至插槽中
-4. role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
-5. eleTree绑定函数可获取选择的菜单信息， 在role中获取后进行保存，并将选中的菜单信息传入modal
-6. modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
-7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的data同配置的otherConfig进行合并
-8. 合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
+2.  modal设置插槽供 父组件插入- 传入数据
+3.  role组件为modal插入 菜单组件eleTree(可选多级菜单展开box)至插槽中
+4.  role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
+5.  eleTree绑定函数可获取选择的菜单信息， 在role中获取后进行保存，并将选中的菜单信息传入modal
+6.  modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
+7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
+8.  合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
 
 <img src="vue3-CMS.assets/image-20230803011716736.png" alt="image-20230803011716736" style="zoom:67%;" />
 
@@ -6347,9 +6334,15 @@ props: 表示具有children： 菜单children对应字段， label 对应字段
 
 > 在这个函数中，主要的逻辑是从 `data2` 参数中解构出选中的节点和半选中的节点，将它们的 keys（或标识）合并成一个新的数组 `menuList`，然后将这个数组存储在 `otherInfo` 变量中。
 
+ **otherInfo.value = { menuList }**
+
+> `otherInfo` 是一个对象，通过赋值的方式在其 `value` 属性中创建了一个名为 `menuList` 的属性，该属性的值是一个数组。
+
 
 
 #### 3.3	将选中的菜单数据传入modal组件
+
+otherInfo的传入，将选中的菜单数据传入
 
 ```ts
     <page-modal
@@ -6401,28 +6394,28 @@ props: 表示具有children： 菜单children对应字段， label 对应字段
 
 ## （三）编辑功能菜单回显
 
-**需求：** 使用编辑功能时，默认菜单为空白，未绑定到menuList, 现需将el-tree绑定，点击编辑时绑定菜单数据
+**需求：** 使用编辑功能时，默认菜单显示为空白未选中状态，未同步角色具有的menuList数据,  现需将el-tree绑定，点击编辑时绑定菜单数据
 
 **思路：**
 
 1.  点击编辑时获取菜单数据，需要使用到hook的回调函数， 将回调函数设置为可传入 可选参数， role
-2. **role组件**传入回调函数后，Hook（upm）将当前行数据 item 传入，获取menuItem成功
-3. 为elTree设置传入菜单数据- 叶子结点（mapLeav函数）
-   - 传入的菜单数据应是从叶子节点开始勾选，因为如选择根节点时会将所有子菜单进行绑定，导致数据不准确
-4. 在回调函数中对elTree的菜单属性进行设置， 需使用ref获取elTree实例， 同时在内部需要使用nextTick函数
-   -  在点击编辑的那一时刻，还未获取到实例，所以需使用nextTick（微任务原理）函数， 将获取实例置于其中，确保绑定实例后进行操作
+2.  **role组件**传入回调函数后，Hook（upm）将当前行数据 item 传入，获取menuItem成功
+3.  为elTree设置传入菜单数据- 叶子结点（mapLeav函数）
+    - 传入的菜单数据应是从叶子节点开始勾选，因为如选择根节点时会将所有子菜单进行绑定，导致数据不准确
+4.  在回调函数中对elTree的菜单属性进行设置， 需使用ref获取elTree实例， 同时在内部需要使用nextTick函数
+    -  在点击编辑的那一时刻，还未获取到实例，所以需使用nextTick（微任务原理）函数， 将获取实例置于其中，确保绑定实例后进行操作
 
 
 
 ### 1. 获取选中角色菜单数据- 使用hook- UPM回调函数传出
 
-在content使用编辑时绑定的函数中有item， 所以需要在role中使用editCallback传入其中， 接收来自content传出的item
+在content使用编辑时触发父组件Role的事件中， 所绑定的函数中有item， 所以需要在role中使用editCallback传入其中， 接收来自content传出的item
 
 #### 1.1  在UPM将Item传入回调函数
 
 将回调函数设置为可接收可选参数，Role传入回调函数获取ITem
 
-编辑被点击时， 传入item，当前角色信息传入
+编辑被点击时， 传入item，当前角色信息传入  **editCb(item)**
 
 ```ts
 type CallbackFn = (item?: any) => void
@@ -6493,7 +6486,7 @@ export function menuMapLeafKeys(menuList: any[]) {
 使用nextTick是避免数据为undefined， 在点击编辑的那一时刻， ref组件未绑定实例， 需要使用nextTIck确保绑定成功后执行函数
 
 - 根据item的muenList传入MapLeafKeys获取叶子节点
-- 再将叶子节点使用实例的setChekedKeys设置菜单
+- 再将叶子节点使用实例的setCheckedKeys设置菜单
 
 ```ts
  // 处理pageModal的hook - 获取item数据 并设置编辑 菜单选中状态
@@ -6547,7 +6540,7 @@ export function menuMapLeafKeys(menuList: any[]) {
 3. 编写配置文件
 4. 设置配置文件  （生效）
 
-🔺✨ 注意：r绑定初始化需要在onMounted挂载后， 实例存在时初始化
+🔺✨ 注意：r绑定初始化需要在onMounted 组件挂载后， 实例存在时初始化
 
 
 
@@ -6619,30 +6612,30 @@ setup() {
 >
 > ```javascript
 > const option = {
->   title: {
->     text: 'ECharts 入门示例', // 图表标题文本
->     subtext: '哈哈哈啊' // 图表副标题文本
->   },
->   tooltip: {
->     trigger: 'axis', // 提示框触发类型，axis 表示通过轴触发
->     axisPointer: {
->       type: 'cross' // 提示框的指示器类型，cross 表示显示十字准星指示器
->     }
->   },
->   legend: {
->     data: ['销量'] // 图例，用于标识每个系列的含义，这里仅有一个系列 '销量'
->   },
->   xAxis: {
->     data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'] // X 轴的刻度数据
->   },
->   yAxis: {}, // Y 轴配置
->   series: [
->     {
->       name: '销量', // 系列名称，与图例关联
->       type: 'bar', // 系列类型，这里是柱状图
->       data: [18, 20, 36, 10, 10, 20] // 每个系列的数据
->     }
->   ]
+> title: {
+> text: 'ECharts 入门示例', // 图表标题文本
+> subtext: '哈哈哈啊' // 图表副标题文本
+> },
+> tooltip: {
+> trigger: 'axis', // 提示框触发类型，axis 表示通过轴触发
+> axisPointer: {
+> type: 'cross' // 提示框的指示器类型，cross 表示显示十字准星指示器
+> }
+> },
+> legend: {
+> data: ['销量'] // 图例，用于标识每个系列的含义，这里仅有一个系列 '销量'
+> },
+> xAxis: {
+> data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'] // X 轴的刻度数据
+> },
+> yAxis: {}, // Y 轴配置
+> series: [
+> {
+> name: '销量', // 系列名称，与图例关联
+> type: 'bar', // 系列类型，这里是柱状图
+> data: [18, 20, 36, 10, 10, 20] // 每个系列的数据
+> }
+> ]
 > };
 > ```
 >
@@ -6688,7 +6681,7 @@ setup() {
 
 **canva:** 适合渲染大规模图标，动画渲染效果好， 不适用于高分辨率显示- 失真
 
-**SVG：** 渲染规模正常图形， 动画效果较差， 但是不失真，适用于高分辨率显示
+**SVG：** 渲染规模正常图形， 动画效果较差， 但是不失真，适用于高分辨率显示（移动端 使用此渲染效果比canva好， 对移动端适配强）
 
 <img src="vue3-CMS.assets/image-20230803041416176.png" alt="image-20230803041416176" style="zoom:67%;" />
 
@@ -6750,7 +6743,7 @@ setup() {
 >
 > 1. **性能相对较低：** 在处理大量图形时，SVG 渲染的性能可能较低，因为需要解析 XML 并渲染矢量对象。
 >
-> 2. **动画效果受限：** SVG 渲染支持一些基本的动画效果，但相对于 Canvas 渲染，动画效果可能不如流畅。
+> 2. **动画效果受限：** SVG 渲染支持一些基本的动画效果，但相对于 Canvas 渲染，动画效果可能不如Canvas流畅。
 >
 > 综合来说，Canvas 渲染在大规模图表绘制和动画效果上具有优势，适合需要高性能的场景。而 SVG 渲染则适合于静态图表、需要保持高分辨率和矢量图形的场景。在实际使用中，你可以根据图表的复杂度、性能需求和展示效果来选择适合的渲染方式。
 
@@ -6768,4 +6761,1519 @@ setup() {
 
 #### 3.3	二者选择
 
+总结：对于一般场景， 规模不大的渲染图标时， 优先使用SVG， 因为其渲染性能更高(PC端)， Svg足以支撑显示， 移动端 优先使用SVG， 各方面都领先！
+
 ![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)
+
+# day33-   14点10分
+
+# 🔺✨ 进度十三（项目完结篇）
+
+**day33-   22点10分**
+
+### 🔺✨Tip 高级检索
+
+#### 格式： site: 域名
+
+**案例**
+
+想学下高级检索：
+
+site:v2ex.com/t 毕设项目
+
+site表示域名是吗
+
+> 是的，您理解得正确。在搜索引擎中，`site:` 后面可以跟一个域名，用来指定搜索结果限定在特定的域名下。这样可以帮助您在特定的网站上查找相关信息，而不必搜索整个互联网。
+
+/t是可加的条件，默认不加是
+
+> 对的，您理解得很对。在 V2EX 这种类型的网站上，通常 `/t` 表示主题或话题的路径。您可以通过在 `site:v2ex.com` 后添加 `/t` 路径来限制搜索结果仅在主题路径下进行搜索。如果不添加 `/t`，则搜索引擎会搜索整个网站，包括所有页面和内容。
+
+
+
+## （其它）MD5加密 - CountUp库获取函数
+
+### 1. MD5加密 /其它加密
+
+在新建用户中， 老师登录无法使用原因， 未对上传的密码数据进行加密，但是用户登录发送密码时，服务器验证的为加密后的密码
+
+- 服务器保存的用户密码是加密保存（MD5其中一种）
+- 登录时验证的也为加密的密码
+  - 保证了用户密码的安全性-
+  - 保存密码一致性（服务器保存的密码为机密转换后的）
+    - 这样的处理逻辑是用户在上传过程中为上传加密的密码，即使中间被人截取了，只要非法分子不知道加密的方式， 就无法对密码进行破解
+
+**总结： 服务器  保存or验证的为加密后的密码**
+
+> 你提到的方式是常见的密码安全策略，这些措施旨在确保用户密码的安全性和隐私保护。让我对你所描述的内容进行解释：
+>
+> 1. **密码加密保存：** 使用加密算法（如 MD5 或其他更强大的哈希算法）对用户密码进行加密后，将加密后的值存储在服务器上。这样，即使服务器遭受数据泄露，实际密码也不会直接被泄露。
+>
+> 2. **登录时验证加密密码：** 当用户尝试登录时，输入的密码会经过相同的加密算法进行加密，然后与服务器上存储的加密密码进行比较。如果匹配，就表示密码正确。
+>
+> 3. **安全性保障：** 这种方法确保了用户密码的安全性。即使黑客获取了数据库中的加密密码，由于正常情况下无法将加密密码还原回原始密码（这就是哈希函数的特性），所以密码泄露的风险相对较低。
+>
+> 4. **密码一致性：** 由于所有用户的密码都经过相同的加密算法处理，服务器上存储的是加密后的一致性值。这样的设计确保了用户的密码在存储时被统一处理。
+>
+> 5. **传输过程中的保护：** 你提到即使密码被中间人截取，只要不知道加密方式，就无法破解密码。这是正确的，加密的目的之一是确保即使在传输过程中被拦截，攻击者也无法获得有意义的原始密码。
+>
+> 需要注意的是，尽管使用哈希函数（如 MD5）是一种好的做法，但现在一些更强大的哈希函数和加密算法（如 SHA-256、bcrypt 或 Argon2）更受推荐，因为它们提供了更高的安全性。
+>
+> 然而，密码安全不仅仅是加密和哈希，还涉及到许多其他因素，如防止暴力破解、防范社会工程学攻击等。所以在设计密码系统时，综合考虑各种安全因素是很重要的。
+
+
+
+### 2. 一般大型企业， 采用多层密码进行加密的
+
+> 是的，大型企业通常会采用多层密码进行加密和安全保护，以提高系统和用户数据的安全性。这种多层密码的方法通常被称为“防御性安全”策略，旨在为系统和数据提供更全面的保护。
+>
+> 以下是一些大型企业在密码加密方面常见的安全实践：
+>
+> 1. **多重哈希加密：** 企业可能会使用多重哈希算法，如将用户密码经过多次哈希迭代，以增加密码破解的难度。
+>
+> 2. **Salt（盐）：** 使用随机的“盐”值来加强哈希过程。盐是一个随机字符串，与用户密码组合后再进行哈希。这样即使两个相同的密码在数据库中存储的哈希值也不同，提高了安全性。
+>
+> 3. **加密传输：** 在数据传输过程中使用加密来保护数据，确保用户输入的密码在传输中不被拦截和窃取。
+>
+> 4. **安全认证和授权：** 使用多层身份验证和授权机制来确保只有授权的用户可以访问敏感数据和系统。
+>
+> 5. **访问控制：** 使用细粒度的访问控制来限制用户对系统和数据的访问权限，避免未经授权的访问。
+>
+> 6. **安全审计和监控：** 对系统进行持续的安全审计和监控，以及时发现和应对异常活动。
+>
+> 7. **密码策略：** 强制用户采用强密码，并定期要求更改密码，以减少密码泄露的风险。
+>
+> 8. **双因素认证：** 引入双因素认证，除了密码外，还需要另一种身份验证方式，如手机验证码或硬件令牌。
+>
+> 9. **密码管理：** 使用密码管理工具，确保员工使用不同的复杂密码，并定期更改密码。
+>
+> 总之，大型企业在密码安全方面会采用多种方法和层次的保护措施，以应对不同的威胁和风险。这些措施的目标是确保数据的机密性、完整性和可用性，以及保护用户隐私。
+
+#### 2.1	企业具体采用的加密方式
+
+​	
+
+> - **哈希函数（如 MD5）：** 哈希函数是一种单向的、不可逆的转换，将输入数据映射为固定长度的输出。MD5 是一个广泛使用的哈希函数，但因为它的特性，如碰撞（不同的输入产生相同的输出）和易受暴力破解等问题，不再被推荐用于密码存储。
+>
+> 
+>
+> 在登录时上传密码时，一般情况下不会使用非对称加密，而是使用一种更强大的哈希函数，如 **SHA-256、bcrypt 或 Argon2** 等。
+>
+> 这些哈希函数能够将密码转换为固定长度的哈希值，但由于哈希函数的单向性，无法从哈希值还原出原始密码。当用户登录时，服务器会将输入的密码使用相同的哈希函数进行哈希，然后与存储在数据库中的哈希值进行比较，以进行验证。
+>
+> 总之，非对称加密和哈希函数在密码保护中扮演不同的角色。哈希函数用于密码存储和验证，而非对称加密用于建立安全通信通道和数字签名等。
+
+#### 2.2  SHA-256、bcrypt 或 Argon2(登录加密方式)
+
+由于用户标识不同（ID或用户名），即使不同用户输入相同密码，加盐后也会生成不同的哈希函数， 且由于哈希函数具有不可推导性，服务器验证就为加密后的密码， 所以即使黑客获得了哈希函数也无法取得密码，破解难度大
+
+> 这种密码存储和验证方式的核心原理是**哈希函数的单向性和不可逆性**。让我进一步解释为什么这种方式能够提供较高的密码安全性，防止黑客破解密码：
+>
+> 1. **不可逆性：** 哈希函数是单向的，意味着从哈希值无法推导出原始的密码。当用户输入密码进行注册或登录时，服务器将密码经过哈希函数转换成固定长度的哈希值。即使黑客获取到这些哈希值，也不能将其逆向转换为原始密码，因为这个过程是不可逆的。
+>
+> 2. **碰撞问题：** 好的哈希函数应该具有抗碰撞的特性，即不同的输入不能产生相同的哈希值。这意味着即使两个不同用户设置相同的密码，它们的哈希值也会是不同的。这种特性降低了黑客通过猜测相同哈希值密码的可能性。
+>
+> 3. **加盐：** 在存储密码的过程中，常常使用“盐”（salt）来增加密码哈希的随机性。盐是一个随机生成的字符串，与密码组合后再进行哈希。这样即使两个相同密码的用户，由于盐值不同，产生的哈希值也会不同。这增加了黑客破解密码的难度。
+>
+> 4. **计算成本：** 强大的哈希函数（如 bcrypt 或 Argon2）被设计为计算成本较高，意味着计算其哈希值需要较长的时间。这有效地降低了黑客使用暴力破解方法破解密码的效率。
+>
+> 总之，这种密码存储和验证方式的核心在于将密码转化为不可逆的哈希值，并采取多重技术措施来提高黑客破解密码的难度。这样即使黑客获得了哈希值，也无法轻易将其还原成原始密码。然而，安全性仍然需要综合多种措施来确保。
+
+**加盐应该是使用用户的唯一标识 进行加盐 后与密码结合  进行绑定**
+
+	加盐后可使得密码和哈希不具有 1：1对比性， 彩虹表破解失效
+
+> 是的，你理解得很正确。在密码存储中，"加盐" 是指将一个随机生成的、唯一的、不可预测的值与用户的密码结合起来，然后再进行哈希。这个随机值被称为 "盐"（salt）。盐的作用是增加密码哈希的随机性和不可预测性，从而提高密码存储的安全性。
+>
+> 加盐通常会使用一个与用户相关的唯一标识，如用户的用户名、用户 ID 或电子邮件地址。这样确保了每个用户都有不同的盐值，即使两个用户设置了相同的密码，由于盐值不同，产生的哈希值也会不同。
+>
+> 这种做法的好处包括：
+>
+> 1. **防止彩虹表攻击：** 彩虹表是一种预先计算出的密码和哈希值对照表，用于加快破解过程。使用盐值后，即使密码相同，由于盐的存在，哈希值也会不同，使彩虹表攻击变得无效。
+>
+> 2. **增加哈希值随机性：** 盐值是随机的，使得黑客无法预测不同用户的盐值，从而无法通过事先准备好的攻击方法来破解哈希。
+>
+> 3. **保护常用密码：** 使用盐值使得即使用户使用常见密码，由于盐的存在，产生的哈希值也会与预先计算的不同。
+>
+> 综上所述，加盐是密码存储中的重要策略之一，能够有效提高密码的安全性，防止常见攻击方法。然而，盐值的生成和管理需要小心处理，以确保安全性。
+
+
+
+### 3. CounterUp库的使用
+
+创作表头数据
+
+<img src="vue3-CMS.assets/image-20230803235900054.png" alt="image-20230803235900054" style="zoom:67%;" />
+
+> `countUp` 是一个 JavaScript 库，用于创建数字增加的动画效果，通常用于展示数字的动态变化，比如金额、计数等。它可以在网页中产生平滑的数字过渡效果，增加用户体验。
+>
+> 这个库允许你将起始数字和目标数字作为参数，然后创建一个动画，使数字从起始值逐渐增加到目标值。你可以在特定的 HTML 元素中显示这个动画，比如一个 `<span>` 元素。
+>
+> 在使用 `countUp` 库之前，你需要引入它的 JavaScript 文件，通常是通过在 HTML 页面的 `<head>` 或底部引入相关的 `<script>` 标签来实现。然后，你可以在自己的 JavaScript 代码中使用 `countUp` 函数来创建数字增加的动画效果。
+>
+> 以下是一个简单的示例，展示如何使用 `countUp` 库：
+>
+> ```html
+> <!DOCTYPE html>
+> <html lang="en">
+> <head>
+> <meta charset="UTF-8">
+> <meta name="viewport" content="width=device-width, initial-scale=1.0">
+> <title>countUp Example</title>
+> <script src="path-to-countup.js"></script> <!-- 引入 countUp.js 文件 -->
+> </head>
+> <body>
+> <span id="count"></span> <!-- 用于显示数字动画的元素 -->
+> <script>
+> const countElement = document.getElementById('count');
+> const startValue = 0;
+> const endValue = 1000;
+> const options = {
+> duration: 2, // 动画持续时间（秒）
+> };
+> 
+> const countUpInstance = new CountUp(countElement, startValue, endValue, options);
+> 
+> if (!countUpInstance.error) {
+> countUpInstance.start(); // 开始动画
+> } else {
+> console.error(countUpInstance.error);
+> }
+> </script>
+> </body>
+> </html>
+> ```
+>
+> 在这个示例中，`path-to-countup.js` 是 `countUp` 库的 JavaScript 文件路径，你需要替换成实际路径。通过创建 `CountUp` 实例并调用 `.start()` 方法，你可以触发数字增加的动画效果。
+>
+> 记得要查阅 `countUp` 的文档以获取更多详细信息和选项。
+
+
+
+## （一）dashBoard的数据请求保存
+
+需求：需要对信息中心（仪盘表【多种展示方法】）的四个数据发起请求并保存至vueX,此为Echarts数据来源
+
+**五图- 四数据**  
+
+分类商品数量（饼图、玫瑰图） 、销量（曲线图） 、 收藏量（柱状图）
+
+不同城市商品销量（中国地图）
+
+思路：
+
+1. 需要先定义四种数据的请求（service —  dashBoard模块）
+2. VueX - dashBoard模块发送四种数据请求并保存至dashBoard的state中，action触发mutatoin并保存
+3. dashoBoard组件 使用useStore，disPatch发送请求， 获得四种数据
+
+
+
+### 1. Service - Analysis- dashboard定义四种数据请方法
+
+```ts
+import hyquest from '@/service/index'
+
+enum DashboardAPI {
+  categoryGoodsCount = '/goods/category/count',
+  categoryGoodsSale = '/goods/category/sale',
+  categoryGoodsFavor = '/goods/category/favor',
+  addressGoodsSale = '/goods/address/sale'
+}
+
+export function getCategoryGoodsCount() {
+  return hyquest.get({
+    url: DashboardAPI.categoryGoodsCount
+  })
+}
+export function getCategoryGoodsSale() {
+  return hyquest.get({
+    url: DashboardAPI.categoryGoodsSale
+  })
+}
+export function getCategoryGoodsFavor() {
+  return hyquest.get({
+    url: DashboardAPI.categoryGoodsFavor
+  })
+}
+export function getAddressGoodsSale() {
+  return hyquest.get({
+    url: DashboardAPI.addressGoodsSale
+  })
+}
+
+```
+
+
+
+### 2. vueX中dashboard模块定义Action发送四种请求并保存数据
+
+```ts
+ state() {
+    return {
+      categoryGoodsCount: [],
+      categoryGoodsSale: [],
+      categoryGoodsFavor: [],
+      addressGoodsSale: []
+    }
+  },
+  mutations: {
+    changeCategoryGoodsCount(state, list) {
+      state.categoryGoodsCount = list
+    },
+    changeCategoryGoodsSale(state, list) {
+      state.categoryGoodsSale = list
+    },
+    changeCategoryGoodsFavor(state, list) {
+      state.categoryGoodsFavor = list
+    },
+    changeAddressGoodsSale(state, list) {
+      state.addressGoodsSale = list
+    }
+  },
+  actions: {
+    async getDashboardDataAction({ commit }) {
+      const categoryCountResult = await getCategoryGoodsCount()
+      console.log(categoryCountResult)
+
+      commit('changeCategoryGoodsCount', categoryCountResult.data)
+      const categorySaleResult = await getCategoryGoodsSale()
+      commit('changeCategoryGoodsSale', categorySaleResult.data)
+      const categoryFavorResult = await getCategoryGoodsFavor()
+      commit('changeCategoryGoodsFavor', categoryFavorResult.data)
+      const addressGoodsResult = await getAddressGoodsSale()
+      commit('changeAddressGoodsSale', addressGoodsResult.data)
+    }
+```
+
+
+
+### 3. dashBoard 组件中触发 VueX/dashboard模块的Action
+
+触发后， 发送四种请求， 并保存数据至VueX中
+
+```ts
+     const store = useStore()
+      store.dispatch('dashboard/getDashboardDataAction')
+    })
+```
+
+
+
+## （二）dashboard界面布局设置 上三 下二 ，并设置title
+
+需求： 需要界面显示上三下二（ 五图表分布） 并且每个图表内部需要使用上下分布的样式
+
+思路： 
+
+	**上三下二：**
+
+1.  页面上部分： el-col 行组件包裹， 内部3 el-row组件， 分别对应 ：span 7   10   7  左中右比例分布
+2.  页面下部分：  同理： span: 12 12 （24）各占一半
+
+	内部上下结构： 使用el -card 组件，封装hy-card组件引入至 dashboard
+
+
+
+### 1. 引入el-card 卡片组件（内容分层）
+
+分为title - 图表
+
+将图表分为显示， title可插入标题
+
+	内容设置插槽 供图表插入
+
+样式解析：  
+
+ &:deep(.el-card__header) {
+    padding: 10px 20px !important;
+  }
+
+表示深层穿透器， 选择组件内部的头部， 并将样式重新调整， 这里主要调整为上下10px，左右20px, 不设置时， 该header高度过高，样式不好看
+
+
+
+```ts
+  <el-card class="box-card">
+    <template #header>
+      <div class="card-header">
+        <span>{{ title }}</span>
+      </div>
+    </template>
+    <div class="item">
+      <slot></slot>
+    </div>
+
+.box-card {
+  &:deep(.el-card__header) {
+    padding: 10px 20px !important;
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+
+.item {
+  margin-bottom: 10px;
+  // border: 1px solid red;
+}
+```
+
+
+
+### 2. 使用el-row 行组件 和 单元格 el-col组件 构成 上三下二
+
+gutter属性传入表示单元格间距x元素， span表示划分，行内按照 x/24 划分区域
+
+```ts
+ <el-row :gutter="10">
+      <el-col :span="7">
+        <hy-card title="分类商品数量(饼图)"></hy-card>
+      </el-col>
+      <el-col :span="10">
+        <hy-card title="不同城市商品销量"></hy-card>
+      </el-col>
+      <el-col :span="7">
+        <hy-card title="分类商品数量(玫瑰图图)"></hy-card>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10" class="content-row">
+      <el-col :span="12">
+        <hy-card title="分类商品销量(饼图)"></hy-card>
+      </el-col>
+      <el-col :span="12">
+        <hy-card title="分类商品的收藏量"></hy-card>
+      </el-col>
+    </el-row>
+```
+
+
+
+
+
+## （三）对图表进行抽取为base-ui组件， 通过传入配置，生成图表-    setup内置script的使用
+
+需求： 在图表需要进行抽取， 并且由父组件传入配置，设置图标的样式， 结合vue3 setup内置脚本的使用， props的接受 属性声明和默认参数（setUp内置写法）
+
+后面可对使用配置这些操作在进行一层抽取
+
+思路： 
+
+1. 抽取为base-ui图表组件， 父组件引用该组件并传入配置即可使用
+2. setup 内置脚本， 使用defineProps定义接收的参数类型（不加？默认必传）， witheDefaults接收的第一个参数为defineProps函数， 第二个为参数赋值 默认值
+
+后面可对父组件传入的配置再次抽取 ， 只需传入动态的数据即可
+
+
+
+### 1. 初次抽取为组件base-echart - 并使用setup内置script
+
+props的接收改变， 现在脚本本身就为seup函数， 不需要return
+
+Props接收： 
+
+- defineProps 为定义接收父组件的数据
+- withDefaults 包含两个参数， 第一个参数defineProps，格式d..s<对象，接收的数据类型> （）， 第二个参数： 对参数进行默认赋值 
+
+💓🐟： 图表需要为其设置style, 设置其宽度高度 ， 否则图表不显示， 并且需动态传入， 静态传入时，传入的变量值只会被**解析为字符串**
+
+
+
+三部曲： echarts.init(echartDivRef.value!) 初始化，编写配置，再进行配置加载**（onMounted）**须在组件挂载完才能对其绑定
+
+```ts
+<template>
+  <div
+    class="base-echart"
+    ref="echartDivRef"
+    :style="{ width: width, height: height }"
+  ></div>
+</template>
+
+<script lang="ts" setup>
+import { ref, onMounted, defineProps, withDefaults } from 'vue'
+import { EChartsOption } from 'echarts'
+import * as echarts from 'echarts'
+
+// 定义props
+const props = withDefaults(
+  defineProps<{
+    options: EChartsOption
+    width?: string
+    height?: string
+  }>(),
+  {
+    width: '100%',
+    height: '360px '
+  }
+)
+const echartDivRef = ref<HTMLElement>()
+onMounted(() => {
+  const echartInstance = echarts.init(echartDivRef.value!)
+  echartInstance.setOption(props.options)
+  console.log(props.options)
+})
+```
+
+
+
+### 2.  dashboard 传入配置
+
+
+
+```ts
+  setup() {
+    const store = useStore()
+    store.dispatch('dashboard/getDashboardDataAction')
+
+    const option = {
+      title: {
+        text: 'ECharts 入门示例',
+        subtext: '哈哈哈啊'
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross'
+        }
+      },
+      legend: {
+        data: ['销量']
+      },
+      xAxis: {
+        data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子']
+      },
+      yAxis: {},
+      series: [
+        {
+          name: '销量',
+          type: 'bar',
+          data: [18, 20, 36, 10, 10, 20]
+        }
+      ]
+    }
+
+    return {
+      option
+    }
+```
+
+
+
+
+
+## 🔺✨ SSR（后端开发技术）提升用户体验-返回骨架Html页面
+
+SSR 是通过在服务器端预先渲染页面内容， 可以理解为请求的数据由原先的需要转化为html页面并再进行加载， 现在直接返回一个加载好的骨架页面
+
+
+
+> 您理解得很正确！服务器端渲染（SSR）的基本概念就是在服务器端预先渲染页面内容，并将渲染好的 HTML 页面直接返回给客户端，而不仅仅是返回数据。这样，客户端浏览器在接收到 HTML 页面时，就能够立即显示出页面的内容，而无需等待浏览器下载和执行 JavaScript，以及发起其他数据请求。
+>
+> 具体来说，SSR 的过程可以总结为以下几个步骤：
+>
+> 1. **请求：** 用户访问网页时，浏览器向服务器发出请求。
+> 2. **服务器端渲染：** 服务器接收到请求后，会预先渲染页面的 HTML 内容，并将数据嵌入到 HTML 中。
+> 3. **返回 HTML：** 渲染好的 HTML 页面直接发送给客户端浏览器。
+> 4. **显示页面：** 浏览器接收到 HTML 后，可以立即显示页面内容，无需等待其他资源加载。
+>
+> 这种方式确实能够提供更快的首屏加载速度，因为用户能够立即看到页面的核心内容，而不需要等待其他资源加载和 JavaScript 执行。同时，SSR 也有助于改善搜索引擎优化（SEO），因为搜索引擎能够更容易地抓取和索引服务器端渲染的页面内容。
+>
+> 需要注意的是，虽然 SSR 能够提供更好的首屏加载性能和 SEO，但在一些情况下也会带来一些额外的开发和配置复杂性。开发人员需要确保在服务器端正确处理数据获取、页面渲染和路由等方面，以实现良好的 SSR 效果。
+
+
+
+ 应该会使得服务器消耗性能吧， 还是说这样会使请求的数据增多， 但是体验感提升
+
+> 您提到的两个方面都是考虑服务器端渲染（SSR）时需要权衡的因素：
+>
+> 1. **服务器性能：** 确实，在进行 SSR 时，服务器会更多地参与页面的渲染和数据处理，这可能会增加服务器的负载和消耗性能。与传统的客户端渲染（CSR）相比，SSR 要求服务器在每次请求时都进行页面渲染，而不仅仅是返回静态资源。因此，您可能需要为服务器提供足够的计算资源，以确保它能够有效地处理大量的页面渲染请求。
+>
+> 2. **数据请求增多：** 另一方面，由于页面在服务器端渲染时需要获取数据并嵌入到 HTML 中，可能会导致页面请求的数据量增加。每次请求需要获取页面内容和数据，这可能会导致一些额外的网络流量。但是，通过在服务器端渲染时将页面的核心内容直接嵌入到 HTML 中，用户在访问页面时能够更快地看到内容，从而提升了用户体验。
+>
+> 在决定是否使用 SSR 时，您需要根据项目的需求和优先级进行权衡。如果您的应用需要更快的首屏加载速度、更好的 SEO 和更好的用户体验，那么使用 SSR 是一个不错的选择。然而，您也需要确保您的服务器具备足够的性能来处理 SSR 请求，并且在开发过程中需要关注页面渲染的性能优化，以确保服务器能够高效地处理大量的页面渲染请求。
+
+
+
+## (四) 将base-echart公共逻辑封装为hook
+
+需求： 当使用新的图表库时不需在base-echart修改，并且需要使这部分代码具有可共享性，相同的逻辑处理（初始化， 使用配置, setSize）可在别处使用
+
+**思路：**
+
+1. 将base-echart图表的初始化和使用配置等逻辑代码抽取为hook
+2. 在hook进行相关的逻辑处理， 并对页面缩小，页面自动调整做优化，setSize
+3. hook中暂时实现功能
+   1. 初始化图表实例
+   2. 返回配置使用函数（参数接收： 配置）
+   3. 监听页面变化重新设置size， 并将该函数返回至调用该hook组件， 可进行其他逻辑处理 ，
+   4. 后续有其他共同的逻辑代码 或是需要修改某功能，直接在此hook修改
+
+### 1. 将e-chart公共逻辑抽取为hook, 并使用resize函数动态调整
+
+抽取的函数为
+
+  const echartInstance = echarts.init(echartDivRef.value!)
+  echartInstance.setOption(props.options)
+
+为什么不使用元组return？
+
+1. 	因为 这样可以按需使用{进行解构}， 元组需要全部解构
+2. 	echart的当前使用并不需使用全部
+
+经过外部调用该hook后， dom绑定元素成功实例化， 并可以使用内部函数，setOption和updataSize， 外部直接调用传入配置直接调用setOption, 更简洁， 且还添加了 resize功能函数， 自动调整表格函数
+
+```ts
+import * as echarts from 'echarts'
+
+export default function (el: HTMLElement) {
+  console.log('11')
+
+  const echartInstance = echarts.init(el)
+
+  const setOptions = (options: echarts.EChartsOption) => {
+    echartInstance.setOption(options)
+  }
+
+  // 返回更新图表
+  const updateSize = () => {
+    echartInstance.resize()
+  }
+
+  // 对浏览器进行监听， 变化是自动调整图表
+  window.addEventListener('resize', () => {
+    echartInstance.resize()
+  })
+
+  return {
+    echartInstance,
+    setOptions,
+    updateSize
+  }
+}
+```
+
+
+
+### 2. base-echat 调用 公共hook函数 useEchart
+
+```ts
+const echartDivRef = ref<HTMLElement>()
+onMounted(() => {
+  const { setOptions } = useEchart(echartDivRef.value!)
+  setOptions(props.options)
+})
+</script>
+```
+
+
+
+## （五） 将配置信息抽取为对应不同类型图表组件，父组件只需要传入具体展示的数据
+
+**需求如图：** 
+
+需要进行解耦， 父组件只需要传入动态数据， 相应的使用模型（图表类型）展示数据封装为 xx组件（如pip chart）， 使得界面更简洁， 不同组件对应不同信息， 我在父组件只需要传入显示的数据即可（具体展示类型 由使用模型决定），模型动态接收数据
+
+**思路**：
+
+1.  将配置信息抽取放置对应模型（具体图表类型）组件
+2.  模型只需接收来自父组件的动态数据
+3.  模型需要进行监听，当数据配置发生改变时， 重新传递配置信息至base-echart，此部分需用到computed包裹， 将设置属性函数包裹为响应式属性
+4.  base-echart 需要使用 watchEffect侦听 配置信息 ， 当配置信息更改时， 重新渲染图表
+
+
+
+<img src="vue3-CMS.assets/image-20230804052700020.png" alt="image-20230804052700020" style="zoom:67%;" />
+
+
+
+### 1. 封装pipEchart模型， 并动态接收来自父组件的数据
+
+在该饼模型中， 动态接收来自父组件传递的数据， 使用computed包裹，并将配置信息传入base-echart组件中
+
+ pieData: IDataType[]， 此行表示接受的数据为 {name: string, value:any} 对象  数组
+
+	父组件传入时， 需将组件数据 使用map映射为 属性名相同的 对象 数组  并传入
+
+```ts
+import { IDataType } from '../types'
+
+const props = defineProps<{ pieData: IDataType[] }>()
+
+const options = computed(() => {
+  return {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      orient: 'horizontal',
+      left: 'left'
+    },
+    series: [
+      {
+        name: '分类数据',
+        type: 'pie',
+        radius: '50%',
+        // 动态接收父组件传递的数据
+        data: props.pieData,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }
+      }
+    ]
+  }
+})
+```
+
+**样式解析：**
+
+> 1. **tooltip：** 这是提示框组件的配置，`trigger: 'item'` 表示触发方式是在图形项上触发。
+>
+> 2. **legend：** 这是图例组件的配置，`orient: 'horizontal'` 表示图例水平排列，`left: 'left'` 表示图例位于图表的左侧。
+>
+> 3. **series：** 这是系列数据配置的数组，其中包含一个对象，定义了一个饼图的系列。具体解析如下：
+>
+>    - **name：** 系列的名称，这里设置为 '分类数据'。
+>
+>    - **type：** 系列的类型，这里设置为 'pie'，表示是一个饼图。
+>
+>    - **radius：** 饼图的半径，这里设置为 '50%'，表示半径为图表宽度的一半。
+>
+>    - **data：** 饼图的数据，这里使用了 `props.pieData`，表示从外部传入的饼图数据。
+>
+>    - emphasis：
+>
+>      强调样式配置，这里设置了阴影效果。
+>
+>      - itemStyle：
+>
+>        图形项的样式配置。
+>
+>        - **shadowBlur：** 阴影的模糊大小。
+>        - **shadowOffsetX：** 阴影的 X 方向偏移。
+>        - **shadowColor：** 阴影的颜色。
+
+
+
+### 2. 父组件动态获取数据，并传入pip-echart中
+
+因为pip组件接受的数据类型为 {name: string , value: any}， 但是 父组件所获取的信息为{name: string,  goodsCount: string}数组， 所以需要使用map将属性名转化为一致， 再传入
+
+```ts
+<pie-echart :pieData="categoryGoodsCount"></pie-echart>
+
+ // 请求数据
+    store.dispatch('dashboard/getDashboardDataAction')
+
+    // 获取商品数量数据
+    const categoryGoodsCount = computed(() => {
+      return store.state.dashboard.categoryGoodsCount.map((item: any) => {
+        return { name: item.name, value: item.goodsCount }
+      })
+    })
+```
+
+
+
+### 3. 💓🐟base-echart 使用watchEffect进行侦听数据并实时更新数据
+
+💓🐟 确认下为什么切换为computed无法执行， 使用watchEffect会默认执行一次， 后面数据发生变化时， 会自动调用渲染函数
+
+```ts
+const echartDivRef = ref<HTMLElement>()
+onMounted(() => {
+  const { setOptions } = useEchart(echartDivRef.value!)
+  watchEffect(() => {
+    setOptions(props.options)
+  })
+})
+```
+
+
+
+## （六） 玫瑰图-  曲线图的配置
+
+玫瑰图大致思路同饼图一致， 曲线图需要传入的数据不是成对的， 需要分开传两个数组， 一个为Xlabel数组（x轴显示的内容）， Ylabel（Y轴显示的内容）
+
+曲线图主要思路：
+
+1. 在父组件中， 获取数据， 在map前定义两个数组， 在map内部直接push将对应的属性push进去
+2. 将两个数组合并为一个对象返回， 使用v-bind进行绑定传入给line-echart组件，会自动解构赋值
+
+### 1. 玫瑰配置文件基本一致 （需要查下样式）
+
+很晚了， 先略过 ， 看到记得重新查下样式
+
+```ts
+ return {
+    // legend: {
+    //   top: 'bottom'
+    // },
+    toolbox: {
+      show: true,
+      feature: {
+        mark: { show: true },
+        dataView: { show: true, readOnly: false },
+        restore: { show: true },
+        saveAsImage: { show: true }
+      }
+    },
+    series: [
+      {
+        name: '类别数据',
+        type: 'pie',
+        // 半径设置
+        radius: [10, 100],
+        center: ['50%', '50%'],
+        roseType: 'area',
+        itemStyle: {
+          borderRadius: 8
+        },
+        data: props.roseData
+      }
+    ]
+  }
+```
+
+
+
+### 2.	曲线图的模型创建
+
+思路：大致思路一致， 主要为传入的参数需为两个数组，原先只需要传入一个数组对象（对象具有两个属性- 为两个数组 ）
+
+1. 定义两个数组对象，对数据进行获取
+2. 遍历商品销量数组， 对其属性进行分割， 分别push至两个数组
+3. 返回一个数组对象， 使用v-bind绑定传入line-echart 会自动解构传入数组
+4. 曲线图内部需要对 接收props声明属性 
+
+样式需要再过一遍💓🐟
+
+
+
+#### 2.1 分类销量 -  数据获取  v-bind 解构传入
+
+```ts
+<hy-card title="分类商品销量(曲线图)">
+    <line-echart v-bind="categoryGoodsSale"></line-echart>
+</hy-card>
+
+
+    // 获取分类商品销量
+    const categoryGoodsSale = computed(() => {
+      const xLabels: string[] = []
+      const values: any[] = []
+      const categoryGoodSale = store.state.dashboard.categoryGoodsSale
+      for (const item of categoryGoodSale) {
+        xLabels.push(item.name)
+        values.push(item.goodsCount)
+      }
+      return { xLabels, values }
+    })
+```
+
+
+
+#### 2.2  LineEchart接收配置， 声明数据并将配置传入-BaseEchart
+
+```ts
+<template>
+  <div class="pie-echart">
+    <base-echart :options="options"></base-echart>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { computed, defineProps, withDefaults } from 'vue'
+import BaseEchart from '@/base-ui/echart'
+
+const props = withDefaults(
+  // 需要对象 包裹
+  defineProps<{
+    title?: string
+    xLabels: string[]
+    values: any[]
+  }>(),
+  {
+    title: ''
+  }
+)
+const options = computed(() => {
+  return {
+    title: {
+      text: props.title
+    },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross',
+        label: {
+          backgroundColor: '#6a7985'
+        }
+      }
+    },
+    legend: {},
+    toolbox: {
+      feature: {
+        saveAsImage: {}
+      }
+    },
+    grid: {
+      left: '3%',
+      right: '4%',
+      bottom: '3%',
+      containLabel: true
+    },
+    xAxis: [
+      {
+        type: 'category',
+        boundaryGap: false,
+        data: props.xLabels
+      }
+    ],
+    yAxis: [
+      {
+        type: 'value'
+      }
+    ],
+    series: [
+      {
+        name: '分别销量',
+        type: 'line',
+        stack: '总量',
+        areaStyle: {},
+        emphasis: {
+          focus: 'series'
+        },
+        data: props.values
+      }
+    ]
+  }
+})
+</script>
+<style scoped lang="less"></style>
+
+```
+
+
+
+
+
+## (七) 条形图模型 配置
+
+此部分 类同（玫瑰图 ）
+
+**样式解析**
+
+> ```ts
+> const options = computed(() => {
+> return {
+> xAxis: {
+> data: props.xLabels,   // x 轴的标签数据
+> axisLabel: {
+>   inside: true,         // x 轴标签文本显示在轴内部
+>   color: '#fff'         // x 轴标签文本颜色
+> },
+> axisTick: {
+>   show: false          // 不显示 x 轴刻度线
+> },
+> axisLine: {
+>   show: false          // 不显示 x 轴线
+> },
+> z: 10                  // x 轴所在层级
+> },
+> yAxis: {
+> axisLine: {
+>   show: false          // 不显示 y 轴线
+> },
+> axisTick: {
+>   show: false          // 不显示 y 轴刻度线
+> },
+> axisLabel: {
+>   color: '#999'        // y 轴标签文本颜色
+> }
+> },
+> dataZoom: [
+> {
+>   type: 'inside'       // 数据缩放类型为内部
+> }
+> ],
+> series: [
+> {
+>   type: 'bar',          // 数据系列类型为条状图
+>   showBackground: true, // 显示背景
+>   itemStyle: {
+>     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+>       { offset: 0, color: '#83bff6' },
+>       { offset: 0.5, color: '#188df0' },
+>       { offset: 1, color: '#188df0' }
+>     ])                  // 条状图每个柱子的渐变颜色样式
+>   },
+>   emphasis: {
+>     itemStyle: {
+>       color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+>         { offset: 0, color: '#2378f7' },
+>         { offset: 0.7, color: '#2378f7' },
+>         { offset: 1, color: '#83bff6' }
+>       ])                 // 鼠标悬停时的强调颜色样式
+>     }
+>   },
+>   data: props.values    // 数据系列的具体数据，从 props 中传入
+> }
+> ]
+> }
+> })
+> 
+> ```
+>
+> 
+
+
+
+
+
+## （八）中国地图绘制
+
+**主要思路：**
+
+1.  需要绘制中国地图（全局注册）（json文件），全局注册地图，在use-echartHook中进行注册，由echarts.registerMap('china', chinaMapData)
+2.  获取所有中国城市经纬度  Ts文件 
+3.  定义城市名映射经纬度函数，匹配城市经纬度文件， 将value值前拼接经纬度， 确保城市能显示在正确位置
+4.  最终显示在地图的数据实际为： name,  geoCoord(经纬度)拼接value值（第二个值会在正确的位置显示）
+5.  父组件中 传入的为对象， 需要将对象属性重命名后 使用map 遍历返回
+
+
+
+### 1.  引入中国data文件， 并在hook注册该地图
+
+
+
+![image-20230804234030618](vue3-CMS.assets/image-20230804234030618.png)
+
+
+
+JSon文件需要在decalare文件中声明才能正确使用✔
+
+```ts
+// 需要使用decalre 声明该json文件
+import chinaMapData from '../data/china.json'
+
+// 为图表全局注册地图
+echarts.registerMap('china', chinaMapData)
+
+```
+
+
+
+### 2.  定义函数根据字典文件，去对value值进行拼接经纬度
+
+在page-echart下，
+
+ 创建文件夹-（utitles） 
+
+- coordinate为经纬度城市字典
+- covert- coordinate-data ，value转换为 经纬度- value， 匹配地图正确显示
+
+字典 - 部分显示
+
+```ts
+export const coordinateData: any = {
+  海门: [121.15, 31.89],
+  鄂尔多斯: [109.781327, 39.608266],
+  招远: [120.38, 37.35],
+  舟山: [122.207216, 29.985295],
+  齐齐哈尔: [123.97, 47.33],
+  盐城: [120.13, 33.38],
+  赤峰: [118.87, 42.28],
+  青岛: [120.33, 36.07],
+  乳山: [121.52, 36.89],...}
+```
+
+
+
+**函数 - value拼接**
+
+res为对象数组，  每个对象为 城市名  经纬度value值 
+
+```ts
+import { coordinateData } from './coordinate-data'
+
+export const convertData = function (data: any) {
+  const res = []
+  for (let i = 0; i < data.length; i++) {
+    // 在这里相当于对传入的城市名进行转换，获取经纬度
+    // 最后将数据切换为 经纬度 拼接 value
+
+    // 最终具体城市所处位置能在地图的具体位置显示
+    const geoCoord = coordinateData[data[i].name]
+    if (geoCoord) {
+      res.push({
+        name: data[i].name,
+        value: geoCoord.concat(data[i].value)
+      })
+    }
+  }
+  return res
+}
+
+```
+
+
+
+### 3. 父组件动态传入-对象（城市销量数组）
+
+ 传入的属性要转化为 IDtype形式， 属性名需要对应
+
+```ts
+<el-col :span="10">
+<hy-card title="不同城市商品销量">
+<map-echart :mapData="addressGoodsSale"></map-echart>
+</hy-card>
+</el-col>
+      
+      
+    // 获取全部商品销量
+    const addressGoodsSale = computed(() => {
+    return store.state.dashboard.addressGoodsSale.map((item: any) => {
+    return { name: item.address, value: item.count }
+    })
+    })
+```
+
+
+
+
+
+# 🔺✨进度Eventually- 项目打包与部署
+
+**day34 -  10点**
+
+# (接口文档)
+
+[接口文档](https://documenter.getpostman.com/view/12387168/TzzDKb12)
+
+## （一）传统的开发模式和DevOps开发模式
+
+![image-20230807111651355](vue3-CMS.assets/image-20230807111651355.png)
+
+
+
+## （二）持续集成和持续交互
+
+### 2.1	持续交付
+
+![image-20230807111117494](vue3-CMS.assets/image-20230807111117494.png)
+
+
+
+### 2.1 	持续部署
+
+
+
+![image-20230807111427154](vue3-CMS.assets/image-20230807111427154.png)
+
+																**（手动部署）**
+
+
+
+![image-20230807111442475](vue3-CMS.assets/image-20230807111442475.png)
+
+																**（自动部署）**
+
+
+
+
+
+## （三）jenkins服务器和Nginx反向代理服务器
+
+### 1.	Jenkins服务器
+
+> 当谈到"Jenkins服务器"时，通常指的是用于持续集成和持续交付（CI/CD）的Jenkins软件的安装和配置。Jenkins是一个开源的自动化服务器，用于构建、测试和部署代码。它可以帮助开发团队在项目的不同阶段自动化各种任务，从代码编译、测试到部署。
+>
+> 以下是一些关于Jenkins服务器的重要信息：
+>
+> 1. **安装和配置：** 您可以在服务器上安装Jenkins软件，然后通过Web界面进行配置。Jenkins提供了丰富的插件，可以支持不同的项目类型、编程语言和工具。
+>
+> 2. **任务（Jobs）：** 在Jenkins中，您可以创建各种任务，例如构建任务、测试任务、部署任务等。每个任务可以配置为在特定的触发事件或计划时间点上运行。
+>
+> 3. **构建（Builds）：** 构建是指将源代码转换为可执行的软件或应用的过程。Jenkins可以自动执行这些构建过程，生成可用的应用程序。
+>
+> 4. **集成版本控制：** Jenkins可以与版本控制系统（如Git、Subversion等）集成，以便在代码提交时自动触发构建和测试。
+>
+> 5. **持续集成和持续交付：** Jenkins的主要目标之一是实现持续集成和持续交付。持续集成是指频繁地将代码合并到共享存储库，并进行自动构建和测试，以减少集成问题。持续交付是在通过测试后自动部署应用程序的过程。
+>
+> 6. **插件生态系统：** Jenkins有一个丰富的插件生态系统，允许您扩展其功能以适应不同的需求。您可以从Jenkins插件市场安装各种插件，例如与不同工具的集成、报告生成、通知等。
+>
+> 7. **可扩展性：** 您可以根据团队和项目的需求自定义Jenkins服务器的配置。您可以设置多个代理节点以分散构建负载，也可以设置几个不同的构建环境。
+>
+> 8. **日志和报告：** Jenkins会生成构建日志和报告，以便您能够查看构建的状态、错误和警告。
+>
+> 要使用Jenkins服务器，您需要安装Jenkins软件并进行适当的配置。然后，您可以创建并配置各种不同类型的任务，并设置触发条件，以便在代码更改时自动执行这些任务。总之，Jenkins是一个强大的工具，可用于实现自动化的持续集成和持续交付流程。
+
+
+
+### 2.	 Nginx-Web服务器和反向代理服务器
+
+> Nginx（发音为"engine-x"）是一个高性能的开源Web服务器和反向代理服务器。它也可以用作负载均衡器、HTTP缓存、以及作为应用程序服务器的反向代理。Nginx的设计目标是提供高并发、低内存占用和高度可扩展的特性，使其成为处理静态资源和处理大量并发连接的优秀选择。
+>
+> Nginx通常用于配置服务器，但它并不是一个编译环境。它的主要用途是处理网络流量，接受来自客户端的请求并将其分发给适当的后端服务器，然后将后端服务器的响应返回给客户端。以下是一些Nginx的用途：
+>
+> 1. **Web服务器：** Nginx可以用作静态文件服务器，用于提供HTML、CSS、JavaScript和其他静态资源。它也支持虚拟主机配置，使多个域名可以共享一个服务器。
+>
+> 2. **反向代理：** Nginx可以作为反向代理，将客户端的请求转发给后端的应用服务器，然后将应用服务器的响应返回给客户端。这对于负载均衡和提高应用程序性能非常有用。
+>
+> 3. **负载均衡：** Nginx可以分发客户端请求到多个后端服务器，以平衡服务器的负载，提高性能和可用性。
+>
+> 4. **HTTP缓存：** Nginx可以用来缓存静态和动态内容，从而减少对后端服务器的请求，加快内容的传输速度。
+>
+> 5. **安全性和访问控制：** Nginx支持配置访问控制、SSL/TLS加密以及防止恶意请求的功能，提供了一定程度的网络安全。
+>
+> 虽然Nginx本身并不提供编译环境，但它可以与其他软件一起使用，如应用程序服务器（例如Node.js、Ruby on Rails、Django等）来提供完整的Web应用程序堆栈。与编译环境相关的任务（如构建和编译代码）通常由开发人员在开发环境中完成，然后将编译好的代码部署到服务器上。
+
+#### 2.1	Nginx相当于中介服务器
+
+​	
+
+> 是的，您可以将Nginx看作是一个中介服务器或中间层服务器，因为它在客户端和后端服务器之间充当了一个转发和处理请求的角色。Nginx可以用于多种用途，其中一个重要的方面是它在网络中的中介作用。
+>
+> 以下是一些Nginx充当中介服务器的典型情况：
+>
+> 1. **反向代理：** Nginx作为反向代理服务器，接收来自客户端的请求，然后将请求转发给后端服务器。这允许您隐藏后端服务器的真实IP地址和细节，提供负载均衡、缓存、SSL终端、访问控制等功能。
+>
+> 2. **负载均衡：** Nginx可以将客户端请求分发到多个后端服务器，实现负载均衡。这有助于分散流量，确保服务器的高可用性，并提高性能。
+>
+> 3. **缓存：** Nginx可以缓存静态和动态内容，将内容保存在内存中，以便更快地提供给客户端，减轻后端服务器的压力。
+>
+> 4. **安全性和防护：** Nginx可以用于防止恶意请求、DDoS攻击等。它可以配置为拦截恶意流量，并将合法的请求转发给后端服务器。
+>
+> 5. **SSL终端：** Nginx可以处理SSL/TLS连接，充当应用程序和客户端之间的SSL终端，从而减轻后端服务器的SSL负担。
+>
+> 总之，Nginx作为一个中介服务器，能够在客户端和后端服务器之间提供许多有用的功能，帮助提高性能、可用性和安全性。它在构建Web应用程序、管理网络流量和优化服务器环境方面发挥着重要作用。
+
+​		
+
+**前后端连接的桥梁**
+
+> 是的，您可以将Nginx看作是前端和后端之间的桥梁，它在这两者之间充当了一个连接点和中介角色。具体而言，Nginx可以在以下方面充当桥梁：
+>
+> 1. **请求转发：** Nginx接收来自前端客户端的请求，并将其转发给后端服务器，这可以是Web应用程序服务器、数据库服务器等。通过这种方式，Nginx将客户端的请求传递给适当的后端资源。
+>
+> 2. **负载均衡：** 如果您有多个后端服务器来处理请求，Nginx可以实现负载均衡，确保请求均匀地分布到不同的后端服务器上，从而提高性能和可用性。
+>
+> 3. **缓存和加速：** Nginx可以缓存静态资源，如图片、CSS和JavaScript文件，减少对后端服务器的请求，从而提高页面加载速度。
+>
+> 4. **SSL终端：** 如果您的应用程序需要使用SSL/TLS加密，Nginx可以处理SSL/TLS连接，充当前端和后端之间的加密终端。
+>
+> 5. **安全性和访问控制：** Nginx可以实施访问控制、拦截恶意请求，并提供一定程度的安全保护，以保护后端服务器免受恶意攻击。
+>
+> 总之，Nginx在前端和后端之间起到了连接和中介的作用，帮助优化流量管理、提高性能、保障安全，并提供了一种有效的方式来处理不同类型的请求和响应。这使得Nginx成为构建复杂的Web应用程序和服务的重要组成部分。
+
+​	
+
+### 3.	NGinx和Jekins之间的关系
+
+> Nginx和Jenkins是两个完全不同的工具，它们在软件领域的不同层次和用途中发挥作用。虽然它们可以在一些情况下一起使用，但它们的主要功能和目的不同。
+>
+> 1. **Nginx：** Nginx是一个高性能的Web服务器和反向代理服务器，用于处理网络流量、负载均衡、缓存和安全性等。它主要用于将客户端请求路由到适当的后端服务器，并处理静态和动态内容的传输。Nginx在网络基础设施中起到关键作用，用于提供Web服务并改善性能、可用性和安全性。
+>
+> 2. **Jenkins：** Jenkins是一个用于持续集成和持续交付（CI/CD）的自动化服务器。它用于自动化构建、测试和部署代码，以便团队能够频繁地集成新代码并自动进行各种测试，从而减少错误和提高交付速度。Jenkins可用于自动化整个软件开发生命周期中的各种任务，从代码编译到部署。
+>
+> 尽管Nginx和Jenkins有不同的用途，但在一些场景中，它们可以结合使用：
+>
+> - **反向代理Jenkins：** 您可以使用Nginx作为Jenkins服务器的反向代理，以提供安全性、负载均衡和访问控制。Nginx可以处理客户端的HTTPS请求，并将其转发到后端运行Jenkins的服务器。这有助于保护Jenkins服务器并分散负载。
+>
+> - **代理应用程序服务器：** 如果您的应用程序服务器需要外部访问，并且您希望通过Nginx进行流量管理和负载均衡，您可以将Nginx配置为反向代理，将流量分发给多个应用程序服务器。这与Jenkins的场景不同，但是概念上类似。
+>
+> 总之，尽管Nginx和Jenkins有一些交集的使用情况，但它们的主要功能和用途在软件开发和服务器管理领域中是不同的。
+
+
+
+### 4.部署流程
+
+<img src="vue3-CMS.assets/image-20230807135633411.png" alt="image-20230807135633411" style="zoom:80%;" />
+
+
+
+### 5.服务器
+
+服务器可以理解为 一台可以操控的电脑， 它具备上网的功能， 它的配置分别对应机子的内存，及网速， 这种对应的配置分别是，具体讲下有哪些
+
+
+
+> 是的，您对服务器的理解基本正确。服务器可以被看作是一台特定用途的计算机，专门用于提供各种服务，如Web服务、数据库服务、文件存储等。服务器的配置通常与其用途和性能需求密切相关，以下是一些与服务器配置相关的主要方面：
+>
+> 1. **CPU（中央处理器）：** CPU是服务器的计算引擎，影响服务器处理能力。更多的核心和更高的时钟频率通常意味着更好的性能。
+>
+> 2. **内存（RAM）：** 内存用于存储正在运行的应用程序和数据。较大的内存容量能够支持更多的同时运行的应用程序和更大的数据集。
+>
+> 3. **存储：** 存储可以分为硬盘驱动器（HDD）和固态驱动器（SSD）。SSD通常比HDD具有更快的读写速度，适用于需要高速访问的应用程序。
+>
+> 4. **网络带宽：** 网络带宽指的是服务器与互联网之间的数据传输速率。高带宽适用于处理大量流量的应用，如视频流媒体和在线游戏。
+>
+> 5. **网络接口：** 服务器通常有多个网络接口，用于连接到网络和其他设备。这些接口可能支持以太网、无线网络等。
+>
+> 6. **操作系统：** 服务器操作系统可以是Linux、Windows Server等。选择操作系统通常基于应用程序的兼容性和性能需求。
+>
+> 7. **虚拟化技术：** 虚拟化技术如VMware、KVM和Hyper-V允许在一台物理服务器上运行多个虚拟服务器，从而提高资源利用率。
+>
+> 8. **安全性：** 安全性配置涉及防火墙、身份验证、访问控制等，以确保服务器和其上运行的应用程序的安全性。
+>
+> 9. **监控和管理：** 配置监控工具和管理软件可以实时监视服务器的性能和状态，并及时进行维护和管理。
+>
+> 10. **扩展性：** 服务器应当具备扩展性，以便在需要时进行硬件升级或添加更多的服务器节点。
+>
+> 11. **备份和恢复：** 配置备份和恢复策略以确保数据的安全性和可恢复性。
+>
+> 服务器的配置需要根据具体的应用需求和预期负载来进行定制。不同类型的应用程序可能需要不同的硬件和软件配置，以便实现最佳性能和可用性。
+
+##### 5.1 虚拟化技术
+
+虚拟化技术就相当于一台服务器可以充当多台服务器
+
+> 是的，您理解得很对。虚拟化技术允许一台物理服务器（宿主机）同时运行多个虚拟服务器（虚拟机），每个虚拟服务器都仿佛是一台独立的物理服务器，拥有自己的操作系统、应用程序和资源。这种方式可以充分利用硬件资源，提高服务器的利用率，并降低成本。
+>
+> 以下是一些虚拟化技术的关键概念：
+>
+> 1. **宿主机（Host）：** 宿主机是物理服务器，运行虚拟化软件，负责管理和分配资源给虚拟机。
+>
+> 2. **虚拟机（Virtual Machine，VM）：** 虚拟机是在宿主机上创建的独立环境，它模拟了一个完整的计算机，包括操作系统、应用程序和资源。多个虚拟机可以同时运行在同一台宿主机上。
+>
+> 3. **虚拟化层：** 虚拟化软件在宿主机上创建虚拟化层，用于管理和分配物理资源（如CPU、内存、存储）给虚拟机。
+>
+> 4. **资源隔离：** 虚拟化技术通过资源隔离，确保每个虚拟机之间互相独立，不会相互影响。这样，一个虚拟机的问题不会影响其他虚拟机的稳定性。
+>
+> 5. **快照和克隆：** 虚拟机可以创建快照，记录特定时刻的状态，以便将来可以回滚到该状态。还可以从现有虚拟机创建克隆，用作测试或复制环境。
+>
+> 6. **弹性和扩展性：** 虚拟化使得根据需求快速创建、删除和调整虚拟机，从而提供灵活性和弹性。
+>
+> 7. **应用隔离：** 不同的应用程序可以在不同的虚拟机中运行，从而隔离应用程序之间的影响，提高安全性和稳定性。
+>
+> 常见的虚拟化技术包括 VMware vSphere、Microsoft Hyper-V、KVM（Kernel-based Virtual Machine）、Xen 等。虚拟化技术在数据中心管理、开发测试环境、云计算等领域都具有重要作用，使多个虚拟服务器共享一台物理服务器的资源，从而提高效率和资源利用率。
+
+
+
+##### 5.2 网络接口
+
+它和端口相同吗？ 
+
+> 网络接口和网络端口是两个不同的概念，尽管它们都涉及到计算机网络，但含义和用途是不同的。
+>
+> 1. **网络接口：** 网络接口是指计算机或设备与网络连接的物理或逻辑连接点。每个计算机通常有一个或多个网络接口，例如以太网接口、Wi-Fi接口等。网络接口具有唯一的硬件地址（MAC地址），用于在局域网中识别设备。它们用于实际物理连接或数据链路连接。
+>
+> 2. **网络端口：** 网络端口是在计算机通信中使用的抽象概念，用于标识不同的服务或应用程序。网络端口是一个16位的数字，可以与IP地址一起唯一标识一个通信通道。例如，HTTP服务通常使用端口80，HTTPS使用端口443，SSH使用端口22，而端口8080通常用于访问Web应用程序。
+>
+> 虽然这两个术语都与计算机网络有关，但它们的概念和作用是不同的。网络接口涉及到物理或逻辑连接到网络的设备，而网络端口涉及到在计算机通信中标识不同服务和应用程序的逻辑标识符。
+
+
+
+##### 5.3	服务器选择
+
+[云服务器了解及选择](file://D:\code-english\other_zs\服务器选择篇\云服务器了解及选择.md)   
+
+txy-15
+
+## （四）搭建服务器环境
+
+
+
+![image-20230807185255889](vue3-CMS.assets/image-20230807185255889.png)
+
+### 1. 安装并启动Jenkins代理服务器 （踩坑篇）
+
+视频教学地址应修改为：  （https://pkg.jenkins.io/redhat-stable/）
+
+
+
+#### 1.1 下载Jenkins依赖的jdk-11 版本
+
+搭建服务器- jenkins
+  yum install fontconfig java-11-openjdk  （jenkins最新版本依赖于11版本）
+
+
+
+#### 1.2 安装Jenkins的提前准备
+
+
+因为Jenkins本身是  没有在dnf的软件仓库包中的,所以我们需要连接Jenkins仓库:
+
+wget是Linux中下载文件的一个工具，-O 表示输出到某个文件夹并且命名文件；
+rpm:全称为The RPM Package Manage，是Linux下一个软件包管理器
+
+
+1. DNF并未注册- jenkins 需先来连接仓库
+   并导入密匙  声明软件合法 （最新方式）
+
+2. **sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo**
+   **sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key**
+
+3. 安装适配的jdk版本- 并安装jenkins 
+   yum install fontconfig java-11-openjdk （已提前安装）
+     yum install jenkins
+
+#### 1.3  防火墙开启端口8080为可用
+
+注意： Jenkins默认使用8080端口， 需要提前为其开启端口使用性（在腾讯云中启动防火墙 允许进行访问）
+
+💓🐟启动失败： 未配置正确的jdk版本 由于原视频安装为jdk-8导致后期一直失败，重新安装了11-
+ 		照着步骤走，不会出错
+
+
+
+#### 1.4  设置JDK环境变量  并为Jenkins配置 JDK
+
+/usr/lib/jvm/jre-11-openjdk-11.0.19.0.7-1.el7_9.x86_64  （这个为下载后的jdk路径）
+
+运行时需要- 配置环境变量 
+（1）进入文件： nano ~/.bashrc
+（2）在文件末尾添加： 
+
+		**export JAVA_HOME=/usr/lib/jvm/jre-11-openjdk-11.0.19.0.7-1.el7_9.x86_64** 
+（3）退出保存后重新加载文件：  source ~/.bashrc
+
+
+
+#### 1.5   配置生效- 解决措施
+
+如配置后失效：  [参考文章 ](https://blog.csdn.net/u012795439/article/details/126587372)
+
+jenkins启动依赖于 ： /usr/lib/systemd/system/jenkins.service文件
+（1）nano打开文件： 在java home directory  （三个 Location 后）
+（2）将注释去除 ， 为Envioment添加正确的路径 ： 
+
+				Enviroment: "/usr/lib/jvm/jre-11-openjdk-11.0.19.0.7-1.el7_9.x86_64"
+（3） 成功启动， 我是用这种方式解决的 （搞了一上午 😓）
+
+
+
+#### 1.6 启动Jenkins  并设置开机自启
+
+启动 Jenkins 服务并设置开机自启
+**sudo systemctl start jenkins**
+**sudo systemctl enable jenkins**
+
+
+
+
+
+#### 1.7   其它配置（提前配置）
+
+
+进入/etc/sysconfig/jenkins文件， 将JENKINS_USER = "root" 设置为管理者
+后面的定时任务移动需要访问 管理文件（**需要权限**）
+
+**启动配置篇：** 
+
+1. 在浏览器打开 ip地址8080端口：  并配置相关服务/工具   
+   在系统中 使用cat /var/lib/jenkins/secrets/initialAdminPassword 找到密码输入
+
+2. 进入选择默认安装所需工具
+   注册用户名： Kaden - 密码 W v 123
+
+
+
+#### 💓🐟 命令bug解决
+
+
+
+[root@VM-8-10-centos lighthouse]# cd ~
+bash: __bp_precmd_invoke_cmd: command not found
+bash: __bp_interactive_mode: command not found
+
+[参考](https://blog.csdn.net/lzsm_/article/details/126083649)
+进入root， 显示隐藏文件
+
+ 进入.bashrc文件， 添加一行  **unset PROMPT_COMMAND**
+
+
+
+
+
+### 2. Nginx中介服务器- 安装及配置
+
+#### 2.1  Nginx的安装
+
+外界访问 是访问到Nginx， 中介转发 数据- 可在之中设置Htps或http， 主要是对服务器尽心一个配置， 提高安全性等
+
+
+
+dnf install nginx
+
+**启动Nginx并自启动-** 
+
+systemctl start nginx
+systenctl status nginx
+systemctl enable nginx
+
+
+
+**外界访问 是访问到Nginx， 中介转发 数据- 可在之中设置Htps或http， 主要是对服务器尽心一个配置， 提高安全性等**
+
+> 是的，你的理解是正确的。Nginx作为中介服务器的主要作用是接收来自外部的请求，并将这些请求转发到内部的服务器上。这可以实现多种功能，包括负载均衡、反向代理、缓存、HTTPS加密等。
+>
+> Nginx可以帮助你实现以下目标：
+>
+> 1. **负载均衡：** Nginx可以将来自多个客户端的请求分发到多个后端服务器上，以平衡负载，提高系统的可靠性和性能。
+> 2. **反向代理：** Nginx可以作为反向代理，将外部请求转发到后端服务器，并将响应返回给客户端。这种方式可以隐藏后端服务器的真实IP地址，提供额外的安全性。
+> 3. **缓存：** Nginx可以将部分静态内容缓存在内存中，减轻后端服务器的负载，加快响应速度。
+> 4. **SSL终止：** Nginx可以处理SSL/TLS加密和解密，将HTTPS请求转发到后端服务器，并在客户端与Nginx之间建立加密连接。
+> 5. **安全性：** Nginx可以设置访问控制、防止恶意请求、限制连接数等，提高系统的安全性。
+> 6. **HTTP重定向：** Nginx可以将HTTP请求重定向到HTTPS，从而实现网站的安全访问。
+> 7. **静态文件服务：** Nginx可以直接提供静态文件，如图片、CSS和JavaScript文件，从而减轻后端服务器的负载。
+>
+> 总之，Nginx是一个功能强大且高度可配置的中介服务器，可以根据你的需求实现各种不同的功能。你的理解是准确的，如果你想深入了解Nginx的各种用法和配置选项，可以继续学习Nginx的文档和相关资源。
+
+
+
+#### 2.2 Nginx配置
+
+
+
+#### 1. Nginx配置
+
+思路：
+
+1. 使用下载并启动Nginx（自启动）
+2. 在vsCode打开，并修改配置  并生成文件夹 CMs
+3. 修改源文件Local 显示路径 为 cms
+
+
+
+### 2.自动化部署
+
+首先需要将项目上传到GitHub， 此部分已完成
+
+
+
+手动部署- 代表需要手动去导入文件
+
+	Nginx 自动化部署， 由它半小时将gitHub仓库的src文件进行拉取到本地（服务器中）， 此时该项目为实时跟进， 测试人员每隔半小时（可自定义时间），就能收到最新的项目情况
+
+
+
+建立任务， 描述那些自定义后
+
+服务器下载git ,连接仓库- 需要写入gitHub用户名 + token
+
+
+
+
+
+
+
+
+
+## 2023-11-16前需要 升级服务器系统
+
+![image-20230808140529407](vue3-CMS.assets/image-20230808140529407.png)
+
+
+
+
+
+

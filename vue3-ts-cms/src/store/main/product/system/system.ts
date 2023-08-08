@@ -1,6 +1,6 @@
 import { Module } from 'vuex'
 import { IRootState } from '@/store/types'
-import { ISystemState } from './types'
+import { ISystemState } from '../types'
 
 import { getPageListData } from '@/service/main/system/system'
 
@@ -20,7 +20,9 @@ const systemModule: Module<ISystemState, IRootState> = {
       goodsList: [],
       goodsCount: 0,
       menuList: [],
-      menuCount: 0
+      menuCount: 0,
+      categoryList: [],
+      categoryCount: 0
     }
   },
   mutations: {
@@ -37,6 +39,7 @@ const systemModule: Module<ISystemState, IRootState> = {
       state.roleCount = count
     },
     changeGoodsList(state, list: any[]) {
+      console.log(list)
       state.goodsList = list
     },
     changeGoodsCount(state, count: number) {
@@ -47,6 +50,12 @@ const systemModule: Module<ISystemState, IRootState> = {
     },
     changeMenuCount(state, count: number) {
       state.menuCount = count
+    },
+    changeCategoryCount(state, totalCount: number) {
+      state.categoryCount = totalCount
+    },
+    changeCategoryList(state, list: any[]) {
+      state.categoryList = list
     }
   },
   getters: {
@@ -81,6 +90,7 @@ const systemModule: Module<ISystemState, IRootState> = {
 
       // 3.将数据存储到state中
       const { list, totalCount } = pageResult.data
+      console.log(list)
 
       // 触发的事件 需要PageName首字母大写
       // 相当于取出字符串首字母再拼接第一个后的所有字母

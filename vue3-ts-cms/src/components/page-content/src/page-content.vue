@@ -110,6 +110,7 @@ export default defineComponent({
     // 有默认值， 当未传入参数时， 默认调用 空对象
     const getPageData = (queryInfo: any = {}) => {
       if (!isQuery) return
+      console.log('11')
       store.dispatch('system/getPageListAction', {
         pageName: props.pageName,
         queryInfo: {
