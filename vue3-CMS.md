@@ -6789,12 +6789,6 @@ setup() {
 
 ![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)
 
-<<<<<<<<< Temporary merge branch 1
-<<<<<<< HEAD
-# day33-   14点10分
-
-=========
->>>>>>>>> Temporary merge branch 2
 # 🔺✨ 进度十三（项目完结篇）
 
 **day33-   22点10分**
