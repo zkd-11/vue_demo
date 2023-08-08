@@ -6260,6 +6260,15 @@ import { usePageModal } from '@/hooks/use-page-modal'
 6.  modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
 7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
 8.  合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
+=======
+2. modal设置插槽供 父组件插入- 传入数据
+3. role组件为modal插入 菜单组件eleTree(可选多级菜单展开box)至插槽中
+4. role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
+5. eleTree绑定函数可获取选择的菜单信息， 在role中获取后进行保存，并将选中的菜单信息传入modal
+6. modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
+7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
+8. 合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
+
 
 <img src="vue3-CMS.assets/image-20230803011716736.png" alt="image-20230803011716736" style="zoom:67%;" />
 
@@ -6780,6 +6789,12 @@ setup() {
 
 ![image-20230803041729169](vue3-CMS.assets/image-20230803041729169.png)
 
+<<<<<<<<< Temporary merge branch 1
+<<<<<<< HEAD
+# day33-   14点10分
+
+=========
+>>>>>>>>> Temporary merge branch 2
 # 🔺✨ 进度十三（项目完结篇）
 
 **day33-   22点10分**
@@ -8315,3 +8330,5 @@ systemctl enable nginx
 
 
 
+=======
+>>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
