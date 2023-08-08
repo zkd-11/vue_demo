@@ -2577,31 +2577,32 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >          console.log('当前路由参数：', route.params);
 >          console.log('当前路由查询参数：', route.query);
 >          return {};
->        },
->      };
->      ```
->
-> 2. `useRouter`：
->
->    - `useRouter` 函数用于在组件中访问路由实例，可以通过该实例进行编程式导航。
->
->    - 它返回当前路由的路由实例，通过这个实例，我们可以使用诸如 `push`、`replace` 等方法进行页面导航。
->
->    - 使用示例：
->
->      ```javascript
->      import { useRouter } from 'vue-router';
->      
->      export default {
->        setup() {
+>          },
+>          };
+>          ```ts
+>          
+>          2. `useRouter`：
+>          
+>          - `useRouter` 函数用于在组件中访问路由实例，可以通过该实例进行编程式导航。
+>          
+>          - 它返回当前路由的路由实例，通过这个实例，我们可以使用诸如 `push`、`replace` 等方法进行页面导航。
+>          
+>          - 使用示例：
+>          
+>          ```javascript
+>          import { useRouter } from 'vue-router';
+>          
+>          export default {
+>          setup() {
 >          const router = useRouter();
->      
-=======
->                                    
->      export default {
->        setup() {
+>          
+>          =======
+>          
+>          export default {
+>          setup() {
 >          const router = useRouter();
->                                    
+>          
+>          ```
 
 >          // 编程式导航示例
 >          const handleButtonClick = () => {
@@ -2613,7 +2614,7 @@ Route： 当前所在路由， 能获取当前路由信息， params, path等信
 >          };
 >        },
 >      };
->      ```
+>      
 >
 > 使用这两个 Composition API 函数可以让我们更方便地在 Vue 3 中处理路由相关的逻辑，并且能够更好地利用 Composition API 的特性来组织和管理代码。 
 
@@ -6169,7 +6170,7 @@ export function formatUtcString(
 
 原界面有conten和search组件， 现需引入modal组件
 
- 		新建用户功能由于需要为其添加权限，  此部分不属于modal所拥有，只展示角色名（具体拥有权限无展示） 需要额外独立开发， 不将其放置modal组件中- 尽量使组件可用性强， 不属于公共逻辑的代码不放入中间组件
+​	新建用户功能由于需要为其添加权限，  此部分不属于modal所拥有，只展示角色名（具体拥有权限无展示） 需要额外独立开发， 不将其放置modal组件中- 尽量使组件可用性强， 不属于公共逻辑的代码不放入中间组件
 
 **简单功能开发思路（不含权限分配）**
 
@@ -6260,7 +6261,6 @@ import { usePageModal } from '@/hooks/use-page-modal'
 6.  modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
 7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
 8.  合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
-=======
 2. modal设置插槽供 父组件插入- 传入数据
 3. role组件为modal插入 菜单组件eleTree(可选多级菜单展开box)至插槽中
 4. role组件获取vueX中的菜单数组，并将特定的信息传入至modal中
@@ -8252,7 +8252,7 @@ bash: __bp_interactive_mode: command not found
 
 #### 2.1  Nginx的安装
 
-外界访问 是访问到Nginx， 中介转发 数据- 可在之中设置Htps或http， 主要是对服务器尽心一个配置， 提高安全性等
+外界访问 是访问到Nginx， 中介转发 数据- 可在之中设置Htps或http， 主要是对服务器进行一个配置， 提高安全性等
 
 
 
@@ -8322,7 +8322,7 @@ systemctl enable nginx
 
 
 
-## 2023-11-16前需要 升级服务器系统
+## 2023-11-16	前需要 升级服务器系统
 
 ![image-20230808140529407](vue3-CMS.assets/image-20230808140529407.png)
 
@@ -8330,5 +8330,4 @@ systemctl enable nginx
 
 
 
-=======
->>>>>>> 2c71df13d1160bd0a997f47ae53285ae0c5ea158
+我在这里去除
