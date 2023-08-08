@@ -6260,7 +6260,6 @@ import { usePageModal } from '@/hooks/use-page-modal'
 6.  modal定义otherConfig属性接收父组件传入的属性（默认为空对象）
 7.  modal 对新建数据和编辑数据的函数进行重写， 对新建数据- 编辑数据 传入的otherInfo 同配置的otherConfig进行合并
 8.  合并后的数据在user组件中这个实例中既拥有原先的用户名-权限名 + 接收进的具体拥有的权限， 再去发送请求， 从而使得新建数据功能实现， 并且对其它组件不影响（相当于这为一个功能拓展， 进一步拓展modal功能）
->>>>>>>>> Temporary merge branch 2
 
 <img src="vue3-CMS.assets/image-20230803011716736.png" alt="image-20230803011716736" style="zoom:67%;" />
 
