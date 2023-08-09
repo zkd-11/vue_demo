@@ -1,6 +1,6 @@
 <template>
   <div class="login-panel">
-    <h1 class="title">悟律-后台管理系统</h1>
+    <h1 class="title">小新-后台管理系统</h1>
     <!-- stretch 自撑开， 默认平分居中 -->
     <!-- currentTab 可以选择默认打开的tab标签 -->
     <el-tabs type="border-card" stretch v-model="currentTab">

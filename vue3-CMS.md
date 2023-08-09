@@ -7902,7 +7902,7 @@ export const convertData = function (data: any) {
 
 **day34 -  10点**
 
-## (接口文档)
+## (接口文档) -  友
 
 [接口文档](https://documenter.getpostman.com/view/12387168/TzzDKb12)
 
@@ -7926,13 +7926,13 @@ export const convertData = function (data: any) {
 
 ![image-20230807111427154](vue3-CMS.assets/image-20230807111427154.png)
 
-																**（手动部署）**
+​															**（手动部署）**
 
 
 
 ![image-20230807111442475](vue3-CMS.assets/image-20230807111442475.png)
 
-																**（自动部署）**
+​															**（自动部署）**
 
 
 
@@ -8278,29 +8278,71 @@ systemctl enable nginx
 
 
 
-#### 2.2 Nginx配置
+#### 2.2 Nginx配置和使用
 
 
 
-#### 1. Nginx配置
+#### 1. Nginx配置及使用自动化部署脚本
 
 思路：
 
-1. 使用下载并启动Nginx（自启动）
-2. 在vsCode打开，并修改配置  并生成文件夹 CMs
-3. 修改源文件Local 显示路径 为 cms
+Nginx 主要功能: 对用户访问进行转发 ， 需要
+
+1. dnf下载 后对其进行启动（自启动）
+
+2. 使用Remote-ssh去进行连接服务器， 对Systemctl.conf进行修改， 修改后当用户访问ip时将其跳转到cms-mall- Index.html 
+
+   > **location / {**
+   > **root root/mall-cms;**
+   > **index index.html;**
+
+3. 进入8080端口对jenkins进行配置， 下载node版本（全局工具）14.17.5， 
+4. 建立任务， 对项目仓库进行绑定， 需要使用用户名+ token (在GitHub 设置中 生成)  
+5. 定义自动部署的时间- * \* \*  \* \*   分 时 日 月 周  原设置为  H H 15 H H 表示每月15号进行拉取仓库进行部署
+6. 选择node工具进行拉取， 使用以下指令进行拉取并部署至Mall-cms文件下， 成功后即可通过访问ip直接访问至项目：
+
+**pwd**
+
+**node -v** 
+**npm -v**
+
+**npm install**
+**npm run build**
+
+**rm -rf /root/mall-cms/***
+**mv -rf ./dist/* /root/mall-cms/**
 
 
 
-### 2.自动化部署
+GitHub 一直拉取失败~ 暂时放弃-  构造了两个多钟- 哭死
 
-首先需要将项目上传到GitHub， 此部分已完成
+![image-20230808214305711](vue3-CMS.assets/image-20230808214305711.png)
 
 
 
-手动部署- 代表需要手动去导入文件
 
-	Nginx 自动化部署， 由它半小时将gitHub仓库的src文件进行拉取到本地（服务器中）， 此时该项目为实时跟进， 测试人员每隔半小时（可自定义时间），就能收到最新的项目情况
+
+Token值： **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**
+
+
+
+转战手动部署！！！
+
+
+
+## （五）手动部署概念
+
+
+
+![image-20230808182252114](vue3-CMS.assets/image-20230808182252114.png)
+
+
+
+手动部署- 代表需要手动去导入文件- 通过xShell文件直接对文件进行拉取
+
+
+
+Nginx 自动化部署， 由它半小时将gitHub仓库的src文件进行拉取到本地（服务器中）， 此时该项目为实时跟进， 测试人员每隔半小时（可自定义时间），就能收到最新的项目情况
 
 
 
@@ -8312,7 +8354,31 @@ systemctl enable nginx
 
 
 
+## （GIt）Git上传踩雷篇
 
+VSCODE 合并代码冲突时
+
+
+
+左边为- 远程仓库  右边为- 本地仓库
+
+在远程仓库起冲突时， mayBe 我返回上一级 git heade reset~1 导致提交历史不同
+
+  我在左边点击接收当前修改-> 表示   以本地修改的内容为上传， 反之右边则表示以远程仓库为准
+
+
+
+💓🐟 ：上传时就不要修改文件， 因为已经 git add. 提交至缓存区， 会检测出当前与上传又造成不同， 且会被识别可能为代码冲突， 为此就必须再次git add. 并且 commit ， 再一并push提交
+
+强烈建议： **上传时就不用动文件**！  上传后随意！
+
+
+
+
+
+[手动部署使用软件](https://wpthemeset.lanzoui.com/b06mw70eh)
+
+使用Xshell 和  SFTP（内置插件， 此两个点链接 免费版都行）
 
 
 
