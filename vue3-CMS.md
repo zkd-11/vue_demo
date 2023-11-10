@@ -7902,7 +7902,7 @@ export const convertData = function (data: any) {
 
 **day34 -  10点**
 
-## (接口文档) -  友
+## (接口文档) -  
 
 [接口文档](https://documenter.getpostman.com/view/12387168/TzzDKb12)
 
