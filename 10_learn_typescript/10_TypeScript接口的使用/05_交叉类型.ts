@@ -1,8 +1,7 @@
-
 export {};
 
 // 一种组合类型的方式: 联合类型
-//  联合 满足其一  
+//  联合 满足其一
 type WulvType = number | string;
 type Direction = "left" | "right" | "up" | "down";
 
@@ -11,31 +10,26 @@ type Direction = "left" | "right" | "up" | "down";
 type WType = number | string;
 
 interface ISwim {
-  swimming: ()=> void;
+  swimming: () => void;
 }
 
 interface IFly {
-  flying: ()=> void;
+  flying: () => void;
 }
 
 type MyType1 = ISwim | IFly;
 type MyType2 = ISwim & IFly;
 
 const obj1: MyType1 = {
-  flying() {
-
-  }
-}
-
+  flying() {},
+  swimming() {},
+};
 
 const obj2: MyType2 = {
   flying() {
-    console.log("交叉类型- fly");  
+    console.log("交叉类型- fly");
   },
   swimming() {
-    console.log("交叉类型- swim");  
-  }
-}
-
-
-
+    console.log("交叉类型- swim");
+  },
+};
