@@ -12,6 +12,7 @@
     "importHelpers": true,
     // 按照node的方式去解析模块 import "/index.node"
     "moduleResolution": "node",
+
     // 跳过一些库的类型检测 (axios -> 类型/ lodash -> @types/lodash / 其他的第三方)
     // import { Person } from 'axios'
     "skipLibCheck": true,
